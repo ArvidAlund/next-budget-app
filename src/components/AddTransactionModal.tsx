@@ -1,0 +1,188 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { ComboBox } from "./ui/combobox"
+import { X } from "lucide-react"
+import { addTransaction } from "@/lib/transactions"
+import { ScanReceipt } from "./ScanReceipt"
+
+export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void; onSuccess: (type: "good" | "bad") => void;}) {
+  const [type, setType] = useState<"inkomst" | "utgift">("inkomst")
+  const [category, setCategory] = useState("")
+  const [amount, setAmount] = useState("")
+  const [description, setDescription] = useState("")
+  const [date, setDate] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [showScanner, setShowScanner] = useState(false)
+  const [recurring, setRecurring] = useState(false);
+
+
+
+  useEffect(() => {
+    setDate(new Date().toISOString().split("T")[0])
+  }, [])
+
+  const incomeOptions = [
+    { value: "lon", label: "Lön" },
+    { value: "bidrag", label: "Bidrag" },
+    { value: "bonus", label: "Bonus" },
+    { value: "investeringar", label: "Investeringar" },
+  ]
+
+  const expenseOptions = [
+    { value: "boende", label: "Boende" },
+    { value: "mat", label: "Mat & Hushåll" },
+    { value: "transport", label: "Transport" },
+    { value: "arbete", label: "Arbete & Studier" },
+    { value: "abonnemang", label: "Abonnemang & Tjänster" },
+    { value: "halsa", label: "Hälsa & Välmående" },
+    { value: "shopping", label: "Shopping & Kläder" },
+    { value: "nojen", label: "Nöjen & Fritid" },
+    { value: "sparande", label: "Sparande & Investeringar" },
+    { value: "ovrigt", label: "Övrigt" },
+  ]
+
+  const categoryOptions = type === "inkomst" ? incomeOptions : expenseOptions
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!category || !amount || !date) {
+      alert("Vänligen fyll i alla obligatoriska fält")
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      await addTransaction({
+        type,
+        category,
+        description,
+        amount: Number(amount),
+        date,
+        recurring
+      })
+      onClose()
+      onSuccess("good")
+    } catch (error: any) {
+      onSuccess("bad")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <>
+      <div className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center px-4 text-black">
+        <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] p-6 overflow-y-auto relative shadow-lg">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-500 hover:text-black"
+          >
+            <X />
+          </button>
+
+          <h2 className="text-xl font-semibold mb-6 text-center">
+            Lägg till Transaktion
+          </h2>
+
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <ComboBox
+              label="Typ*"
+              value={type}
+              onChange={(val) => setType(val as "inkomst" | "utgift")}
+              options={[
+                { value: "inkomst", label: "Inkomst" },
+                { value: "utgift", label: "Utgift" },
+              ]}
+            />
+
+            <ComboBox
+              label="Kategori*"
+              value={category}
+              onChange={setCategory}
+              options={categoryOptions}
+              placeholder="Välj kategori"
+            />
+
+            {/* Checkbox för återkommande */}
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="recurring"
+                checked={recurring}
+                onChange={(e) => setRecurring(e.target.checked)}
+                className="peer hidden"
+              />
+              <div className="w-5 h-5 rounded-md border border-gray-400 peer-checked:bg-amber-500 flex items-center justify-center transition">
+                <svg
+                  className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <label htmlFor="recurring" className="text-sm font-medium text-gray-800 select-none">
+                Återkommande
+              </label>
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Beskrivning</label>
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full p-2 border rounded"
+                placeholder="..."
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Belopp*</label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full p-2 border rounded"
+                placeholder="kr"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Datum*</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="!bg-amber-500 text-white py-2 rounded hover:bg-amber-600 mt-2"
+              disabled={loading}
+            >
+              {loading ? "Sparar..." : "Spara"}
+            </button>
+          </form>
+
+          <button
+            className="!bg-gray-700 text-white py-2 rounded hover:bg-amber-600 mt-2 w-full"
+            onClick={() => setShowScanner(true)}
+          >
+            Skanna kvitto
+          </button>
+        </div>
+      </div>
+
+      {showScanner && <ScanReceipt onClose={() => setShowScanner(false)} />}
+    </>
+  )
+}
