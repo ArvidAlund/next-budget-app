@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core"
 import { ProgressBar } from "./progressbar"
-import { formatCurrency } from "@/lib/formatcurrency"
+import { formatCurrency } from "@/app/lib/formatcurrency"
 
 type categoryWProps = {
   image: IconDefinition

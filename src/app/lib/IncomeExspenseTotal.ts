@@ -1,4 +1,4 @@
-import supabase from "../pages/supabaseClient"
+import supabase from "./supabaseClient"
 
 export async function getIncomeExpenseTotal(userId: string, date: Date) {
   // Skapa datumsträngar i format YYYY-MM-DD utan tid

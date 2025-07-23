@@ -2,7 +2,7 @@
 "use client"
 
 import { useState } from "react"
-import supabase from "@/pages/supabaseClient"
+import supabase from "@/app/lib/supabaseClient"
 
 export function LoginModal() {
   const [email, setEmail] = useState("")

@@ -5,8 +5,8 @@ import {
   faDumbbell, faGamepad, faGlobe, faMoneyBills, faCircleQuestion
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { getbudget } from "@/lib/getbudget";
-import supabase from "@/pages/supabaseClient";
+import { getbudget } from "@/app/lib/getbudget";
+import supabase from "@/app/lib/supabaseClient";
 
 function calculatePercentage(totsum: number, expense: number): number {
   if (totsum <= 0) return 0;

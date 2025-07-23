@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { ComboBox } from "./ui/combobox"
 import { X } from "lucide-react"
-import { addTransaction } from "@/lib/transactions"
+import { addTransaction } from "@/app/lib/transactions"
 import { ScanReceipt } from "./ScanReceipt"
 
 export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void; onSuccess: (type: "good" | "bad") => void;}) {

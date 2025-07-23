@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { Container } from "./ui/container"
 import { NavIcon } from "./ui/navicon"
 import { faMoneyBillTrendUp } from "@fortawesome/free-solid-svg-icons"
-import { getIncomeExpenseTotal } from "@/lib/IncomeExspenseTotal"
-import supabase from "@/pages/supabaseClient"
-import { formatCurrency } from "@/lib/formatcurrency"
+import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal"
+import supabase from "@/app/lib/supabaseClient"
+import { formatCurrency } from "@/app/lib/formatcurrency"
 
 export function Overview() {
   const [income, setIncome] = useState(0)

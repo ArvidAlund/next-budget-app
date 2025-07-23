@@ -1,4 +1,4 @@
-import supabase from "../pages/supabaseClient"
+import supabase from "./supabaseClient"
 import { createBudget } from "./createBudget"
 
 export async function getbudget(userId: string) {

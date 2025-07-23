@@ -1,4 +1,4 @@
-import supabase from "@/pages/supabaseClient"
+import supabase from "@/app/lib/supabaseClient"
 
 export async function addTransaction(transaction: {
   type: string

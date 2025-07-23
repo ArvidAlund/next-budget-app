@@ -1,4 +1,4 @@
-import supabase from "../pages/supabaseClient"
+import supabase from "./supabaseClient"
 
 export async function createBudget(userId: string) {
   const defaultBudget = {

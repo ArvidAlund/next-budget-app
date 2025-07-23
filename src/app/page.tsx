@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import supabase from "@/pages/supabaseClient"
+import supabase from "@/app/lib/supabaseClient"
 
 import { Navbar } from "@/components/Navbar"
 import { AddExpenseBtn } from "@/components/AddExpenseBtn"
