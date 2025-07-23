@@ -1,11 +1,11 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
-import { createWorker } from "tesseract.js"
+import { createWorker, type Worker } from "tesseract.js";
 
 export function ScanReceipt({ onClose }: { onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
-  const [worker, setWorker] = useState<any>(null)
+  const [worker, setWorker] = useState<Worker | null>(null);
   const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {

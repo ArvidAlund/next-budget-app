@@ -8,6 +8,20 @@ import { useEffect, useState } from "react";
 import { getbudget } from "@/app/lib/getbudget";
 import supabase from "@/app/lib/supabaseClient";
 
+type BudgetData = {
+  boende: number;
+  mat: number;
+  transport: number;
+  arbete: number;
+  abonnemang: number;
+  halsa: number;
+  shopping: number;
+  nojen: number;
+  sparande: number;
+  ovrigt: number;
+};
+
+
 function calculatePercentage(totsum: number, expense: number): number {
   if (totsum <= 0) return 0;
   const percentage = (expense / totsum) * 100;
@@ -15,7 +29,7 @@ function calculatePercentage(totsum: number, expense: number): number {
 }
 
 export function ExpensesCard() {
-  const [budgetData, setBudgetData] = useState<any | null>(null);
+  const [budgetData, setBudgetData] = useState<BudgetData | null>(null);
   const [categorySums, setCategorySums] = useState<Record<string, number>>({});
 
   useEffect(() => {

@@ -11,10 +11,12 @@ import { ExpensesCard } from "@/components/ExpensesCard"
 import { AddTransactionModal } from "@/components/AddTransactionModal"
 import { LoginModal } from "@/components/LoginForm"
 import { AlertboxContainer } from "@/components/AlertboxContainer"
+import type { Session } from '@supabase/supabase-js'
+
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [session, setSession] = useState<any>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [alertType, setAlertType] = useState<"good" | "bad" | "">("")
 
