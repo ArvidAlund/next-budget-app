@@ -54,7 +54,7 @@ export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void
     setLoading(true)
 
     try {
-      await addTransaction({
+        await addTransaction({
         type,
         category,
         description,
@@ -64,8 +64,6 @@ export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void
       })
       onClose()
       onSuccess("good")
-    } catch (error: any) {
-      onSuccess("bad")
     } finally {
       setLoading(false)
     }

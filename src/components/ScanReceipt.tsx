@@ -50,7 +50,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
         worker.terminate()
       }
     }
-  }, [])
+  }, [worker])
 
   const stopCamera = () => {
     if (streamRef.current) {

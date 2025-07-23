@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 import { NavIcon } from "./ui/navicon"
 import { faHouseUser, faCalendar } from "@fortawesome/free-solid-svg-icons"
+import Link from "next/link"
 
 export function Navbar() {
   const [hidden, setHidden] = useState(false)
@@ -38,7 +39,7 @@ export function Navbar() {
     `}
     >
         <div className="flex justify-around items-center h-full w-[90%]">
-          <a href="/"><NavIcon icon={faHouseUser} label="Hem" /></a>
+          <Link href="/"><NavIcon icon={faHouseUser} label="Hem" /></Link>
             <a href="/kalender"><NavIcon icon={faCalendar} label="Kalender"/></a>
             {/* fler ikoner */}
         </div>
