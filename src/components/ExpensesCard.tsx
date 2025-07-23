@@ -50,7 +50,7 @@ export function ExpensesCard() {
         return;
       }
 
-      setBudgetData(data);
+      setBudgetData(data ?? null);
 
       const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
       const firstDayNextMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString().split("T")[0];
