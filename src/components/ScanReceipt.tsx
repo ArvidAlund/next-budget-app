@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
 import { createWorker, type Worker } from "tesseract.js";
+import { AnalyzeOCR } from "@/app/lib/analyzeOCR";
 
 export function ScanReceipt({ onClose }: { onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -94,6 +95,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
         } = await worker.recognize(image)
 
         console.log("📸 OCR-resultat:", text)
+        await AnalyzeOCR(text)
         // TODO: Spara till DB, skicka till backend eller analysera vidare här
       } catch (err) {
         console.error("❌ OCR-fel:", err)
@@ -143,7 +145,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
       )}
 
       {isProcessing && (
-        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 text-white font-semibold text-lg animate-pulse">
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 text-white font-semibold text-xl animate-pulse text-bold">
           Analyserar foto...
         </div>
       )}
