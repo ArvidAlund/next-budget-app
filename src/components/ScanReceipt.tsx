@@ -11,16 +11,14 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
   const [cameraReady, setCameraReady] = useState(false);
 
   useEffect(() => {
-    const init = async () => {
+    const initWorker = async () => {
       try {
-        const newWorker = await createWorker("swe")
-        setWorker(newWorker)
+        const newWorker = await createWorker("swe");
+        setWorker(newWorker);
       } catch (e) {
-        console.error("Fel vid initiering av OCR worker:", e)
+        console.error("Fel vid initiering av OCR worker:", e);
       }
-    }
-
-    init()
+    };
 
     const startCamera = async () => {
       try {
@@ -47,6 +45,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
       }
     };
 
+    initWorker()
     startCamera()
 
     return () => {
@@ -55,7 +54,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
         worker.terminate()
       }
     }
-  }, [worker])
+  }, [])
 
   const stopCamera = () => {
     if (streamRef.current) {
