@@ -61,14 +61,14 @@ export function Overview() {
     <Container sizeClass="w-full h-40">
       <div className="flex flex-col mb-3">
         <h3>Saldo</h3>
-        <div className="font-bold text-4xl">{loading ? "..." : formatCurrency(sum) + " kr"}</div>
+        <div className="font-bold text-4xl text-green-500">{loading ? "..." : formatCurrency(sum) + " kr"}</div>
       </div>
       <div className="flex flex-row justify-around">
         <div className="flex flex-row items-center text-center gap-2">
           <div className="flex justify-center items-center min-w-fit">
             <NavIcon icon={faMoneyBillTrendUp} label="Utgifter" color="text-red-700" bgcolor="bg-white" />
           </div>
-          <div className="flex flex-col text-left text-black">
+          <div className="flex flex-col text-left">
             <p className="text-sm text-muted-foreground">Utgifter</p>
             <div className="text-xl font-semibold">{loading ? "..." : formatCurrency(expense) + " kr"}</div>
           </div>
@@ -77,7 +77,7 @@ export function Overview() {
           <div className="flex justify-center items-center min-w-fit">
             <NavIcon icon={faMoneyBillTrendUp} label="Inkomst" color="text-lime-600" bgcolor="bg-white" />
           </div>
-          <div className="flex flex-col text-left text-black">
+          <div className="flex flex-col text-left">
             <p className="text-sm text-muted-foreground">Inkomst</p>
             <div className="text-xl font-semibold">{loading ? "..." : formatCurrency(income) + " kr"}</div>
           </div>

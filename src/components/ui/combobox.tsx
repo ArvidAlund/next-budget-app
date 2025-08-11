@@ -49,7 +49,7 @@ export function ComboBox({
             variant="default"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between border-solid border-2"
+            className="w-full justify-between border-solid border-2 bg-white"
           >
             {value
               ? options.find((option) => option.value === value)?.label

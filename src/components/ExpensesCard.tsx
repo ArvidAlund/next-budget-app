@@ -89,7 +89,7 @@ export function ExpensesCard() {
   }
 
   return (
-    <Container sizeClass="w-full" colorClass="bg-white">
+    <Container sizeClass="w-full">
       <div className="flex w-full justify-between">
         <p>Utgifter</p>
         <a href="" className="text-blue-700">Visa alla</a>

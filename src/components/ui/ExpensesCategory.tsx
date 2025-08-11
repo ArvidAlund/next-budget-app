@@ -26,16 +26,16 @@ export function ExpensesCategory({
   return (
     <div className="flex flex-row items-center text-center gap-2 h-15">
       <div className="flex justify-center items-center min-w-fit">
-        <FontAwesomeIcon icon={image} className={`${imageclr} text-[2rem] mr-2`} />
+        <FontAwesomeIcon icon={image} className={`${imageclr} text-[2rem] mr-2 text-secondary-100`} />
       </div>
-      <div className="flex flex-col text-left text-black w-[60%] justify-between h-10">
+      <div className="flex flex-col text-left  w-[60%] justify-between h-10">
         <p className="font-medium text-md">{category}</p>
         <ProgressBar value={percentageValue} />
       </div>
-      <div className="flex flex-col text-right text-black w-1/3 items-end h-10 ml-auto justify-between">
+      <div className="flex flex-col text-right  w-1/3 items-end h-10 ml-auto justify-between">
         <p className="text-md font-bold">{formatCurrency(expense) + " kr"}</p>
         <p className="text-xs font-medium text-muted-foreground">
-          {formatCurrency(totsum - expense) + " kr kvar"}
+          {formatCurrency(totsum - expense) + " kr"}
         </p>
       </div>
     </div>

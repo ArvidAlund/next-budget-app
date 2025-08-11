@@ -69,6 +69,7 @@ export function Calander() {
 
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1); // 1–12
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   const displayMonth = months[currentMonth];
 
@@ -92,9 +93,13 @@ export function Calander() {
 
   const days = generateCalendarGrid(currentYear, currentMonth);
 
+  const handleDayClick = (day: number) => {
+    setSelectedDay(day);
+  };
+
   return (
     <Container sizeClass="w-full h-fit">
-      <Container sizeClass="w-full h-fit" colorClass="bg-white">
+      <Container sizeClass="w-full h-fit">
         <div className="w-100% flex flex-row justify-between items-center">
           <FontAwesomeIcon icon={faAngleLeft} onClick={handlePrevMonth} className="cursor-pointer" />
           <h1 className="text-center text-2xl font-bold">{displayMonth} {currentYear}</h1>
@@ -122,12 +127,16 @@ export function Calander() {
                     currentMonth === today.getMonth() + 1 &&
                     day === today.getDate();
 
+                const isSelected = day === selectedDay;
+
                 return (
                     <td
                     key={index}
+                    onClick={() => {handleDayClick(day)}}
                     className={`aspect-square flex items-center justify-center rounded-xl ${
-                        isToday ? "bg-white font-extrabold" : ""
-                    }`}
+                        isToday ? "bg-accent font-extrabold" : ""}
+                        ${isSelected ? "bg-secondary-100 text-primary font-bold" : ""}
+                        `}
                     >
                     {day}
                     </td>
