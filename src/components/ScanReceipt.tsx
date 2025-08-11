@@ -8,6 +8,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
   const streamRef = useRef<MediaStream | null>(null)
   const [worker, setWorker] = useState<Worker | null>(null);
   const [isProcessing, setIsProcessing] = useState(false)
+  const [cameraReady, setCameraReady] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -30,18 +31,21 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
             height: { ideal: 720 },
             aspectRatio: 9 / 16,
           },
-        })
+        });
 
-        streamRef.current = stream
+        streamRef.current = stream;
 
         if (videoRef.current) {
-          videoRef.current.srcObject = stream
-          videoRef.current.play()
+          videoRef.current.srcObject = stream;
+          videoRef.current.onloadedmetadata = () => {
+            setCameraReady(true);
+            videoRef.current?.play();
+          };
         }
       } catch (err) {
-        console.error("Kunde inte öppna kameran", err)
+        console.error("Kunde inte öppna kameran", err);
       }
-    }
+    };
 
     startCamera()
 
@@ -58,7 +62,6 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
       streamRef.current.getTracks().forEach((track) => track.stop())
       streamRef.current = null
     }
-
     if (videoRef.current) {
       videoRef.current.srcObject = null
     }
@@ -96,7 +99,6 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
 
         console.log("📸 OCR-resultat:", text)
         await AnalyzeOCR(text)
-        // TODO: Spara till DB, skicka till backend eller analysera vidare här
       } catch (err) {
         console.error("❌ OCR-fel:", err)
       } finally {
@@ -120,9 +122,14 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black z-50 px-4">
       <div className="fixed top-0 left-0 aspect-[9/16] w-full h-full overflow-hidden shadow-lg">
+        {!cameraReady && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
+            Startar kamera...
+          </div>
+        )}
         <video
           ref={videoRef}
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover transition-opacity duration-500 ${cameraReady ? "opacity-100" : "opacity-0"}`}
           playsInline
           muted
           autoPlay
@@ -145,7 +152,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
       )}
 
       {isProcessing && (
-        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 text-white font-semibold text-xl animate-pulse text-bold">
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 text-white font-semibold text-xl animate-pulse">
           Analyserar foto...
         </div>
       )}
