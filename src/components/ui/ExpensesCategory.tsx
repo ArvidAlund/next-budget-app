@@ -30,7 +30,7 @@ export function ExpensesCategory({
       </div>
       <div className="flex flex-col text-left  w-[60%] justify-between h-10">
         <p className="font-medium text-md">{category}</p>
-        <ProgressBar value={percentageValue} />
+        <ProgressBar value={percentageValue}/>
       </div>
       <div className="flex flex-col text-right  w-1/3 items-end h-10 ml-auto justify-between">
         <p className="text-md font-bold">{formatCurrency(expense) + " kr"}</p>

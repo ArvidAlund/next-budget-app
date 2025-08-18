@@ -4,7 +4,7 @@ type ProgressBarProps = {
   color?: string // t.ex. "bg-amber-500"
 }
 
-export function ProgressBar({ value, height = "h-2", color = "bg-primary-900" }:ProgressBarProps) {
+export function ProgressBar({ value, height = "h-2", color = "bg-accent" }:ProgressBarProps) {
   const width = `${Math.min(Math.max(value, 0), 100)}%` // Säkerställ 0–100
 
   return (

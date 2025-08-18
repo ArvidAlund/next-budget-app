@@ -33,7 +33,7 @@ export function Navbar() {
   return (
     <nav
     className={`
-        fixed bottom-0 left-0 w-full h-16 bg-secondary text-white bg-white px-4 rounded-t-xl shadow-md
+        fixed bottom-0 left-0 w-full h-16 bg-secondary text-white px-4 rounded-t-xl shadow-md
         transition-transform duration-300 ease-in-out
         ${hidden ? "translate-y-full" : "translate-y-0"}
     `}

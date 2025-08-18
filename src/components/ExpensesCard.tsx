@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { getbudget } from "@/app/lib/getbudget";
 import supabase from "@/app/lib/supabaseClient";
+import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 
 type BudgetData = {
   boende: number;
@@ -55,22 +56,18 @@ export function ExpensesCard() {
       const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
       const firstDayNextMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString().split("T")[0];
 
-      const { data: transactiondata, error: transactionerror } = await supabase
-        .from("transactions")
-        .select("category, amount")
-        .eq("type", "utgift")
-        .eq("user_id", user.id)
-        .gte("date", firstDayOfMonth)
-        .lt("date", firstDayNextMonth);
+      const { data: expensesData = [], error: expensesError } = await supabase
+      .from("transactions")
+      .select("*")
+      .eq("user_id", user.id)
+      .or(
+        `and(date.gte.${firstDayOfMonth},date.lt.${firstDayNextMonth}),recurring.eq.true`
+      );
 
-      if (transactionerror) {
-        console.error("Fel vid hämtning av transaktioner:", transactionerror);
-        return;
-      }
-
-      const summed = transactiondata.reduce((acc: Record<string, number>, item) => {
-        const cat = item.category || "Övrigt";
-        acc[cat] = (acc[cat] || 0) + (item.amount || 0);
+      const summed = expensesData.reduce((acc: Record<string, number>, item) => {
+        const cat = item.category ?? "Övrigt";
+        const amount = item.amount ?? 0;
+        acc[cat] = (acc[cat] || 0) + amount;
         return acc;
       }, {});
 

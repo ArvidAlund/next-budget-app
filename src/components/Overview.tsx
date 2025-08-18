@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react"
 import { Container } from "./ui/container"
 import { NavIcon } from "./ui/navicon"
-import { faMoneyBillTrendUp } from "@fortawesome/free-solid-svg-icons"
+import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons"
 import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal"
 import supabase from "@/app/lib/supabaseClient"
 import { formatCurrency } from "@/app/lib/formatcurrency"
+
+function isNegative(num:number){
+  return num < 0;
+}
 
 export function Overview() {
   const [income, setIncome] = useState(0)
@@ -61,12 +65,12 @@ export function Overview() {
     <Container sizeClass="w-full h-40">
       <div className="flex flex-col mb-3">
         <h3>Saldo</h3>
-        <div className="font-bold text-4xl text-green-500">{loading ? "..." : formatCurrency(sum) + " kr"}</div>
+        <div className={`font-bold text-4xl  ${isNegative(sum) ? "text-red-500" : "text-green-500"}`}>{loading ? "..." : formatCurrency(sum) + " kr"}</div>
       </div>
       <div className="flex flex-row justify-around">
         <div className="flex flex-row items-center text-center gap-2">
           <div className="flex justify-center items-center min-w-fit">
-            <NavIcon icon={faMoneyBillTrendUp} label="Utgifter" color="text-red-700" bgcolor="bg-white" />
+            <NavIcon icon={faArrowDown} label="Utgifter" color="text-red-700" bgcolor="bg-white" />
           </div>
           <div className="flex flex-col text-left">
             <p className="text-sm text-muted-foreground">Utgifter</p>
@@ -75,7 +79,7 @@ export function Overview() {
         </div>
         <div className="flex flex-row items-center text-center gap-2">
           <div className="flex justify-center items-center min-w-fit">
-            <NavIcon icon={faMoneyBillTrendUp} label="Inkomst" color="text-lime-600" bgcolor="bg-white" />
+            <NavIcon icon={faArrowUp} label="Inkomst" color="text-lime-600" bgcolor="bg-white" />
           </div>
           <div className="flex flex-col text-left">
             <p className="text-sm text-muted-foreground">Inkomst</p>

@@ -14,8 +14,10 @@ export async function getIncomeExpenseTotal(userId: string, date: Date) {
     .from("transactions")
     .select("*")
     .eq("user_id", userId)
-    .gte("date", firstDayOfMonth)
-    .lt("date", firstDayNextMonth)
+    .or(
+      `and(date.gte.${firstDayOfMonth},date.lt.${firstDayNextMonth}),recurring.eq.true`
+    );
+
 
   if (error) {
     console.error("Fel vid hämtning:", error.message)

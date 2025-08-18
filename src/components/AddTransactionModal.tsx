@@ -5,8 +5,11 @@ import { ComboBox } from "./ui/combobox"
 import { X } from "lucide-react"
 import { addTransaction } from "@/app/lib/transactions"
 import { ScanReceipt } from "./ScanReceipt"
+import { Label } from "@radix-ui/react-label"
+import { useRouter } from "next/navigation";
 
 export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void; onSuccess: (type: "good" | "bad") => void;}) {
+  const router = useRouter();
   const [type, setType] = useState<"inkomst" | "utgift">("inkomst")
   const [category, setCategory] = useState("")
   const [amount, setAmount] = useState("")
@@ -27,6 +30,7 @@ export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void
     { value: "bidrag", label: "Bidrag" },
     { value: "bonus", label: "Bonus" },
     { value: "investeringar", label: "Investeringar" },
+    { value: "annat", label:"Annat"},
   ]
 
   const expenseOptions = [
@@ -54,7 +58,7 @@ export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void
     setLoading(true)
 
     try {
-        await addTransaction({
+       let error = await addTransaction({
         type,
         category,
         description,
@@ -62,8 +66,14 @@ export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void
         date,
         recurring
       })
-      onClose()
-      onSuccess("good")
+
+      if (error === false){
+        alert("En transaktion med samma beskrivning är redan sparad.")
+      } else {
+        onSuccess("good");
+        router.refresh();
+        onClose();
+      }
     } finally {
       setLoading(false)
     }
@@ -131,7 +141,7 @@ export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void
             </div>
 
             <div>
-              <label className="block mb-1 font-medium">Beskrivning</label>
+              <label className="block mb-1 font-medium">{recurring ? ("Beskrivning*") : ("Beskrivning")}</label>
               <input
                 type="text"
                 value={description}

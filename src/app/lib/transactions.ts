@@ -17,12 +17,36 @@ export async function addTransaction(transaction: {
     throw new Error("Ingen användare inloggad")
   }
 
-  const { error } = await supabase.from("transactions").insert([
-    {
-      ...transaction,
-      user_id: user.id,
-    },
-  ])
+  if (transaction.recurring === true) {
+    const { data, error } = await supabase
+      .from("transactions")
+      .select("*")
+      .eq("recurring", true)
+      .eq("description", transaction.description)
+      .eq("user_id", user.id);
 
-  if (error) throw new Error("Fel vid insättning: " + error.message)
+    if (error) {
+      console.error("Fel vid fetch:", error);
+    } else if (data.length > 0) {
+      return false
+    } else {
+      const { error: insertError } = await supabase.from("transactions").insert([
+      {
+        ...transaction,
+        user_id: user.id,
+      },
+    ])
+
+      if (insertError) console.error("Fel vid insert:", insertError);
+    }
+  } else {
+    const { error } = await supabase.from("transactions").insert([
+      {
+        ...transaction,
+        user_id: user.id,
+      },
+    ])
+
+    if (error) throw new Error("Fel vid insättning: " + error.message)
+  }
 }
