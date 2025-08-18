@@ -5,7 +5,6 @@ import { ComboBox } from "./ui/combobox"
 import { X } from "lucide-react"
 import { addTransaction } from "@/app/lib/transactions"
 import { ScanReceipt } from "./ScanReceipt"
-import { Label } from "@radix-ui/react-label"
 import { useRouter } from "next/navigation";
 
 export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void; onSuccess: (type: "good" | "bad") => void;}) {
@@ -58,7 +57,7 @@ export function AddTransactionModal({ onClose, onSuccess}: { onClose: () => void
     setLoading(true)
 
     try {
-       let error = await addTransaction({
+       const error = await addTransaction({
         type,
         category,
         description,

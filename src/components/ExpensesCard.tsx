@@ -22,6 +22,16 @@ type BudgetData = {
   ovrigt: number;
 };
 
+type Transaction = {
+  id: string;
+  user_id: string;
+  category?: string | null;
+  amount?: number | null;
+  date: string;
+  recurring: boolean;
+  description: string;
+};
+
 
 function calculatePercentage(totsum: number, expense: number): number {
   if (totsum <= 0) return 0;
@@ -56,7 +66,7 @@ export function ExpensesCard() {
       const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
       const firstDayNextMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString().split("T")[0];
 
-      const { data: expensesData = [], error: expensesError } = await supabase
+      const { data: expensesDataRaw, error: expensesError } = await supabase
       .from("transactions")
       .select("*")
       .eq("user_id", user.id)
@@ -64,6 +74,8 @@ export function ExpensesCard() {
         `and(date.gte.${firstDayOfMonth},date.lt.${firstDayNextMonth}),recurring.eq.true`
       );
 
+      const expensesData: Transaction[] = expensesDataRaw ?? [];
+      
       const summed = expensesData.reduce((acc: Record<string, number>, item) => {
         const cat = item.category ?? "Övrigt";
         const amount = item.amount ?? 0;
