@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import supabase from "@/app/lib/supabaseClient";
 import { Button } from "./ui/button";
@@ -10,29 +11,31 @@ export default function ConnectButton() {
     const fetchUser = async () => {
       const {
         data: { user },
+        error,
       } = await supabase.auth.getUser();
 
-      if (user) setUserId(user.id);
+      if (error || !user) {
+        console.error("Ingen användare inloggad");
+        return;
+      }
+
+      setUserId(user.id);
     };
+
     fetchUser();
   }, []);
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = () => {
     if (!userId) return;
 
-    const res = await fetch(`/api/calendar?userId=${userId}`);
-    const data = await res.json();
-
-    if (!data.url) return;
-
-    const icsUrl = encodeURIComponent(`${window.location.origin}${data.url}`);
-    const url = `https://calendar.google.com/calendar/u/0/r?cid=${icsUrl}`;
-    window.open(url, "_blank");
+    // Ladda ner ICS direkt
+    const icsUrl = `https://next-budget-app-theta.vercel.app/api/calendar?userId=${userId}`;
+    window.open(icsUrl, "_blank");
   };
 
   return (
     <Button className="bg-secondary font-bold" onClick={handleSubscribe}>
-      Synka med Google Kalender
+      Ladda ner & Lägg till i Kalender
     </Button>
   );
 }
