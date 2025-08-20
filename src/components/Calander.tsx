@@ -2,7 +2,6 @@ import { Container } from "./ui/container"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react";
-import { Key } from "lucide-react";
 
 const months: { [key: number]: string } = {
   1: "Januari",

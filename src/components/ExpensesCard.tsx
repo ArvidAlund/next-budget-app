@@ -7,7 +7,6 @@ import {
 import { useEffect, useState } from "react";
 import { getbudget } from "@/app/lib/getbudget";
 import supabase from "@/app/lib/supabaseClient";
-import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 
 type BudgetData = {
   boende: number;
