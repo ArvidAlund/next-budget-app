@@ -6,17 +6,17 @@ export async function getIncomeExpenseTotal(userId: string, date: Date) {
     .toISOString()
     .split("T")[0] // t.ex. "2025-07-01"
 
-  const firstDayNextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1)
+  const currentday = new Date()
     .toISOString()
-    .split("T")[0] // t.ex. "2025-08-01"
+    .split("T")[0]
 
   const { data, error } = await supabase
     .from("transactions")
     .select("*")
     .eq("user_id", userId)
     .or(
-      `and(date.gte.${firstDayOfMonth},date.lt.${firstDayNextMonth}),recurring.eq.true`
-    );
+        `and(date.gte.${firstDayOfMonth},date.lte.${currentday}),and(recurring.eq.true,date.lte.${currentday})`
+      );
 
 
   if (error) {

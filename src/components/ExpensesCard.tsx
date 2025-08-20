@@ -63,15 +63,16 @@ export function ExpensesCard() {
       setBudgetData(data ?? null);
 
       const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
-      const firstDayNextMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString().split("T")[0];
+      const currentday = new Date().toISOString().split("T")[0];
 
       const { data: expensesDataRaw, error: expensesError } = await supabase
       .from("transactions")
       .select("*")
       .eq("user_id", user.id)
       .or(
-        `and(date.gte.${firstDayOfMonth},date.lt.${firstDayNextMonth}),recurring.eq.true`
+        `and(date.gte.${firstDayOfMonth},date.lte.${currentday}),and(recurring.eq.true,date.lte.${currentday})`
       );
+
 
       const expensesData: Transaction[] = expensesDataRaw ?? [];
       
