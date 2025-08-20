@@ -50,8 +50,8 @@ export async function GET(req: NextRequest) {
         0,
       ] as [number, number, number, number, number],
       duration: { hours: 1 },
-      title: tx.category || "Transaktion",
-      description: tx.description || `Belopp: ${tx.amount}`,
+      title: tx.description || "Transaktion",
+      description: `Belopp: ${tx.amount}` || `${tx.category}`,
       recurrenceRule: `FREQ=MONTHLY;UNTIL=${untilDate
         .toISOString()
         .replace(/[-:]/g, "")
