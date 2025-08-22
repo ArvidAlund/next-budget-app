@@ -96,7 +96,7 @@ export function ExpensesCard() {
       {/* Header med titel och länk */}
       <div className="flex w-full justify-between">
         <p>Utgifter</p>
-        <a href="" className="text-blue-700">Visa alla</a>
+        <a href="/transactions" className="text-blue-700">Visa alla</a>
       </div>
       <hr className="bg-primary w-full mt-2 mb-2" />
 
