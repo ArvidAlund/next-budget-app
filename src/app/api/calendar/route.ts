@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
   const events: EventAttributes[] = transactions.map((tx) => {
     const startDate = new Date(tx.date);
     const untilDate = new Date(startDate);
-    untilDate.setMonth(untilDate.getMonth() + 3);
+    untilDate.setMonth(untilDate.getMonth() + 4);
 
     return {
       start: [

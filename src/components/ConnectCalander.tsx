@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 
 export default function ConnectButton() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [copiedURL, setCopyURL] = useState(false)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,12 +31,27 @@ export default function ConnectButton() {
 
     // Ladda ner ICS direkt
     const icsUrl = `https://next-budget-app-theta.vercel.app/api/calendar?userId=${userId}`;
-    window.open(icsUrl, "_blank");
+    navigator.clipboard.writeText(icsUrl).then(() => {
+      setCopyURL(true);
+      setTimeout(()=>{
+        setCopyURL(false)
+      },3000)
+    })
+    
   };
 
   return (
-    <Button className="bg-secondary font-bold" onClick={handleSubscribe}>
-      Ladda ner & Lägg till i Kalender
+    <Button className="bg-secondary font-bold w-60 relative" onClick={handleSubscribe}>
+      <span className={`block transition-opacity duration-500 absolute ${
+          copiedURL ? "opacity-0" : "opacity-100"
+        }`}>
+          Kopiera kalenderlänk
+        </span>
+        <span className={`block transition-opacity duration-500 absolute ${
+          copiedURL ? "opacity-100" : "opacity-0"
+        }`}>
+          Länk kopierad ✅
+        </span>
     </Button>
   );
 }

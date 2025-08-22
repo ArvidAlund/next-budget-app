@@ -133,7 +133,7 @@ export function Calander() {
                     key={index}
                     onClick={() => {handleDayClick(day)}}
                     className={`aspect-square flex items-center justify-center rounded-xl ${
-                        isToday ? "bg-accent font-extrabold" : ""}
+                        isToday ? "!bg-accent font-extrabold" : ""}
                         ${isSelected ? "bg-secondary-100 text-primary font-bold" : ""}
                         `}
                     >
