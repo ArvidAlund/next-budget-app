@@ -6,7 +6,7 @@ import { formatCurrency } from "@/app/lib/formatcurrency"
  * @param text Text som ska trunkeras
  * @returns Trunkerad text med "..." om den är längre än 20 tecken
  */
-function truncate(text: string): string {
+export function truncate(text: string): string {
   return text.length > 20
     ? text.slice(0, 20).trim() + "..."
     : text
