@@ -6,21 +6,31 @@ import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal"
 import supabase from "@/app/lib/supabaseClient"
 import { formatCurrency } from "@/app/lib/formatcurrency"
 
-function isNegative(num:number){
+/**
+ * Hjälpfunktion för att kolla om ett tal är negativt
+ */
+function isNegative(num: number) {
   return num < 0;
 }
 
+/**
+ * Overview
+ * ----------------
+ * Visar saldo, inkomster och utgifter för aktuell användare.
+ */
 export function Overview() {
-  const [income, setIncome] = useState(0)
-  const [expense, setExpense] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [income, setIncome] = useState(0)   // Total inkomst
+  const [expense, setExpense] = useState(0) // Total utgift
+  const [loading, setLoading] = useState(true) // Laddningsstatus
 
+  // Hämtar inkomster och utgifter när komponenten mountas
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true)
         const currentDate = new Date()
 
+        // Hämta aktuell användare via Supabase
         const {
           data: { user },
           error: authError,
@@ -38,6 +48,7 @@ export function Overview() {
           return
         }
 
+        // Hämta totala inkomster och utgifter
         const totals = await getIncomeExpenseTotal(user.id, currentDate)
 
         if (!totals) {
@@ -59,15 +70,23 @@ export function Overview() {
     fetchData()
   }, [])
 
+  // Beräkna saldo
   const sum = income - expense
 
   return (
     <Container sizeClass="w-full h-40">
+      {/* Saldo-sektion */}
       <div className="flex flex-col mb-3">
         <h3>Saldo</h3>
-        <div className={`font-bold text-4xl  ${isNegative(sum) ? "text-red-500" : "text-green-500"}`}>{loading ? "..." : formatCurrency(sum) + " kr"}</div>
+        <div className={`font-bold text-4xl  ${isNegative(sum) ? "text-red-500" : "text-green-500"}`}>
+          {loading ? "..." : formatCurrency(sum) + " kr"}
+        </div>
       </div>
+
+      {/* Inkomst / Utgift-sektion */}
       <div className="flex flex-row justify-around">
+
+        {/* Utgifter */}
         <div className="flex flex-row items-center text-center gap-2">
           <div className="flex justify-center items-center min-w-fit">
             <NavIcon icon={faArrowDown} label="Utgifter" color="text-red-700" bgcolor="bg-white" />
@@ -77,6 +96,8 @@ export function Overview() {
             <div className="text-xl font-semibold">{loading ? "..." : formatCurrency(expense) + " kr"}</div>
           </div>
         </div>
+
+        {/* Inkomst */}
         <div className="flex flex-row items-center text-center gap-2">
           <div className="flex justify-center items-center min-w-fit">
             <NavIcon icon={faArrowUp} label="Inkomst" color="text-lime-600" bgcolor="bg-white" />
@@ -86,6 +107,7 @@ export function Overview() {
             <div className="text-xl font-semibold">{loading ? "..." : formatCurrency(income) + " kr"}</div>
           </div>
         </div>
+
       </div>
     </Container>
   )

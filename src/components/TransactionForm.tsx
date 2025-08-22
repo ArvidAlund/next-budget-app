@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
-// Typ för en transaktion – så vi vet vilka fält den ska innehålla
+// Typdefinition för en transaktion – bestämmer vilka fält som ska finnas
 type Transaction = {
   title: string
   amount: number
@@ -11,14 +11,19 @@ type Transaction = {
   date: string
 }
 
-// Props till komponenten – vi skickar med en funktion som heter `onAdd`
+// Props för TransactionForm – vi kräver en funktion `onAdd` från föräldern
 type Props = {
   onAdd: (t: Transaction) => void
 }
 
-// Formulärkomponenten
+/**
+ * TransactionForm
+ * ----------------
+ * Ett formulär för att skapa nya transaktioner.
+ * Tar emot en callback `onAdd` som körs när formuläret skickas.
+ */
 export function TransactionForm({ onAdd }: Props) {
-  // State för att hålla koll på vad användaren har skrivit i formuläret
+  // Lokalt state som håller reda på vad användaren fyllt i
   const [form, setForm] = useState<Transaction>({
     title: "",
     amount: 0,
@@ -26,26 +31,33 @@ export function TransactionForm({ onAdd }: Props) {
     date: "",
   })
 
-  // När användaren skriver i ett inputfält
+  /**
+   * Hanterar förändringar i inputfält.
+   * Uppdaterar rätt property i `form` baserat på fältnamnet.
+   * Konverterar amount till Number för att undvika strängvärde.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    // Uppdaterar rätt fält i form-objektet
     setForm((prev) => ({
       ...prev,
       [name]: name === "amount" ? Number(value) : value,
     }))
   }
 
-  // När formuläret skickas (t.ex. när man trycker på "Lägg till")
+  /**
+   * Hanterar inskick av formuläret.
+   * Stoppar sidladdning, gör enkel validering och skickar vidare datan.
+   * Nollställer formuläret efteråt.
+   */
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault() // Hindrar att sidan laddas om
+    e.preventDefault()
 
-    // Enkel validering – kräver att några fält är ifyllda
+    // Enkel validering: titel, belopp och datum måste vara ifyllda
     if (!form.title || !form.amount || !form.date) return
 
-    onAdd(form) // Skickar datan till föräldern (App)
+    onAdd(form) // Skickar transaktionen till föräldern
 
-    // Töm formuläret efter inskick
+    // Nollställ formuläret för ny inmatning
     setForm({ title: "", amount: 0, category: "", date: "" })
   }
 

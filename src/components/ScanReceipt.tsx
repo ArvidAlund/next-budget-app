@@ -3,23 +3,36 @@ import { useEffect, useRef, useState } from "react"
 import { createWorker, type Worker } from "tesseract.js";
 import { AnalyzeOCR } from "@/app/lib/analyzeOCR";
 
+/**
+ * ScanReceipt
+ * ----------------
+ * En komponent för att ta foto av kvitto och analysera texten via OCR.
+ */
 export function ScanReceipt({ onClose }: { onClose: () => void }) {
+  // Referens till videoelementet
   const videoRef = useRef<HTMLVideoElement>(null)
+  // Referens till MediaStream så vi kan stoppa kameran
   const streamRef = useRef<MediaStream | null>(null)
+  // OCR worker
   const [worker, setWorker] = useState<Worker | null>(null);
+  // Om vi håller på att analysera bilden
   const [isProcessing, setIsProcessing] = useState(false)
+  // Om kameran är redo
   const [cameraReady, setCameraReady] = useState(false);
 
+  // Körs när komponenten mountas
   useEffect(() => {
+    // Initiera OCR worker
     const initWorker = async () => {
       try {
-        const newWorker = await createWorker("swe");
+        const newWorker = await createWorker("swe"); // Svenska språkdata
         setWorker(newWorker);
       } catch (e) {
         console.error("Fel vid initiering av OCR worker:", e);
       }
     };
 
+    // Starta kameran med bakre kameran ("environment")
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -48,6 +61,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
     initWorker()
     startCamera()
 
+    // Cleanup vid unmount
     return () => {
       stopCamera()
       if (worker) {
@@ -56,6 +70,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
     }
   }, [])
 
+  // Stoppar kameran
   const stopCamera = () => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop())
@@ -66,11 +81,13 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
     }
   }
 
+  // Stänger modalen
   const handleClose = () => {
     stopCamera()
     onClose()
   }
 
+  // Tar ett foto och kör OCR
   const takePhoto = async () => {
     if (!videoRef.current || !worker || isProcessing) return
 
@@ -88,8 +105,10 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
       return
     }
 
+    // Rita videobilden på canvas
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
+    // Funktion för att köra OCR på bilden
     const processImage = async (image: Blob | string) => {
       try {
         const {
@@ -107,6 +126,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
       }
     }
 
+    // Konvertera canvas till Blob och kör OCR
     canvas.toBlob((blob) => {
       if (blob) {
         processImage(blob)
@@ -120,6 +140,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 bg-black z-50 px-4">
+      {/* Video-container */}
       <div className="fixed top-0 left-0 aspect-[9/16] w-full h-full overflow-hidden shadow-lg">
         {!cameraReady && (
           <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
@@ -135,6 +156,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
         />
       </div>
 
+      {/* Stäng-knapp */}
       <button
         className="fixed top-5 right-5 px-4 py-2 !bg-white text-black rounded z-60"
         onClick={handleClose}
@@ -142,6 +164,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
         Stäng
       </button>
 
+      {/* Ta bild-knapp */}
       {!isProcessing && (
         <button
           className="fixed bottom-10 left-1/2 transform -translate-x-1/2 !bg-white w-15 aspect-square rounded-full border-4 !border-gray-300 !shadow-lg"
@@ -150,6 +173,7 @@ export function ScanReceipt({ onClose }: { onClose: () => void }) {
         />
       )}
 
+      {/* Loading-indikator */}
       {isProcessing && (
         <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 text-white font-semibold text-xl animate-pulse">
           Analyserar foto...
