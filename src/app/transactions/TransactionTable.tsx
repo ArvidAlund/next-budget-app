@@ -1,15 +1,6 @@
 "use client"
-
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
- 
 import {
   Table,
-  TableBody,
   TableCell,
   TableHead,
   TableRow,
@@ -17,7 +8,6 @@ import {
 
 import { GetTransactionsMonth } from "../lib/getTransactionsMonth"
 import { useEffect, useState } from "react"
-import { truncate } from "@/components/ExpensesBox"
 
 type Transaction = {
   id: string;
@@ -31,8 +21,8 @@ type Transaction = {
 export function TransactionTable(){
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-    const currdate = new Date()
-    const currmonth = currdate.getMonth()
+    // const currdate = new Date()
+    // const currmonth = currdate.getMonth()
 
     useEffect(() =>{
       const fetchData = async() =>{
@@ -54,14 +44,14 @@ export function TransactionTable(){
                 <TableHead className="text-secondary">Datum</TableHead>
             </TableRow>
             {transactions.map((t) => (
-              <TableRow>
+              <TableRow key={t.id}>
                 <TableCell className="text-secondary">{t.type}</TableCell>
                 <TableCell className="text-secondary">{t.amount}</TableCell>
                 <TableCell className="text-secondary">{t.description}</TableCell>
                 <TableCell className="text-secondary">{t.date}</TableCell>
               </TableRow>
-
             ))}
+
 
         </Table>
     )
