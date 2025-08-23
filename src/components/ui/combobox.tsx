@@ -49,7 +49,7 @@ export function ComboBox({
             variant="default"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between border-solid border-2 bg-white"
+            className="w-full justify-between border-solid border-2 bg-primary"
           >
             {value
               ? options.find((option) => option.value === value)?.label
@@ -57,9 +57,9 @@ export function ComboBox({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-85 p-0 bg-white text-black border border-black-200">
+        <PopoverContent className="w-85 p-0 bg-white text-black border border-black-200" onFocus={(e) => e.preventDefault()}>
           <Command className="">
-            <CommandInput placeholder="Sök..." className="h-9 text-black" />
+            <CommandInput placeholder="Sök..." className="h-9 text-black" autoFocus={false}/>
             <CommandList>
               <CommandEmpty>Inget hittades.</CommandEmpty>
               <CommandGroup>
