@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
-import { Container } from "./ui/container"
-import { NavIcon } from "./ui/navicon"
+import { Container } from "../ui/container"
+import { NavIcon } from "../ui/navicon"
 import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons"
 import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal"
 import supabase from "@/app/lib/supabaseClient"
 import { formatCurrency } from "@/app/lib/formatcurrency"
+import { BalanceEndMonth } from "@/app/lib/BalanceEndMonth"
 
 /**
  * Hjälpfunktion för att kolla om ett tal är negativt
@@ -65,6 +66,8 @@ export function Overview() {
       } finally {
         setLoading(false)
       }
+
+      await BalanceEndMonth()
     }
 
     fetchData()

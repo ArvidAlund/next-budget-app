@@ -1,39 +1,69 @@
 import supabase from "./supabaseClient"
 
+type Balance = {
+  user_id: string,
+  date: Date,
+  amount: number,
+  positive: boolean,
+  created_at: Date
+}
+
 export async function getIncomeExpenseTotal(userId: string, date: Date) {
-  // Skapa datumsträngar i format YYYY-MM-DD utan tid
-  const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
-    .toISOString()
-    .split("T")[0] // t.ex. "2025-07-01"
+  let currentMonth = date.getMonth() + 1;
+  let currentYear = date.getFullYear();
 
-  const currentday = new Date()
+  // Datum för första dagen i månaden
+  const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1)
     .toISOString()
-    .split("T")[0]
+    .split("T")[0];
+  const currentday = new Date().toISOString().split("T")[0];
 
-  const { data, error } = await supabase
+  // Hämta transaktioner
+  const { data: transactions, error: txError } = await supabase
     .from("transactions")
     .select("*")
     .eq("user_id", userId)
     .or(
-        `and(date.gte.${firstDayOfMonth},date.lte.${currentday}),and(recurring.eq.true,date.lte.${currentday})`
-      );
+      `and(date.gte.${firstDayOfMonth},date.lte.${currentday}),and(recurring.is.true,date.lte.${currentday})`
+    );
 
-
-  if (error) {
-    console.error("Fel vid hämtning:", error.message)
-    return { income: 0, expense: 0 }
+  // Flytta till föregående månad
+  if (currentMonth === 1) {
+    currentMonth = 12;
+    currentYear -= 1;
+  } else {
+    currentMonth -= 1;
   }
 
-  let income = 0
-  let expense = 0
+  const firstDayPrevMonth = `${currentYear}-${String(currentMonth).padStart(2, '0')}-01`;
 
-  data.forEach((item) => {
-    if (item.type === "inkomst") {
-      income += item.amount
-    } else if (item.type === "utgift") {
-      expense += item.amount
-    }
-  })
+  // Hämta föregående månads balans
+  const { data: balances, error: balancesError } = await supabase
+    .from("end_of_month_balances")
+    .select("*")
+    .eq("user_id", userId)
+    .gte("date", firstDayPrevMonth);
 
-  return { income, expense }
+  if (txError || balancesError) {
+    console.error("Fel vid hämtning:", txError?.message || balancesError?.message);
+    return { income: 0, expense: 0 };
+  }
+
+  // Summera income och expense
+  let income = 0;
+  let expense = 0;
+
+  transactions?.forEach((item) => {
+    if (item.type === "inkomst") income += item.amount;
+    else if (item.type === "utgift") expense += item.amount;
+  });
+
+  // Lägg till föregående månads balans
+  if (balances && balances.length > 0) {
+    const prev = balances[0]; // första raden
+    if (prev.positive) income += prev.amount;
+    else expense -= prev.amount;
+  }
+
+  return { income, expense };
 }

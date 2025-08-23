@@ -1,9 +1,9 @@
 "use client"
 
 import { Navbar } from "@/components/Navbar"
-import  {Calander} from "@/components/Calander"
-import { ExpensesBox } from "@/components/ExpensesBox"
-import ConnectButton from "@/components/ConnectCalander"
+import  {Calander} from "@/components/Calendar/Calender"
+import { ExpensesBox } from "@/components/visibleData/ExpensesBox"
+import ConnectButton from "@/components/Calendar/ConnectCalander"
 
 export default function KalenderPage() {
     return (

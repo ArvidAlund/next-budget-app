@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import supabase from "@/app/lib/supabaseClient";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 /**
  * ConnectButton
@@ -49,7 +49,7 @@ export default function ConnectButton() {
     >
       {/* Originaltext */}
       <span
-        className={`block transition-opacity duration-500 absolute ${
+        className={`block transition-opacity duration-500 absolute text-primary ${
           copiedURL ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -58,7 +58,7 @@ export default function ConnectButton() {
 
       {/* Feedbacktext */}
       <span
-        className={`block transition-opacity duration-500 absolute ${
+        className={`block transition-opacity duration-500 absolute text-primary ${
           copiedURL ? "opacity-100" : "opacity-0"
         }`}
       >

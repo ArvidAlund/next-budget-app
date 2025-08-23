@@ -1,4 +1,4 @@
-import { Container } from "./ui/container"
+import { Container } from "../ui/container"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react"
@@ -111,7 +111,7 @@ export function Calander() {
                     key={index}
                     onClick={() => handleDayClick(day)}
                     className={`aspect-square flex items-center justify-center rounded-xl ${
-                      isToday ? "!bg-accent font-extrabold" : ""
+                      isToday ? "!bg-accent font-extrabold text-primary" : ""
                     } ${isSelected ? "bg-secondary-100 text-primary font-bold" : ""}`}
                   >
                     {day}

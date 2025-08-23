@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Container } from "./ui/container";
-import { ExpensesCategory } from "./ui/ExpensesCategory";
+import { Container } from "../ui/container";
+import { ExpensesCategory } from "../ui/ExpensesCategory";
 import {
   faHouse, faBowlFood, faCarSide, faCartShopping, faBriefcase,
   faDumbbell, faGamepad, faGlobe, faMoneyBills, faCircleQuestion

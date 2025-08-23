@@ -1,4 +1,4 @@
-import { Container } from "./ui/container"
+import { Container } from "../ui/container"
 import { formatCurrency } from "@/app/lib/formatcurrency"
 
 /**

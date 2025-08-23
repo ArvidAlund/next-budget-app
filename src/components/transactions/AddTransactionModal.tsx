@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ComboBox } from "./ui/combobox"
+import { ComboBox } from "../ui/combobox"
 import { X } from "lucide-react"
 import { addTransaction } from "@/app/lib/transactions"
 import { ScanReceipt } from "./ScanReceipt"
