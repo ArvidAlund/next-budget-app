@@ -10,7 +10,7 @@ export function Container({
   children
 }: ContainerProps) {
   return (
-    <div className={`rounded-xl  ${sizeClass} ${colorClass} p-4 text-secondary border-solid border-r border-b border-secondary-100 border-t border-b-primary-50 border-l border-r-primary-50`}>
+    <div className={`rounded-xl  ${sizeClass} ${colorClass} p-4 text-secondary border-solid border-r border-b border-secondary-500 border-t border-b-secondary-50 border-l border-r-secondary-50 shadow-sm shadow-secondary-100`}>
       {children}
     </div>
   )
