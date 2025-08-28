@@ -1,13 +1,5 @@
 import supabase from "./supabaseClient"
 
-type Balance = {
-  user_id: string,
-  date: Date,
-  amount: number,
-  positive: boolean,
-  created_at: Date
-}
-
 export async function getIncomeExpenseTotal(userId: string, date: Date) {
   let currentMonth = date.getMonth() + 1;
   let currentYear = date.getFullYear();

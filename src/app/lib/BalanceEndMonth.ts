@@ -22,6 +22,8 @@ export async function BalanceEndMonth(){
         .eq("date", currday)
         .maybeSingle(); // returnerar null om ingen rad finns
 
+        if (rowExistError) return
+
         if (!rowExist) {
             const {income, expense} = await getIncomeExpenseTotal(id, date)
 
@@ -29,7 +31,7 @@ export async function BalanceEndMonth(){
 
             const isPositive =totsum > 0
 
-            const { data, error } = await supabase.from("end_of_month_balances")
+            const { error } = await supabase.from("end_of_month_balances")
             .insert([
                 {
                     user_id: id,
