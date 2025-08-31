@@ -52,9 +52,11 @@ export async function getIncomeExpenseTotal(userId: string, date: Date) {
 
   // Lägg till föregående månads balans
   if (balances && balances.length > 0) {
-    const prev = balances[0]; // första raden
-    if (prev.positive) income += prev.amount;
-    else expense -= prev.amount;
+    if (balances[0].date != currentday){
+      const prev = balances[0]; // första raden
+      if (prev.positive) income += prev.amount;
+      else expense -= prev.amount;
+    }
   }
 
   return { income, expense };
