@@ -23,6 +23,8 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [openTransactions, setOpenTransactions] = useState<Record<string, boolean>>({});
     const [closing, setClosing ] = useState(false);
+    const [loading, setLoading ] = useState(true);
+    const isVisible = !loading && !closing;
 
     const expenseOptions = [
         { value: "boende", label: "Boende" },
@@ -66,6 +68,8 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
 
             if (!error && data) {
                 setTransactions(data);
+
+                setLoading(false)
             }
 
         }
@@ -87,7 +91,7 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
     return(
         <section className="fixed top-0 left-0 w-full h-full z-10 flex justify-center backdrop-blur-sm">
             <div className={`fixed w-90 h-fit bg-primary-900 text-secondary top-10 rounded-md text-center overflow-hidden bg-opacity-50
-        transition-opacity duration-300 ${closing ? "opacity-0" : "opacity-100"}`}>
+        transition-all duration-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
                 <nav className="bg-accent text-primary w-full relative flex h-10 justify-center align-middle items-center">
                     <h1 className="text-2xl font-bold">{category}</h1>
                     <button className="absolute top-1/2 right-2 transform -translate-y-1/2" onClick={handleClose}><FontAwesomeIcon icon={faX}/></button>
@@ -110,7 +114,7 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
 
                     {/* Extra info under raden */}
                     {openTransactions[transaction.id] && (
-                    <div className="mt-2 pl-12 flex flex-row gap-1 justify-between">
+                    <div className={`mt-2 pl-12 flex flex-row gap-1 justify-between`}>
                         <p>{transaction.date}</p>
                         <p>Återkommande: {transaction.recurring ? "Ja" : "Nej"}</p>
                     </div>
