@@ -8,8 +8,8 @@ export async function GetTransactionsMonth(){
     
       if (!user) return { data: [], error: authError ?? null };
 
-      const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
-      const currentday = new Date().toISOString().split("T")[0];
+      const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString("sv-SE");
+      const currentday = new Date().toLocaleDateString("sv-SE");
 
     const { data, error } = await supabase
       .from("transactions")

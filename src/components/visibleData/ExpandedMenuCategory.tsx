@@ -64,8 +64,6 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
 
             if (error) return
 
-            console.log(data)
-
             if (!error && data) {
                 setTransactions(data);
             }

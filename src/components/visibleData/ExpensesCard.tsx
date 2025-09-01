@@ -45,6 +45,8 @@ export function ExpensesCard() {
 
   useEffect(() => {
     const fetchData = async () => {
+      const date = new Date();
+
       // Hämta inloggad användare
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if (authError || !user) {
@@ -67,7 +69,7 @@ export function ExpensesCard() {
         return;
       }
 
-      const expensesData: Transaction[] = expensesDataRaw ?? [];
+      const expensesData: Transaction[] = expensesDataRaw?.filter(item => parseInt(item.date.split("-")[2], 10) <= date.getDate()) ?? [];
 
       // Summera utgifter per kategori
       const summed = expensesData.reduce((acc: Record<string, number>, item) => {

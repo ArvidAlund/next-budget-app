@@ -6,9 +6,8 @@ export async function getIncomeExpenseTotal(userId: string, date: Date) {
 
   // Datum för första dagen i månaden
   const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1)
-    .toISOString()
-    .split("T")[0];
-  const currentday = new Date().toISOString().split("T")[0];
+    .toLocaleDateString("sv-SE");
+  const currentday = new Date().toLocaleDateString("sv-SE");
 
   // Hämta transaktioner
   const { data: transactions, error: txError } = await supabase
@@ -46,9 +45,12 @@ export async function getIncomeExpenseTotal(userId: string, date: Date) {
   let expense = 0;
 
   transactions?.forEach((item) => {
+    if (parseInt(item.date.split("-")[2], 10) > date.getDate()) return;
+    
     if (item.type === "inkomst") income += item.amount;
     else if (item.type === "utgift") expense += item.amount;
-  });
+    
+    });
 
   // Lägg till föregående månads balans
   if (balances && balances.length > 0) {
