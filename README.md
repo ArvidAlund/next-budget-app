@@ -61,9 +61,11 @@ npm run dev
 Appen körs på http://localhost:3000
 
 ## Projektstruktur
+```bash
 src/
  ├── app/              # Next.js app directory
  ├── components/       # UI-komponenter
  ├── lib/              # Hjälpfunktioner (t.ex. db, auth)
  ├── styles/           # CSS / Tailwind
 public/                # Statisk media
+```
