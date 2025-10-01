@@ -6,29 +6,41 @@ function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
 
-function changeMonth(year: number, month: number, minus: number): string {
-    // Justera månaden och året manuellt
-    let newMonth = month - minus; // 1-baserad
-    let newYear = year;
-
-    while (newMonth <= 0) {
-        newMonth += 12;
-        newYear -= 1;
-    }
-
-    // JavaScript Date använder 0-baserad månad
-    const lastDay = new Date(newYear, newMonth, 0); // dag 0 = sista dagen i föregående månad
-    return lastDay.toLocaleDateString("sv-SE");
+// Returnerar föregående månad 
+function changeMonth(year: number, month: number, minus: number): [number, number] {
+  let totalMonths = (year * 12 + (month - 1)) - minus;
+  let newYear = Math.floor(totalMonths / 12);
+  let newMonth = (totalMonths % 12) + 1;
+  return [newYear, newMonth];
 }
+
+// Formaterar datumet korrekt
+function formatDate(year: number, month: number, day: number): string {
+  return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+}
+
 
 export async function BalanceEndMonth(){
     const date = new Date()
-    const currday = date.toISOString().split("T")[0];
-    const numdays = getDaysInMonth(date.getFullYear(), (date.getMonth() - 1))
     const id = await supabaseUserID();
-    const firstDayPrevMonth = changeMonth(date.getFullYear(), date.getMonth(), 1);
-    const lastDayPrevMonth = new Date(date.getFullYear(), (date.getMonth() - 1), numdays).toLocaleDateString("sv-SE");
-    const lastDayTwoMonthsAgo = changeMonth(date.getFullYear(), date.getMonth(), 2);
+
+    // Dagens datum
+    const currday = date.toLocaleDateString("sv-SE").split("T")[0];
+    const [year, month, day] = currday.split("-").map(Number);
+
+    // Förra månadens år, månad och dagar
+    const [Year, lastMonth] = changeMonth(year, month, 1);
+    const numdays = getDaysInMonth(Year, lastMonth);
+
+    // Första och sista dagen i förra månaden
+    const lastDayPrevMonth = formatDate(Year, lastMonth, numdays);
+    const firstDayPrevMonth = formatDate(Year, lastMonth, 1);
+
+    // 2 månader sedan
+    const [twoMAGYear, twoMAGMonth] = changeMonth(year, month, 2);
+    const lastDayTwoMonthsAgo = formatDate(twoMAGYear, twoMAGMonth, getDaysInMonth(twoMAGYear, twoMAGMonth));
+
+
 
     if (date.getDate() === 1){
 
@@ -53,6 +65,7 @@ export async function BalanceEndMonth(){
                 `and(date.gte.${firstDayPrevMonth},date.lte.${lastDayPrevMonth}),and(recurring.eq.true,date.lte.${lastDayPrevMonth})`
             );
 
+
             const { data: balances, error: balancesError } = await supabase
             .from("end_of_month_balances")
             .select("*")
@@ -72,11 +85,9 @@ export async function BalanceEndMonth(){
             });
 
             if (balances && balances.length > 0) {
-                if (balances[0].date == lastDayPrevMonth){
                 const prev = balances[0]; // första raden
                 if (prev.positive) income += prev.amount;
                 else expense -= prev.amount;
-                }
             }
 
             let totsum = income - expense;
@@ -104,9 +115,9 @@ export async function BalanceEndMonth(){
 
             if (error){
                 console.warn("Supabase insert error: ", error.message)
+            } else {
+                window.location.reload();
             }
-
-            window.location.reload();
         }
     }
 }
