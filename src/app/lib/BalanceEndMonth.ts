@@ -8,9 +8,9 @@ function getDaysInMonth(year: number, month: number): number {
 
 // Returnerar föregående månad 
 function changeMonth(year: number, month: number, minus: number): [number, number] {
-  let totalMonths = (year * 12 + (month - 1)) - minus;
-  let newYear = Math.floor(totalMonths / 12);
-  let newMonth = (totalMonths % 12) + 1;
+  const totalMonths = (year * 12 + (month - 1)) - minus;
+  const newYear = Math.floor(totalMonths / 12);
+  const newMonth = (totalMonths % 12) + 1;
   return [newYear, newMonth];
 }
 
