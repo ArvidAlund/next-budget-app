@@ -131,7 +131,7 @@ export function ExpensesBox() {
               <p>{truncate(item.description)}</p>
 
               {/* Belopp */}
-              <div className="text-red-500">- {formatCurrency(item.amount)} KR</div>
+              <div className={`${item.type === "utgift" ? "text-red-500": "text-green-500"}`}>{item.type === "utgift" ? "-" : null} {formatCurrency(item.amount)} KR</div>
             </div>
           
         ))}
