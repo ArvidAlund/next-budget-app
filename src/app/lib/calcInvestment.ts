@@ -3,7 +3,9 @@ import supabase, { supabaseUserID } from "./supabaseClient";
 
 export default async function calcInvestment(): Promise<number> {
     const date = new Date();
-    if (date.getDate() !== 25) return 0
+    if (date.getDate() < 25) return 0
+    const dateMinus:number = date.getDate() - 25;
+    date.setDate(date.getDate() - dateMinus);
 
     const user = await supabaseUserID();
 
