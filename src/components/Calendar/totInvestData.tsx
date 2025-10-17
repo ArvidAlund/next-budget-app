@@ -3,7 +3,7 @@ import calcInvestment from "@/app/lib/calcInvestment";
 import { Container } from "../ui/container";
 
 export default function TotInvestData(){
-    const [investmentAmount, setInvestmentAmount] = useState<Number>();
+    const [investmentAmount, setInvestmentAmount] = useState<number>();
 
     useEffect(()=>{
         const getInvestmentAmount = async ()=>{
