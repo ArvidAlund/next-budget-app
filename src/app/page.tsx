@@ -13,7 +13,7 @@ import { LoginModal } from "@/components/LoginForm"
 import { AlertboxContainer } from "@/components/AlertboxContainer"
 import type { Session } from '@supabase/supabase-js'
 import { useWindowWidth } from "@/components/useWindowWidth"
-
+import calcInvestment from "./lib/calcInvestment"
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -35,6 +35,8 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
+
+    calcInvestment();
 
     return () => {
       listener.subscription.unsubscribe()

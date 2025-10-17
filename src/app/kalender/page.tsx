@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar"
 import  {Calander} from "@/components/Calendar/Calender"
 import { ExpensesBox } from "@/components/visibleData/ExpensesBox"
 import ConnectButton from "@/components/Calendar/ConnectCalander"
+import TotInvestData from "@/components/Calendar/totInvestData"
 
 export default function KalenderPage() {
     return (
@@ -12,6 +13,7 @@ export default function KalenderPage() {
             {/* <Calander/> */}
             <ConnectButton/>
             <ExpensesBox/>
+            <TotInvestData/>
         </div>
     );
 }
