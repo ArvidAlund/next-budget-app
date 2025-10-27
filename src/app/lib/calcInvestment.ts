@@ -4,7 +4,7 @@ import supabase, { supabaseUserID } from "./supabaseClient";
 export default async function calcInvestment(): Promise<number> {
     const date = new Date();
     if (date.getDate() < 25) return 0
-    const dateMinus:number = date.getDate() - 25;
+    const dateMinus:number = date.getDate() - 24;
     date.setDate(date.getDate() - dateMinus);
 
     const user = await supabaseUserID();
@@ -28,8 +28,6 @@ export default async function calcInvestment(): Promise<number> {
     }
 
     const totinvest: number = (Number(income) - Number(expense)) - incomeTodayTotal;
-
-    console.log("investera: ", Math.round(totinvest), "Kr")
 
     return Math.round(totinvest)
 }
