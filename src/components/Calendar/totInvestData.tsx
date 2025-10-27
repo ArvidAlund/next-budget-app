@@ -21,7 +21,7 @@ export default function TotInvestData(){
             const user = await supabaseUserID();
 
             const { data, error } = await supabase
-                .from('transaction')
+                .from('transactions')
                 .select('*')
                 .eq('type', 'utgift')
                 .eq('description', 'Avanza')
