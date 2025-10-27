@@ -14,15 +14,18 @@ export default function TotInvestData(){
             if (result === 0) return console.error("Något gick fel försök igen senare");
             setInvestmentAmount(result);
 
-            getAvanzaInvestment(result);
+            await getAvanzaInvestment(result);
         }
 
         const getAvanzaInvestment = async (amount: number) => {
+            const user = await supabaseUserID();
+
             const { data, error } = await supabase
                 .from('transaction')
                 .select('*')
                 .eq('type', 'utgift')
                 .eq('description', 'Avanza')
+                .eq("user_id", user)
                 .eq('amount', amount)
                 .eq('category', 'sparande');
 
@@ -40,7 +43,7 @@ export default function TotInvestData(){
 
     return (investmentAmount ?<Container sizeClass="w-full h-fit flex flex-col" colorClass={hasInvested ? "bg-green-500" : "bg-red-500"}>
         <div className="text-black text-center font-bold">
-            <h1>Att invstera denna månad</h1>
+            <h1>{hasInvested ? "Du har redan investerat månadens överskott": "Månadens rekommenderade investering"}</h1>
             <h3>{investmentAmount ? `${formatCurrency(investmentAmount)} kr`:"Laddar..."}</h3>
         </div>
     </Container> :
