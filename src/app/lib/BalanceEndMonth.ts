@@ -41,9 +41,6 @@ export async function BalanceEndMonth(){
     const lastDayTwoMonthsAgo = formatDate(twoMAGYear, twoMAGMonth, getDaysInMonth(twoMAGYear, twoMAGMonth));
 
 
-
-    if (date.getDate() === 1){
-
         const { data:rowExist, error:rowExistError } = await supabase
         .from("end_of_month_balances")
         .select("*")
@@ -119,5 +116,4 @@ export async function BalanceEndMonth(){
                 window.location.reload();
             }
         }
-    }
 }
