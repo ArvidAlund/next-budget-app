@@ -49,6 +49,7 @@ export function AddExpenseBtn({ onClick }: AddExpenseBtnProps) {
         cursor-pointer               /* Visa hand-pekare vid hover */
         transition-opacity duration-500 ease-in-out /* Smooth fade-in/out */
         ${visible ? "opacity-100" : "opacity-0 pointer-events-none"} /* Dölj eller visa knapp */
+        z-110
       `}
       role="button" 
       aria-label="Lägg till ny kostnad eller inkomst"
