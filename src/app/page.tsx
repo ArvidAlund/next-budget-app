@@ -58,7 +58,6 @@ function App() {
 
   return (
     <div className="min-h-screen w-full bg-primary flex flex-col items-center gap-6 overflow-x-hidden p-4">
-      <Navbar />
       {width < 1024 ? <TopInfo textclr="text-white"/> : null}
       <Overview />
       <ExpensesCard />
