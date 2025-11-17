@@ -23,6 +23,11 @@ export const metadata: Metadata = {
   description: "Budget app to me",
 };
 
+/**
+ * Root layout for the application that sets global fonts and renders the navbar and page content.
+ *
+ * @returns The top-level HTML layout element containing a body with global font classes, the Navbar, and `children`.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
