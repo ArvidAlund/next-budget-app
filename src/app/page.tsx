@@ -15,6 +15,13 @@ import type { Session } from '@supabase/supabase-js'
 import { useWindowWidth } from "@/components/useWindowWidth"
 import calcInvestment from "./lib/calcInvestment"
 
+/**
+ * Root client React component that manages authentication, modal state, alerts, and renders the main overview and expenses UI.
+ *
+ * On mount it obtains the current Supabase session, subscribes to auth state changes, and triggers investment calculation. While loading it renders nothing; when unauthenticated it renders the login modal; when authenticated it renders the app layout including responsive top info, overview, expenses card, the add-transaction flow, and temporary alert messages.
+ *
+ * @returns The component's rendered UI: `null` while loading, `LoginModal` when there is no session, or the authenticated app layout (overview, expenses, add-transaction modal when opened, and alert container) when a session exists.
+ */
 function App() {
   const [modalOpen, setModalOpen] = useState(false)
   const [session, setSession] = useState<Session | null>(null)

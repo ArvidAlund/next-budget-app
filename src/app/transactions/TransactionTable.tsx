@@ -30,6 +30,17 @@ const sortList = [
   { label: "Pris: Lägst → Högst", value: "price_asc" },
 ]
 
+/**
+ * Render a searchable, filterable, and sortable list of the current month's transactions with animated entry.
+ *
+ * The component fetches the current month's transactions and maintains client-side state for text search,
+ * visibility toggles for income ("inkomst") and expense ("utgift"), and sorting (alphabetical or by amount).
+ * The rendered UI includes a search input, type filter buttons, a sort selector, and a list of transaction cards
+ * showing description, formatted amount (colored by type), and date. List items animate into view when the
+ * displayed set changes.
+ *
+ * @returns The JSX element for the transaction table UI.
+ */
 export function TransactionTable(){
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [inputValue, setInputvalue] = useState<string>("")

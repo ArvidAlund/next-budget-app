@@ -9,9 +9,12 @@ import { useWindowWidth } from "./useWindowWidth"
 import { AddExpenseBtn } from "./AddExpenseBtn"
 
 /**
- * Navbar
- * ----------------
- * Mobilnavigationsbar som döljer sig vid scroll ner och visas vid scroll upp.
+ * Mobile bottom navigation bar that hides when scrolling down and reappears when scrolling up.
+ *
+ * Renders a fixed, responsive bottom nav for small viewports with navigation icons (Home, Kalender).
+ * On wide viewports it includes a TopInfo section shown when window width is greater than 1024px.
+ *
+ * @returns A React element that renders the navbar component.
  */
 export function Navbar() {
   const [hidden, setHidden] = useState(false) // Om navbaren ska döljas

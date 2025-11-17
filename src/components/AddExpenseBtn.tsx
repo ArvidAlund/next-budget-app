@@ -11,13 +11,11 @@ type AddExpenseBtnProps = {
 }
 
 /**
- * AddExpenseBtn
- * 
- * En flytande knapp som visas längst ner till höger på sidan.
- * Knappen döljs automatiskt när användaren scrollar ner mer än 100px,
- * och visas igen när scrollpositionen är mindre än 100px.
- * 
- * Används för att lägga till en ny kostnad eller inkomst.
+ * Floating action button positioned at the bottom-right that shows or hides based on the page scroll.
+ *
+ * The button is hidden when the vertical scroll position is 100px or greater and shown when it is less than 100px. Clicking the button invokes the provided `onClick` callback.
+ *
+ * @returns The JSX element for the floating add-expense/add-income button
  */
 export function AddExpenseBtn({ onClick }: AddExpenseBtnProps) {
   // State som avgör om knappen ska vara synlig
