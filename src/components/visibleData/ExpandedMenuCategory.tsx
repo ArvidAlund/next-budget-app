@@ -35,7 +35,7 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
         { value: "halsa", label: "Hälsa & Välmående" },
         { value: "shopping", label: "Shopping & Kläder" },
         { value: "nojen", label: "Nöjen & Fritid" },
-        { value: "sparande", label: "Sparande & Investeringar" },
+        { value: "sparande", label: "Sparande" },
         { value: "ovrigt", label: "Övrigt" },
     ]
 
@@ -63,8 +63,10 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
             )
             .lte("date", currentday)
 
-
-            if (error) return
+            if (error) {
+                console.error("Error fetching transactions:", error);
+                return
+            }
 
             if (!error && data) {
                 setTransactions(data);
@@ -88,7 +90,7 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
         }, 300); // samma som duration i animation
     };
 
-    return(
+    if (!loading) return(
         <section className="fixed top-0 left-0 w-full h-full z-10 flex justify-center backdrop-blur-sm">
             <div className={`fixed w-90 h-fit bg-primary-900 text-secondary top-10 rounded-md text-center overflow-hidden bg-opacity-50
         transition-all duration-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>

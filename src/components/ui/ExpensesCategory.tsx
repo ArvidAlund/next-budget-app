@@ -32,7 +32,7 @@ export function ExpensesCategory({
 
   return (
     <>
-      <div className="flex flex-row items-center text-center gap-2 h-15" onClick={handleCategoryClick}>
+      <div className="flex flex-row items-center text-center gap-2 h-15 select-none cursor-pointer" onClick={handleCategoryClick}>
         <div className="flex justify-center items-center min-w-fit">
           <FontAwesomeIcon icon={image} className={`${imageclr} text-[2rem] mr-2 text-secondary-100`} />
         </div>
