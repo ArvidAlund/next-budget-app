@@ -24,6 +24,8 @@ type Transaction = {
 };
 
 const sortList = [
+  { label: "Nyast", value: "date_desc" },
+  { label: "Äldst", value: "date_asc" },
   { label: "A–Ö", value: "alpha_asc" },
   { label: "Ö–A", value: "alpha_desc" },
   { label: "Pris: Högst → Lägst", value: "price_desc" },
@@ -44,7 +46,7 @@ const sortList = [
 export function TransactionTable(){
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [inputValue, setInputvalue] = useState<string>("")
-    const [sortBy, setSortBy] = useState("alpha_asc");
+    const [sortBy, setSortBy] = useState("date_desc");
     const [activeButtons, setActiveButtons] = useState({ inkomst: true, utgift: true });
     const transactionRefs = useRef<HTMLDivElement[]>([]);
 
@@ -102,6 +104,10 @@ export function TransactionTable(){
               const descA = a.description ?? "";
               const descB = b.description ?? "";
               switch (sortBy) {
+                case "date_asc":
+                  return new Date(a.date).getTime() - new Date(b.date).getTime();
+                case "date_desc":
+                  return new Date(b.date).getTime() - new Date(a.date).getTime();
                 case "alpha_asc":
                   return descA?.localeCompare(descB);
                 case "alpha_desc":
