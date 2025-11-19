@@ -15,7 +15,7 @@ interface UnsavedDetails {
 
 interface UnsavedChanges {
     language?: string;
-    currency?: string;
+    default_currency?: string;
     time_format?: string;
     auto_backup?: boolean;
     [key: string]: string | number | boolean | undefined;

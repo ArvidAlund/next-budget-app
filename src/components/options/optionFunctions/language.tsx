@@ -40,11 +40,13 @@ export default function LanguageOption() {
                 <h2 className="text-xl font-semibold mb-2">Språk</h2>
                 <p>Välj det språk du vill använda i appen.</p>
             </div>
-            {loaded && (
+            {loaded ? (
                 <select className="mt-2 p-2 border rounded w-full bg-primary text-secondary" onChange={(e) => setLanguage(e.target.value)} defaultValue={language}>
                     <option value="sv" selected={language === "sv"}>Svenska</option>
                     <option value="en" selected={language === "en"}>English</option>
                 </select>
+            ) : (
+                <p className="w-full text-center">Laddar...</p>
             )}
         </div>
     );

@@ -27,10 +27,10 @@ export default function CurrencyOption() {
         if (!loaded) return
         if (userCurrency === null) return;
         if (currency === userCurrency) {
-            emitEvent("remove-unsaved-general-changes", {"currency" : currency});
+            emitEvent("remove-unsaved-general-changes", {"default_currency" : currency});
             return;
         }
-        emitEvent("unsaved-general-changes", {"currency" : currency});
+        emitEvent("unsaved-general-changes", {"default_currency" : currency});
     }, [currency, userCurrency, loaded]);
     return (
         <div className="p-4 grid gap-2 grid-cols-2 items-center">
@@ -38,12 +38,16 @@ export default function CurrencyOption() {
                 <h2 className="text-xl font-semibold mb-2">Valuta</h2>
                 <p>Välj den valuta du vill använda i appen.</p>
             </div>
-            <select className="mt-2 p-2 border rounded w-full bg-primary text-secondary" onChange={(e) => setCurrency(e.target.value)} defaultValue={currency}>
-                <option value="SEK">Svenska Kronor (SEK)</option>
-                <option value="USD">US Dollar (USD)</option>
-                <option value="EUR">Euro (EUR)</option>
-            
-            </select>
+            {loaded ? (
+                <select className="mt-2 p-2 border rounded w-full bg-primary text-secondary" onChange={(e) => setCurrency(e.target.value)} defaultValue={currency}>
+                    <option value="SEK">Svenska Kronor (SEK)</option>
+                    <option value="USD">US Dollar (USD)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                
+                </select>
+            ) : (
+                <p className="w-full text-center">Laddar...</p>
+            )}
         </div>
     );
 }
