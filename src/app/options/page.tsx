@@ -4,6 +4,8 @@ import { faChevronRight, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
+import GeneralOptions from "@/components/options/menus/general";
+
 const optionsList = [
   { id: 'general', name: 'Allmänt' },
   { id: 'appearance', name: 'Utseende' },
@@ -19,7 +21,7 @@ const optionsList = [
 function renderContent(selectedOption:string | null) {
   switch (selectedOption) {
     case 'general':
-      return <div className="p-4">Allmänna inställningar innehåll här.</div>;
+      return <GeneralOptions/>;
     case 'appearance':
       return <div className="p-4">Inställningar för utseende innehåll här.</div>;
     case 'calendar':
