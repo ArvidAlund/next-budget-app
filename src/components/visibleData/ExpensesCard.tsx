@@ -32,6 +32,19 @@ type Transaction = {
   description: string;
 };
 
+const categoryList = [
+  { image: faHouse, category: "Boende", key: "boende" },
+  { image: faBowlFood, category: "Mat & Hushåll", key: "mat" },
+  { image: faCarSide, category: "Transport", key: "transport" },
+  { image: faBriefcase, category: "Arbete & Studier", key: "arbete" },
+  { image: faGlobe, category: "Abonnemang & Tjänster", key: "abonnemang" },
+  { image: faDumbbell, category: "Hälsa & Välmående", key: "halsa" },
+  { image: faCartShopping, category: "Shopping & Kläder", key: "shopping" },
+  { image: faGamepad, category: "Nöjen & Fritid", key: "nojen" },
+  { image: faMoneyBills, category: "Sparande", key: "sparande" },
+  { image: faCircleQuestion, category: "Övrigt", key: "ovrigt" },
+];
+
 // Beräkna procent av budget som spenderats
 function calculatePercentage(totsum: number, expense: number): number {
   if (totsum <= 0) return 0;
@@ -102,87 +115,18 @@ export function ExpensesCard() {
       </div>
       <hr className="bg-primary w-full mt-2 mb-2" />
 
-      {/* Rendera varje kategori med ExpensesCategory */}
-      <ExpensesCategory
-        image={faHouse}
-        category="Boende"
-        totsum={budgetData.boende}
-        expense={categorySums["boende"] || 0}
-        percentageValue={calculatePercentage(budgetData.boende, categorySums["boende"] || 0)}
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory
-        image={faBowlFood}
-        category="Mat & Hushåll"
-        totsum={budgetData.mat}
-        expense={categorySums["mat"] || 0}
-        percentageValue={calculatePercentage(budgetData.mat, categorySums["mat"] || 0)}
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faCarSide} 
-      category="Transport" 
-      totsum={budgetData.transport} 
-      expense={categorySums["transport"] || 0} 
-      percentageValue={calculatePercentage(budgetData.transport, categorySums["transport"] || 0)} 
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faBriefcase} 
-      category="Arbete & Studier" 
-      totsum={budgetData.arbete} 
-      expense={categorySums["arbete"] || 0} 
-      percentageValue={calculatePercentage(budgetData.arbete, 
-      categorySums["arbete"] || 0)} 
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faGlobe} 
-      category="Abonnemang & Tjänster" 
-      totsum={budgetData.abonnemang} 
-      expense={categorySums["abonnemang"] || 0} 
-      percentageValue={calculatePercentage(budgetData.abonnemang, categorySums["abonnemang"] || 0)} 
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faDumbbell} 
-      category="Hälsa & Välmående" 
-      totsum={budgetData.halsa} 
-      expense={categorySums["halsa"] || 0} 
-      percentageValue={calculatePercentage(budgetData.halsa, categorySums["halsa"] || 0)} 
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faCartShopping} 
-      category="Shopping & Kläder" 
-      totsum={budgetData.shopping} 
-      expense={categorySums["shopping"] || 0} 
-      percentageValue={calculatePercentage(budgetData.shopping, categorySums["shopping"] || 0)} 
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faGamepad} 
-      category="Nöjen & Fritid" 
-      totsum={budgetData.nojen} 
-      expense={categorySums["nojen"] || 0} 
-      percentageValue={calculatePercentage(budgetData.nojen, categorySums["nojen"] || 0)} 
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faMoneyBills} 
-      category="Sparande" 
-      totsum={budgetData.sparande} 
-      expense={categorySums["sparande"] || 0} 
-      percentageValue={calculatePercentage(budgetData.sparande, categorySums["sparande"] || 0)} 
-      />
-      <hr className="bg-primary w-full mt-2 mb-2" />
-      <ExpensesCategory 
-      image={faCircleQuestion} 
-      category="Övrigt" 
-      totsum={budgetData.ovrigt} 
-      expense={categorySums["ovrigt"] || 0} 
-      percentageValue={calculatePercentage(budgetData.ovrigt, categorySums["ovrigt"] || 0)} 
-      />
+      {categoryList.map(({ image, category, key }, index) => (
+        <div key={key}>
+          <ExpensesCategory
+            image={image}
+            category={category}
+            totsum={budgetData[key as keyof BudgetData]}
+            expense={categorySums[key] || 0}
+            percentageValue={calculatePercentage(budgetData[key as keyof BudgetData], categorySums[key] || 0)}
+          />
+          {index < categoryList.length - 1 && <hr className="bg-primary w-full mt-2 mb-2" />}
+        </div>
+      ))}
     </Container>
   );
 }
