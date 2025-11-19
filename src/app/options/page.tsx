@@ -7,6 +7,13 @@ import gsap from "gsap";
 import GeneralOptions from "@/components/options/menus/general";
 import AppearanceOptions from "@/components/options/menus/appearance";
 import CalendarOptions from "@/components/options/menus/calendar";
+import PrivacyOptions from "@/components/options/menus/privacy";
+import SecurityOptions from "@/components/options/menus/security";
+import AccountOptions from "@/components/options/menus/account";
+import BudgetOptions from "@/components/options/menus/budget";
+import CategoriesOptions from "@/components/options/menus/categories";
+import NotificationsOptions from "@/components/options/menus/notifications";
+import QuickOptions from "@/components/options/menus/quick";
 
 const optionsList = [
   { id: 'general', name: 'Allmänt' },
@@ -29,19 +36,19 @@ function renderContent(selectedOption:string | null) {
     case 'calendar':
       return <CalendarOptions/>;
     case 'notifications':
-      return <div className="p-4">Notifikationsinställningar innehåll här.</div>;
+      return <NotificationsOptions/>;
     case 'privacy':
-      return <div className="p-4">Integritetsinställningar innehåll här.</div>;
+      return <PrivacyOptions/>;
     case 'security':
-      return <div className="p-4">Säkerhetsinställningar innehåll här.</div>;
+      return <SecurityOptions/>;
     case 'account':
-      return <div className="p-4">Konto- och synkroniseringsinställningar innehåll här.</div>;
+      return <AccountOptions/>;
     case 'budget':
-      return <div className="p-4">Budget- och transaktionsinställningar innehåll här.</div>;
+      return <BudgetOptions/>;
     case 'categories':
-      return <div className="p-4">Kategorinställningar innehåll här.</div>;
+      return <CategoriesOptions/>;
     default:
-      return <div className="p-4">Välj en inställningskategori från vänster.</div>;
+      return <QuickOptions/>;
   }
 }
 
@@ -61,7 +68,7 @@ export default function OptionsPage() {
         <main className="grid sm:grid-cols-2 overflow-x-hidden">
             <div>
                 {optionsList.map(option => (
-                    <div key={option.id} className="p-4 border-b bg-primary-400 text-secondary flex items-center justify-between hover:bg-primary-300 cursor-pointer transition-all duration-300" onClick={() => setSelectedOption(option.id)}>
+                    <div key={option.id} className="p-4 border-b bg-primary-400 text-secondary flex items-center justify-between hover:bg-primary-300 cursor-pointer transition-all duration-300" onClick={() => setSelectedOption(() => option.id === selectedOption ? "" : option.id)}>
                         <div>
                             <h2 className="text-lg font-semibold">{option.name}</h2>
                             <p className="text-sm text-gray-600">Inställningar för {option.name.toLowerCase()}.</p>
