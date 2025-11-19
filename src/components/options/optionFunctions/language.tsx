@@ -28,10 +28,10 @@ export default function LanguageOption() {
         if (!loaded) return
         if (userLanguage === null) return;
         if (language === userLanguage) {
-            emitEvent("remove-unsaved-general-changes", {"language" : language});
+            emitEvent("remove-unsaved-changes", {"language" : language});
             return;
         }
-        emitEvent("unsaved-general-changes", {"language" : language});
+        emitEvent("unsaved-changes", {"language" : language});
     }, [language, userLanguage, loaded]);
 
     return (
