@@ -2,6 +2,14 @@ import SortCategoriesOption from "../optionFunctions/sortCategories";
 
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
+/**
+ * Render the categories settings UI, including the sort option and a conditional save button.
+ *
+ * Renders a section with a header ("Kategori Inställningar"), the SortCategoriesOption component,
+ * and a "Spara Ändringar" button when there are unsaved changes.
+ *
+ * @returns The component's React element tree: a section containing the header, an optional "Spara Ändringar" button shown when `unsavedChanges` has entries, and the `SortCategoriesOption` node.
+ */
 export default function CategoriesOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
     return (

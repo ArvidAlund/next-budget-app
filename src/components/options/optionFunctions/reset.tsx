@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import removeUser from "@/app/lib/db/removeUser";
 import checkOrCreateUser from "@/app/lib/db/checkUser";
 
+/**
+ * Render an option that resets the current user's data to factory defaults.
+ *
+ * When activated, the component removes the user's stored data, ensures a new user record exists, and then reloads the page. The component guards against concurrent resets while the reset is in progress.
+ *
+ * @returns A JSX element containing the reset UI and action button
+ */
 export default function ResetDataOption() {
     const [loading, setLoading] = useState(false);
     const [reset, setReset] = useState(false);

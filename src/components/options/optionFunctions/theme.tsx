@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import getUserOption from "@/app/lib/db/getUserOption";
 import { emitEvent } from "@/app/lib/eventbus";
 
+/**
+ * ThemeOption renders a theme selector and synchronizes it with the persisted user preference.
+ *
+ * Loads the saved theme on mount; when the saved value is available, updates local state and emits
+ * "unsaved-changes" with the current theme if the selection differs from the saved value, or
+ * "remove-unsaved-changes" if it matches.
+ *
+ * @returns The React element for the theme option UI (select input with light, dark, and system).
+ */
 export default function ThemeOption() {
     const [theme, setTheme] = useState<string>("system");
     const [userTheme, setUserTheme] = useState<string | null>(null);

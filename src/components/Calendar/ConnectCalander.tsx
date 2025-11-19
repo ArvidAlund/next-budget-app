@@ -5,9 +5,12 @@ import supabase from "@/app/lib/supabaseClient";
 import { Button } from "../ui/button";
 
 /**
- * ConnectButton
- * ----------------
- * Knapp som kopierar ICS-kalenderlänk till clipboard och visar feedback
+ * Renders a button that copies the current user's ICS calendar URL to the clipboard and shows temporary feedback.
+ *
+ * On mount the component fetches the authenticated user's ID from Supabase. When clicked (and a user is present)
+ * it copies `https://budget.arvidalund.com/api/calendar?userId={userId}` to the clipboard and displays "Länk kopierad!" for 3 seconds.
+ *
+ * @returns A button element that triggers the copy-to-clipboard action and displays success feedback.
  */
 export default function ConnectButton() {
   const [userId, setUserId] = useState<string | null>(null); // Inloggad användare

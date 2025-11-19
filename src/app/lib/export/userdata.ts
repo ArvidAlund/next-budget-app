@@ -1,5 +1,11 @@
 import checkOrCreateUser from "../db/checkUser";
 
+/**
+ * Export the current user's data and trigger a file download in the chosen format.
+ *
+ * @param format - Desired export format; either `'json'` to download the full user object as pretty-printed JSON or `'csv'` to download a single-row CSV with object keys as headers
+ * @throws Error - If no authenticated user is available (message: "Användare inte autentiserad")
+ */
 export default async function exportUserData({ format }: { format: 'csv' | 'json' }) {
   const user = await checkOrCreateUser();
   if (!user) throw new Error("Användare inte autentiserad");

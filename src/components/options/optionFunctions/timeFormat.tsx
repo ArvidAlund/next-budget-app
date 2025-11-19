@@ -2,6 +2,15 @@ import { emitEvent } from "@/app/lib/eventbus";
 import { useState, useEffect } from "react";
 import getUserOption from "@/app/lib/db/getUserOption";
 
+/**
+ * Renders a time-format selection UI and synchronizes the selected value with the stored user option.
+ *
+ * Fetches the user's saved "time_format" option on mount and shows a loading state until it is loaded.
+ * After loading, emits "unsaved-general-changes" with { time_format } when the selection differs from the stored value,
+ * and emits "remove-unsaved-general-changes" with { time_format } when it matches the stored value.
+ *
+ * @returns A React element containing the time format option control (loading state or a select with "24h" and "12h" options).
+ */
 export default function TimeFormatOption() {
     const [timeFormat, setTimeFormat] = useState<string>("24h");
     const [userTimeFormat, setUserTimeFormat] = useState<string | null>(null);

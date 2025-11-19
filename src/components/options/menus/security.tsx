@@ -1,3 +1,8 @@
+/**
+ * Renders the security settings section with a centered Swedish heading and an empty container for option items.
+ *
+ * @returns The JSX element representing the security settings section.
+ */
 export default function SecurityOptions() {
     return (
         <section className="text-secondary">

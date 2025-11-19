@@ -8,12 +8,12 @@ import { TopInfo } from "./Topinfo"
 import { useWindowWidth } from "./useWindowWidth"
 
 /**
- * Mobile bottom navigation bar that hides when scrolling down and reappears when scrolling up.
+ * Bottom navigation bar that hides when scrolling down and reappears when scrolling up.
  *
- * Renders a fixed, responsive bottom nav for small viewports with navigation icons (Home, Kalender).
- * On wide viewports it includes a TopInfo section shown when window width is greater than 1024px.
+ * Renders a fixed, responsive bottom nav for small viewports with navigation icons (Home, Options).
+ * On viewports wider than 1024px the TopInfo panel is shown in the left area.
  *
- * @returns A React element that renders the navbar component.
+ * @returns The navbar React element.
  */
 export function Navbar() {
   const [hidden, setHidden] = useState(false) // Om navbaren ska döljas
