@@ -19,6 +19,14 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+/**
+ * Renders a draggable sortable item for the given id.
+ *
+ * The component attaches DnD kit sortable attributes and listeners and displays the `id` as its label.
+ *
+ * @param id - Identifier used as the sortable key and displayed label
+ * @returns A JSX element representing the draggable sortable item
+ */
 function SortableItem({ id }: { id: string }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -45,6 +53,13 @@ function SortableItem({ id }: { id: string }) {
 // Hjälpfunktion för att konvertera id till sträng
 const toStringId = (id: UniqueIdentifier): string => String(id);
 
+/**
+ * Renders a control that lets the user drag and reorder categories.
+ *
+ * Loads the initial order from the user option "category_order", displays a loading state while fetching, and provides a draggable list for reordering using @dnd-kit. Emits "unsaved-changes" with `{ category_order: string[] }` when the in-memory order differs from the persisted order, and emits "remove-unsaved-changes" with the same payload when they match.
+ *
+ * @returns A React element containing the sortable category list and related UI.
+ */
 export default function SortCategoriesOption() {
   const [sortCategories, setSortCategories] = useState<string[]>([]);
   const [userSortCategories, setUserSortCategories] = useState<string[]>([]);

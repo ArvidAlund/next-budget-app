@@ -7,6 +7,13 @@ import ExportUserdataOption from "../optionFunctions/exportUserdata";
 
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
+/**
+ * Render the "General Settings" section with individual option controls.
+ *
+ * Displays language, currency, time format, auto-backup, export, and reset options in a vertically stacked layout. When there are unsaved changes a "Spara Ändringar" button is shown; clicking it triggers saving of pending changes.
+ *
+ * @returns A React element containing the general settings section with option components and a conditional "Spara Ändringar" button shown when there are unsaved changes.
+ */
 export default function GeneralOptions() {
   const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
 

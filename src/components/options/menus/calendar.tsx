@@ -5,6 +5,13 @@ import MarkRecurringOption from "../optionFunctions/markRecurring";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 
+/**
+ * Renders the calendar settings UI with controls for connecting a calendar, configuring paydays, and marking recurring events.
+ *
+ * The component shows a header labeled "Kalender Inställningar", the three option components (ConnectCalendarOption, PaydayOption, MarkRecurringOption), and a conditional "Spara Ändringar" button when there are unsaved changes.
+ *
+ * @returns The JSX element for the calendar settings section; the "Spara Ändringar" button appears when unsaved changes exist and triggers saving when clicked.
+ */
 export default function CalanderOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
     return (

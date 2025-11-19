@@ -1,6 +1,14 @@
 import supabase from "../supabaseClient";
 import { supabaseUserID } from "../supabaseClient";
 
+/**
+ * Export the authenticated user's transactions as a downloadable CSV or JSON file.
+ *
+ * @param format - 'json' exports pretty-printed JSON (file: transactions.json, MIME: application/json); 'csv' exports a CSV with header row derived from transaction keys (file: transactions.csv, MIME: text/csv)
+ * @throws Error If the user is not authenticated ("Användare inte autentiserad")
+ * @throws Error If no transactions are found ("Inga transaktioner hittades att exportera")
+ * @throws Error If the Supabase query returns an error
+ */
 export default async function exportTransactions({ format }: { format: 'csv' | 'json' }) {
   const userId = await supabaseUserID();
   if (!userId) throw new Error("Användare inte autentiserad");

@@ -1,6 +1,13 @@
 import exportUserData from "@/app/lib/export/userdata";
 import { useState, useEffect } from "react";
 
+/**
+ * Renders a UI option for exporting user data and initiates an export in the selected format while preventing concurrent exports.
+ *
+ * The component displays explanatory text and two buttons ("CSV" and "JSON"). Clicking a button starts an export for that format and disables re-entrant exports until the current export completes.
+ *
+ * @returns A React element containing controls to export user data; clicking a format button initiates an export for that format (`'csv'` or `'json'`).
+ */
 export default function ExportUserdataOption() {
     const [exporting, setExporting] = useState(false);
         const [format, setFormat] = useState<'csv' | 'json' | null>(null);

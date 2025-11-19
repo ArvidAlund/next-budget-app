@@ -1,3 +1,8 @@
+/**
+ * Renders an account settings section with a centered "Konto Inställningar" heading and a styled container for option rows.
+ *
+ * @returns The JSX element representing the account settings section.
+ */
 export default function SecurityOptions() {
     return (
         <section className="text-secondary">

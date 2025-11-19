@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
 import getUserOption from "@/app/lib/db/getUserOption";
 
+/**
+ * Renders a payday (day of month) configuration control and synchronizes changes with the global event bus.
+ *
+ * Fetches the persisted "payday_day" on mount and initializes the input. While loaded, valid changes (1–31)
+ * cause the component to emit either "unsaved-changes" or "remove-unsaved-changes" with a payload containing
+ * the effective `payday`. Invalid values outside 1–31 are shown in the UI but are not emitted.
+ *
+ * @returns A React element that renders the payday selection UI and manages its saved/unsaved state via events.
+ */
 export default function PaydayOption() {
     const [payday, setPayday] = useState<number>(1);
     const [userPayday, setUserPayday] = useState<number | null>(null);

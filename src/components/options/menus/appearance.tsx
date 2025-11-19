@@ -2,6 +2,13 @@ import ThemeOption from "../optionFunctions/theme";
 
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
+/**
+ * Renders the appearance settings section including theme controls and a conditional "Spara Ändringar" button.
+ *
+ * The button appears when there are unsaved changes and signals a save by calling the hook's setter.
+ *
+ * @returns The React element for the appearance settings UI.
+ */
 export default function AppearanceOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
     return (

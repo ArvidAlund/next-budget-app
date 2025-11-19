@@ -2,6 +2,16 @@ import { useState, useEffect } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
 import getUserOption from "@/app/lib/db/getUserOption";
 
+/**
+ * Renders a settings panel that displays and controls the user's "mark recurring transactions" preference.
+ *
+ * On mount it loads the saved `highlight_recurring` option; while loading it shows a "Laddar..." placeholder.
+ * When the user toggles the checkbox the component updates its local state and emits either
+ * `unsaved-changes` (when the current value differs from the saved value) or `remove-unsaved-changes`
+ * (when the current value matches the saved value) with payload `{ mark_recurring_transactions: boolean }`.
+ *
+ * @returns The rendered option panel as a JSX element.
+ */
 export default function MarkRecurringOption() {
     const [markRecurring, setMarkRecurring] = useState<boolean>(true);
     const [userMarkRecurring, setUserMarkRecurring] = useState<boolean | null>(null);

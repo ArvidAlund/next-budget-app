@@ -27,6 +27,12 @@ const optionsList = [
   { id: 'categories', name: 'Kategorier' },
 ];
 
+/**
+ * Renders the options content component corresponding to the selected option id.
+ *
+ * @param selectedOption - The id of the selected option (e.g. 'general', 'appearance', 'calendar', 'notifications', 'privacy', 'security', 'account', 'budget', 'categories'); `null` or any unrecognized value shows the default QuickOptions view.
+ * @returns The React element for the matching options panel; `QuickOptions` when no matching id is provided.
+ */
 function renderContent(selectedOption:string | null) {
   switch (selectedOption) {
     case 'general':
@@ -53,6 +59,13 @@ function renderContent(selectedOption:string | null) {
 }
 
 
+/**
+ * Renders the two-pane options/settings page with selectable categories and an animated detail pane.
+ *
+ * The left column displays a list of option categories; selecting a category opens the right detail pane and animates it into view. On small screens the detail pane includes a dismiss control that closes the pane.
+ *
+ * @returns The React element representing the options page layout.
+ */
 export default function OptionsPage() {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const contentRef = useRef<HTMLDivElement>(null);

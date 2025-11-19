@@ -7,29 +7,22 @@
 const eventBus = new EventTarget();
 
 /**
- * Skickar ett event med ett namn och valfri data.
+ * Dispatches a CustomEvent with the given name on the global event bus.
  *
- * @param name - Namnet på eventet.
- * @param detail - Data som ska skickas med eventet (valfritt).
- *
- * Exempel:
- * emitEvent("jump-start");
- * emitEvent("EnterHouse", { playerId: 1 });
+ * @param name - The event name to dispatch.
+ * @param detail - Optional payload delivered as the CustomEvent's `detail` property.
  */
 export function emitEvent<T>(name: string, detail?: T): void {
   eventBus.dispatchEvent(new CustomEvent<T>(name, { detail }));
 }
 
 /**
- * Lyssnar på ett event med ett specifikt namn.
+ * Subscribes to a named event and invokes the handler with the event's detail.
  *
- * @param name - Namnet på eventet att lyssna på.
- * @param handler - Callback som körs när eventet triggas.
- * @returns Funktion för att avregistrera event-lyssnaren.
- *
- * Exempel:
- * const unsubscribe = onEvent("jump-start", () => console.log("Player started jumping"));
- * unsubscribe(); // när du vill sluta lyssna
+ * @param name - The event name to listen for.
+ * @param handler - Callback invoked with the event's `detail` payload when the event is dispatched.
+ * @returns A function that removes the registered listener.
+ * @throws Error if `handler` is not a function.
  */
 export function onEvent<T>(
   name: string,
@@ -48,4 +41,3 @@ export function onEvent<T>(
 
   return () => eventBus.removeEventListener(name, listener);
 }
-

@@ -2,6 +2,16 @@ import { emitEvent } from "@/app/lib/eventbus";
 import { useState, useEffect } from "react";
 import getUserOption from "@/app/lib/db/getUserOption";
 
+/**
+ * Render a UI control for viewing and toggling the user's automatic backup setting.
+ *
+ * The component loads the persisted `auto_backup` option on mount and reflects its state
+ * with a checkbox. When the checkbox value differs from the stored setting the component
+ * emits an event to indicate unsaved general changes; when it matches the stored value it
+ * emits an event to remove those unsaved-change notifications.
+ *
+ * @returns A JSX element containing the automatic backup option control.
+ */
 export default function AutoBackupOption() {
     const [autoBackup, setAutoBackup] = useState<boolean>(true);
     const [userAutoBackup, setUserAutoBackup] = useState<boolean | null>(null);

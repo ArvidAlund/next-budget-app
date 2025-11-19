@@ -1,6 +1,11 @@
 import ExportTransactionsOption from "../optionFunctions/exportTransactions";
 
 
+/**
+ * Render the "Budget Inställningar" section with its options.
+ *
+ * @returns A JSX element containing a styled section with a centered header and the ExportTransactionsOption entry.
+ */
 export default function BudgetOptions() {
     return (
         <section className="text-secondary">

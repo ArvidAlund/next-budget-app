@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
 import getUserOption from "@/app/lib/db/getUserOption";
 
+/**
+ * Renders a currency selection control that loads the user's saved default currency and keeps it synchronized.
+ *
+ * Loads the stored "default_currency" on mount, displays a select with SEK/USD/EUR, and updates local state when the user changes selection. Emits "unsaved-general-changes" with `{ default_currency: <value> }` when the current selection differs from the stored user preference, and emits "remove-unsaved-general-changes" with the same payload when the selection matches the stored preference.
+ *
+ * @returns A JSX element containing the currency option UI.
+ */
 export default function CurrencyOption() {
     const [currency, setCurrency] = useState<string>("SEK");
     const [userCurrency, setUserCurrency] = useState<string | null>(null);

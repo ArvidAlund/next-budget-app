@@ -64,6 +64,21 @@ interface UnsavedDetails {
   [key: string]: string | number | boolean;
 }
 
+/**
+ * Manage and persist a collection of unsaved settings via event-driven updates.
+ *
+ * The hook maintains a map of pending changes and a boolean flag that triggers persistence.
+ * It listens for "unsaved-changes" events to merge incoming details into the map and
+ * for "remove-unsaved-changes" events to remove specified keys. When the returned
+ * `setSaveChanges(true)` is called, the current changes are persisted to the database,
+ * the map is cleared, a "general-changes-saved" event is emitted, and the page is reloaded.
+ *
+ * @returns An object containing:
+ * - `unsavedChanges`: the current map of pending changes.
+ * - `setUnsavedChanges`: setter to replace or merge pending changes.
+ * - `saveChanges`: boolean flag indicating whether a save has been requested.
+ * - `setSaveChanges`: setter used to trigger persistence when set to `true`.
+ */
 export function useUnsavedChanges() {
   const [unsavedChanges, setUnsavedChanges] = useState<UnsavedChanges>({});
   const [saveChanges, setSaveChanges] = useState(false);

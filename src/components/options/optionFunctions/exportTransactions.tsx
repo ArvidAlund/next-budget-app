@@ -1,6 +1,11 @@
 import exportTransactions from "@/app/lib/export/transactions";
 import { useState, useEffect } from "react";
 
+/**
+ * Renders UI for exporting transactions and initiates an export when the user selects CSV or JSON.
+ *
+ * @returns A React element containing descriptive text and buttons to start CSV or JSON exports; selecting a format triggers the export flow.
+ */
 export default function ExportTransactionsOption() {
     const [exporting, setExporting] = useState(false);
     const [format, setFormat] = useState<'csv' | 'json' | null>(null);

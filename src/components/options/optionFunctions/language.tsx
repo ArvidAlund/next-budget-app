@@ -2,6 +2,17 @@ import { useState, useEffect } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
 import getUserOption from "@/app/lib/db/getUserOption";
 
+/**
+ * Renders a language selection UI and synchronizes it with the stored user language option.
+ *
+ * On mount it loads the saved language option and updates local state. After loading,
+ * it emits "unsaved-changes" with the current language when the selection differs from
+ * the saved value, or "remove-unsaved-changes" when they match. While loading it shows
+ * a centered "Laddar..." message; once loaded it renders a select with Svenska ("sv")
+ * and English ("en").
+ *
+ * @returns The rendered JSX element for the language option control.
+ */
 export default function LanguageOption() {
     const [language, setLanguage] = useState<string>("sv");
     const [userLanguage, setUserLanguage] = useState<string | null>(null);
