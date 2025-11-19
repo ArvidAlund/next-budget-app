@@ -49,9 +49,9 @@ export function Navbar() {
   return (
     <nav
       className={`
-        fixed flex flex-row bottom-0 left-0 w-full h-16 bg-secondary text-white px-4 rounded-t-xl shadow-md
-        transition-transform duration-300 ease-in-out z-100
-        ${hidden ? "translate-y-full" : "translate-y-0"}  /* Döljer/visar navbaren */
+        fixed flex flex-row bottom-0 left-0 w-full h-16 bg-secondary text-white rounded-t-xl shadow-md
+        transition-transform duration-300 ease-in-out z-100 overflow-hidden
+        ${hidden ? "translate-y-full" : "translate-y-0"} 
         lg:static lg:rounded-md
     `}
 

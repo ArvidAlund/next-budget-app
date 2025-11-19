@@ -78,7 +78,7 @@ export default function OptionsPage() {
     }, [selectedOption]);
   return (
     <>
-        <main className="grid sm:grid-cols-2 overflow-x-hidden">
+        <main className="grid sm:grid-cols-2 h-screen w-full relative sm:fixed sm:z-200">
             <div>
                 {optionsList.map(option => (
                     <div key={option.id} className="p-4 border-b bg-primary-400 text-secondary flex items-center justify-between hover:bg-primary-300 cursor-pointer transition-all duration-300" onClick={() => setSelectedOption(() => option.id === selectedOption ? "" : option.id)}>
@@ -90,8 +90,8 @@ export default function OptionsPage() {
                     </div>
                 ))}
             </div>
-            <div className={`sm:border-l sm:block ${selectedOption ? 'absolute top-0 left-0 w-full sm:relative' : 'hidden'}`}>
-                <div ref={contentRef} className="p-4 sm:border-l min-h-screen bg-primary-100 relative">
+            <div className={`sm:border-l sm:block ${selectedOption ? 'absolute top-0 left-0 w-full h-full sm:relative' : 'hidden'}`}>
+                <div ref={contentRef} className="p-4 sm:border-l bg-primary-100 relative min-h-screen w-full">
                     <button className="fixed top-4 right-4 block sm:hidden" onClick={() => setSelectedOption("")}><FontAwesomeIcon icon={faX} className="text-secondary fa-lg" /></button>
                     {renderContent(selectedOption)}
                 </div>

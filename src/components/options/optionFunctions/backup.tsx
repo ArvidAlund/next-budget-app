@@ -38,10 +38,10 @@ export default function AutoBackupOption() {
         if (!loaded) return
         if (userAutoBackup === null) return;
         if (autoBackup === userAutoBackup) {
-            emitEvent("remove-unsaved-general-changes", {"auto_backup" : autoBackup});
+            emitEvent("remove-unsaved-changes", {"auto_backup" : autoBackup});
             return;
         }
-        emitEvent("unsaved-general-changes", {"auto_backup" : autoBackup});
+        emitEvent("unsaved-changes", {"auto_backup" : autoBackup});
     }, [autoBackup, userAutoBackup, loaded]);
 
     return (

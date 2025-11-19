@@ -35,10 +35,10 @@ export default function TimeFormatOption() {
         if (!loaded) return
         if (userTimeFormat === null) return;
         if (timeFormat === userTimeFormat) {
-            emitEvent("remove-unsaved-general-changes", {"time_format" : timeFormat});
+            emitEvent("remove-unsaved-changes", {"time_format" : timeFormat});
             return;
         }
-        emitEvent("unsaved-general-changes", {"time_format" : timeFormat});
+        emitEvent("unsaved-changes", {"time_format" : timeFormat});
     }, [timeFormat, userTimeFormat, loaded]);
     return (
         <div className="p-4 grid gap-2 grid-cols-2 items-center">

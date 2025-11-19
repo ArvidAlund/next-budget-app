@@ -34,10 +34,10 @@ export default function CurrencyOption() {
         if (!loaded) return
         if (userCurrency === null) return;
         if (currency === userCurrency) {
-            emitEvent("remove-unsaved-general-changes", {"default_currency" : currency});
+            emitEvent("remove-unsaved-changes", {"default_currency" : currency});
             return;
         }
-        emitEvent("unsaved-general-changes", {"default_currency" : currency});
+        emitEvent("unsaved-changes", {"default_currency" : currency});
     }, [currency, userCurrency, loaded]);
     return (
         <div className="p-4 grid gap-2 grid-cols-2 items-center">
