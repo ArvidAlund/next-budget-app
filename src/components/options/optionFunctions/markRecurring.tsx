@@ -1,0 +1,58 @@
+import { useState, useEffect } from "react";
+import { emitEvent } from "@/app/lib/eventbus";
+import getUserOption from "@/app/lib/db/getUserOption";
+
+export default function MarkRecurringOption() {
+    const [markRecurring, setMarkRecurring] = useState<boolean>(true);
+    const [userMarkRecurring, setUserMarkRecurring] = useState<boolean | null>(null);
+    const [loaded, setLoaded] = useState(false);
+    useEffect(() => {
+        const fetchMarkRecurring = async () => {
+            try {
+                const userMarkRecurring = await getUserOption("highlight_recurring");
+                if (typeof userMarkRecurring === "boolean") {
+                    setMarkRecurring(userMarkRecurring);
+                    setUserMarkRecurring(userMarkRecurring);
+                    setLoaded(true);
+                }   
+            } catch (error) {
+                console.error("Error fetching mark recurring option:", error);
+            }
+        };
+
+        fetchMarkRecurring();
+    }, []);
+
+    useEffect(() => {
+        if (!loaded) return
+        if (userMarkRecurring === null) return;
+        if (markRecurring === userMarkRecurring) {
+            emitEvent("remove-unsaved-changes", {"mark_recurring_transactions" : markRecurring});
+            return;
+        }
+        emitEvent("unsaved-changes", {"mark_recurring_transactions" : markRecurring});
+    }, [markRecurring, userMarkRecurring, loaded]);
+    return (
+        <div className="p-4 grid gap-2 grid-cols-2 items-center">
+            <div className="sm:w-3/4">
+                <h2 className="text-xl font-semibold mb-2">Markera Återkommande Transaktioner</h2>
+                <p>Aktivera eller inaktivera markering av återkommande transaktioner i din transaktionslista.</p>
+            </div>
+            {loaded ? (
+                <div className="flex justify-center items-center">
+                    <label className="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            className="form-checkbox h-5 w-5 accent-accent-300 text-secondary bg-primary border-secondary"
+                            checked={markRecurring}
+                            onChange={(e) => setMarkRecurring(e.target.checked)}
+                        />
+                        <span className="ml-2">{markRecurring ? "Aktiverad" : "Inaktiverad"}</span>
+                    </label>
+                </div>
+            ) : (
+                <p className="w-full text-center">Laddar...</p>
+            )}
+        </div>
+    );
+}
