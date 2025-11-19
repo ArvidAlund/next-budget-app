@@ -2,7 +2,6 @@ import LanguageOption from "../optionFunctions/language";
 import CurrencyOption from "../optionFunctions/currency";
 import TimeFormatOption from "../optionFunctions/timeFormat";
 import AutoBackupOption from "../optionFunctions/backup";
-import ExportDataOption from "../optionFunctions/export";
 import ResetDataOption from "../optionFunctions/reset";
 
 
@@ -15,7 +14,6 @@ export default function GeneralOptions() {
                 <CurrencyOption />
                 <TimeFormatOption />
                 <AutoBackupOption />
-                <ExportDataOption />
                 <ResetDataOption />
             </div>
         </section>
