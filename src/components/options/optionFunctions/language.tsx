@@ -1,3 +1,6 @@
+import { useState, useEffect } from "react";
+import { emitEvent } from "@/app/lib/eventbus";
+
 export default function LanguageOption() {
     return (
         <div className="p-4 grid gap-2 grid-cols-2 items-center">

@@ -5,17 +5,47 @@ import AutoBackupOption from "../optionFunctions/backup";
 import ResetDataOption from "../optionFunctions/reset";
 import ExportUserdataOption from "../optionFunctions/exportUserdata";
 
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { emitEvent, onEvent } from "@/app/lib/eventbus";
+import saveChangesToDb from "@/app/lib/db/saveChanges";
 
 export default function GeneralOptions() {
-    const [unsavedChanges, setUnsavedChanges] = useState(false);
+    const [unsavedChanges, setUnsavedChanges] = useState({});
+    const [saveChanges, setSaveChanges] = useState(false);
+
+    useEffect(() => {
+        if(!saveChanges) return;
+
+        const performSave = async () => {
+            try {
+                await saveChangesToDb(unsavedChanges);
+                setUnsavedChanges({});
+                emitEvent("general-changes-saved");
+            } catch (error) {
+                console.error("Error saving changes:", error);
+            } finally {
+                setSaveChanges(false);
+            }
+        };
+
+        performSave();
+    }, [unsavedChanges, saveChanges]);
+
+    useEffect(() => {
+        const handleUnsavedChanges = onEvent<boolean>("unsaved-general-changes", (details) => {
+            setUnsavedChanges(details);
+        });
+
+        return () => {
+            handleUnsavedChanges();
+        };
+    },[]);
     return (
         <section className="text-secondary">
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
                 <h1 className="text-2xl font-bold w-full text-center">Allmänna Inställningar</h1>
                 {unsavedChanges && (
-                    <button className="border text-secondary px-4 py-2 rounded-md hover:bg-accent-300 transition-all duration-300 text-sm w-fit">Spara Ändringar</button>
+                    <button className="border text-secondary px-4 py-2 rounded-md hover:bg-accent-300 transition-all duration-300 text-sm w-fit" onClick={() => setSaveChanges(true)}>Spara Ändringar</button>
                 )}
             </div>
             <div className="space-y-4 [&>*]:border-b [&>*]:pb-4">
