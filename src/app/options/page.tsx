@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import GeneralOptions from "@/components/options/menus/general";
+import AppearanceOptions from "@/components/options/menus/appearance";
+import CalendarOptions from "@/components/options/menus/calendar";
 
 const optionsList = [
   { id: 'general', name: 'Allmänt' },
@@ -23,9 +25,9 @@ function renderContent(selectedOption:string | null) {
     case 'general':
       return <GeneralOptions/>;
     case 'appearance':
-      return <div className="p-4">Inställningar för utseende innehåll här.</div>;
+      return <AppearanceOptions/>;
     case 'calendar':
-      return <div className="p-4">Kalenderinställningar innehåll här.</div>;
+      return <CalendarOptions/>;
     case 'notifications':
       return <div className="p-4">Notifikationsinställningar innehåll här.</div>;
     case 'privacy':
@@ -68,7 +70,7 @@ export default function OptionsPage() {
                     </div>
                 ))}
             </div>
-            <div className={`sm:border-l sm:block ${selectedOption ? 'fixed top-0 left-0 w-full sm:relative' : 'hidden'}`}>
+            <div className={`sm:border-l sm:block ${selectedOption ? 'absolute top-0 left-0 w-full sm:relative' : 'hidden'}`}>
                 <div ref={contentRef} className="p-4 sm:border-l min-h-screen bg-primary-100 relative">
                     <button className="fixed top-4 right-4 block sm:hidden" onClick={() => setSelectedOption("")}><FontAwesomeIcon icon={faX} className="text-secondary fa-lg" /></button>
                     {renderContent(selectedOption)}

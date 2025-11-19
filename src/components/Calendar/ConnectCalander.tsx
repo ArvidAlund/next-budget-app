@@ -30,7 +30,7 @@ export default function ConnectButton() {
   const handleSubscribe = () => {
     if (!userId) return;
 
-    const icsUrl = `https://next-budget-app-theta.vercel.app/api/calendar?userId=${userId}`;
+    const icsUrl = `https://budget.arvidalund.com/api/calendar?userId=${userId}`;
 
     navigator.clipboard.writeText(icsUrl).then(() => {
       setCopyURL(true);
@@ -43,13 +43,13 @@ export default function ConnectButton() {
   };
 
   return (
-    <Button
-      className="bg-secondary font-bold w-60 relative"
+    <button
+      className="p-2 border rounded w-full bg-primary text-secondary hover:bg-primary-300 transition-all duration-300 relative overflow-hidden h-10 flex items-center justify-center"
       onClick={handleSubscribe}
     >
       {/* Originaltext */}
       <span
-        className={`block transition-opacity duration-500 absolute text-primary ${
+        className={`block transition-opacity duration-500 absolute ${
           copiedURL ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -58,12 +58,12 @@ export default function ConnectButton() {
 
       {/* Feedbacktext */}
       <span
-        className={`block transition-opacity duration-500 absolute text-primary ${
+        className={`block transition-opacity duration-500 absolute ${
           copiedURL ? "opacity-100" : "opacity-0"
         }`}
       >
-        Länk kopierad ✅
+        Länk kopierad!
       </span>
-    </Button>
+    </button>
   );
 }
