@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
 
-import { Navbar } from "@/components/Navbar"
+import { ExpensesBox } from "@/components/visibleData/ExpensesBox"
 import { AddExpenseBtn } from "@/components/AddExpenseBtn"
 import { TopInfo } from "@/components/Topinfo"
 import { Overview } from "@/components/visibleData/Overview"
@@ -14,6 +14,7 @@ import { AlertboxContainer } from "@/components/AlertboxContainer"
 import type { Session } from '@supabase/supabase-js'
 import { useWindowWidth } from "@/components/useWindowWidth"
 import calcInvestment from "./lib/calcInvestment"
+import TotInvestData from "@/components/Calendar/totInvestData"
 
 /**
  * Root client React component that manages authentication, modal state, alerts, and renders the main overview and expenses UI.
@@ -78,6 +79,9 @@ function App() {
       )}
 
       {alertType && <AlertboxContainer type={alertType} />}
+
+      <ExpensesBox/>
+      <TotInvestData/>
     </div>
   )
 }
