@@ -57,6 +57,7 @@ interface UnsavedChanges {
   allow_future_transactions?: boolean;
   custom_categories?: JSONSchema;
   category_settings?: JSONSchema;
+  category_order?: JSONSchema;
 }
 
 interface UnsavedDetails {
@@ -69,7 +70,6 @@ export function useUnsavedChanges() {
 
   // När saveChanges blir true → spara till DB
   useEffect(() => {
-    console.log("Unsaved changes:", unsavedChanges);
     if (!saveChanges) return;
 
     const performSave = async () => {
