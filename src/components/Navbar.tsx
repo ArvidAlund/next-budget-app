@@ -2,11 +2,10 @@
 
 import { useEffect, useState, useRef } from "react"
 import { NavIcon } from "./ui/navicon"
-import { faHouseUser, faCalendar } from "@fortawesome/free-solid-svg-icons"
+import { faHouseUser, faGear } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
 import { TopInfo } from "./Topinfo"
 import { useWindowWidth } from "./useWindowWidth"
-import { AddExpenseBtn } from "./AddExpenseBtn"
 
 /**
  * Mobile bottom navigation bar that hides when scrolling down and reappears when scrolling up.
@@ -62,11 +61,9 @@ export function Navbar() {
       </div>
 
       <div className="flex justify-around items-center h-full w-[90%] lg:w-[70%]">
-        {/* Hem-ikon */}
         <Link href="/"><NavIcon icon={faHouseUser} label="Hem" /></Link>
-        {/* Kalender-ikon */}
-        <a href="/kalender"><NavIcon icon={faCalendar} label="Kalender"/></a>
-        {/* Fler ikoner kan läggas till här */}
+        <Link href="/options"><NavIcon icon={faGear} label="Options"/></Link>
+
       </div>
     </nav>
   )
