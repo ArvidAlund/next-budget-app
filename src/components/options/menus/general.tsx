@@ -26,7 +26,6 @@ export default function GeneralOptions() {
     const [saveChanges, setSaveChanges] = useState(false);
 
     useEffect(() => {
-        console.log("Unsaved changes:", unsavedChanges);
         if(!saveChanges) return;
 
         const performSave = async () => {
