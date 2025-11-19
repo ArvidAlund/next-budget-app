@@ -1,12 +1,7 @@
 // src/app/api/calendar/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { createEvents, EventAttributes } from "ics";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+import supabase from "@/app/lib/supabaseClient";
 
 type Transaction = {
   date: string;
