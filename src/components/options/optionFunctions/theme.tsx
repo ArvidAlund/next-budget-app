@@ -39,11 +39,15 @@ export default function ThemeOption() {
                 <p>Välj mellan ljust, mörkt eller systemtema för applikationen.</p>
             </div>
             <div className="flex justify-center items-center">
-                <select className="form-select w-full max-w-xs bg-primary text-secondary border-secondary accent-accent-300">
-                    <option value="light">Ljust</option>
-                    <option value="dark">Mörkt</option>
-                    <option value="system">System</option>
-                </select>
+                {loaded ? (
+                    <select className="form-select w-full max-w-xs bg-primary text-secondary border-secondary accent-accent-300" onChange={(e) => setTheme(e.target.value)} defaultValue={theme}>
+                        <option value="light">Ljust</option>
+                        <option value="dark">Mörkt</option>
+                        <option value="system">System</option>
+                    </select>
+                ) : (
+                    <p className="w-full text-center">Laddar...</p>
+                )}
             </div>
         </div>
     );
