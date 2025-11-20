@@ -9,6 +9,5 @@ export async function getCategories() {
         console.error("Error fetching categories:", error);
         return [];
     }
-    console.log("Fetched categories:", data);
     return data;
 }

@@ -49,7 +49,7 @@ export function ExpensesCategory({
           </p>
         </div>
       </div>
-      {expandOpen ? <ExpandedMenuCategory category={category} onClose={() => setExpandOpen(false)} /> : null}
+      {expandOpen ? <ExpandedMenuCategory category={category} name={name} onClose={() => setExpandOpen(false)} /> : null}
     </>
   )
 }

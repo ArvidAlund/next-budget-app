@@ -3,9 +3,11 @@ import { faX, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-ico
 import { useEffect, useState } from "react"
 import { supabaseUserID } from "@/app/lib/supabaseClient"
 import supabase from "@/app/lib/supabaseClient"
+import { getCategories } from "@/app/lib/db/getCategories"
 
 type Props = {
   category: string,
+  name:string,
   onClose: () => void
 } 
 
@@ -17,33 +19,37 @@ type Transaction = {
   recurring: boolean;
 };
 
+interface Category {
+  category_key: string;
+  icon: string;
+  name_en: string;
+  name_sv: string;
+  transaction_type: 'income' | 'expense';
+}
 
-export function ExpandedMenuCategory({ category, onClose }: Props) {
+export function ExpandedMenuCategory({ category, name, onClose }: Props) {
 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [openTransactions, setOpenTransactions] = useState<Record<string, boolean>>({});
     const [closing, setClosing ] = useState(false);
     const [loading, setLoading ] = useState(true);
     const isVisible = !loading && !closing;
+    const [categorys , setCategorys] = useState<Category[]>([]);
 
-    const expenseOptions = [
-        { value: "boende", label: "Boende" },
-        { value: "mat", label: "Mat & Hushåll" },
-        { value: "transport", label: "Transport" },
-        { value: "arbete", label: "Arbete & Studier" },
-        { value: "abonnemang", label: "Abonnemang & Tjänster" },
-        { value: "halsa", label: "Hälsa & Välmående" },
-        { value: "shopping", label: "Shopping & Kläder" },
-        { value: "nojen", label: "Nöjen & Fritid" },
-        { value: "sparande", label: "Sparande" },
-        { value: "ovrigt", label: "Övrigt" },
-    ]
+    useEffect(() => {
+        const getCategorys = async () => {
+            const categoryData = await getCategories();
+            setCategorys(categoryData);
+        }
 
-    const categoryValue = expenseOptions.find(opt => opt.label === category)?.value;
-
-
+        getCategorys();
+    },[])
 
     useEffect(() =>{
+
+        if (categorys.length === 0) return
+
+        const categoryValue = categorys.find(opt => opt.category_key === category)?.category_key;
         
         if (!categoryValue) return;
 
@@ -54,9 +60,9 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
 
             const { data, error } = await supabase
             .from("transactions")
-            .select("amount, description, date, recurring, id")
+            .select("*")
             .eq("user_id", userID)
-            .eq("type", "utgift")
+            .eq("type", "expense")
             .eq("category", categoryValue)
             .or(
                 `date.gte.${firstDayOfMonth},recurring.eq.true`
@@ -77,7 +83,7 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
         }
 
         getData();
-    }, [categoryValue]) 
+    }, [categorys, category]) 
 
     const handleExtendMenu = (id: string) => {
     setOpenTransactions(prev => ({ ...prev, [id]: !prev[id] }));
@@ -95,7 +101,7 @@ export function ExpandedMenuCategory({ category, onClose }: Props) {
             <div className={`fixed w-90 h-fit bg-primary-900 text-secondary top-10 rounded-md text-center overflow-hidden bg-opacity-50
         transition-all duration-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
                 <nav className="bg-accent text-primary w-full relative flex h-10 justify-center align-middle items-center">
-                    <h1 className="text-2xl font-bold">{category}</h1>
+                    <h1 className="text-2xl font-bold">{name}</h1>
                     <button className="absolute top-1/2 right-2 transform -translate-y-1/2" onClick={handleClose}><FontAwesomeIcon icon={faX}/></button>
                 </nav>
                 {transactions.map(transaction => 

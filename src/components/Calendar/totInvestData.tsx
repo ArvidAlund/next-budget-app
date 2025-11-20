@@ -23,11 +23,11 @@ export default function TotInvestData(){
             const { data, error } = await supabase
                 .from('transactions')
                 .select('*')
-                .eq('type', 'utgift')
+                .eq('type', 'expense')
                 .eq('description', 'Avanza')
                 .eq("user_id", user)
                 .eq('amount', amount)
-                .eq('category', 'sparande');
+                .eq('category', 'savings');
 
             if (error) {
                 console.error("Supabase error:", error);

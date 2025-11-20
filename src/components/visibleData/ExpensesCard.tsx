@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container } from "../ui/container";
 import { ExpensesCategory } from "../ui/ExpensesCategory";
-import {
-  faHouse, faBowlFood, faCarSide, faCartShopping, faBriefcase,
-  faDumbbell, faGamepad, faGlobe, faMoneyBills, faCircleQuestion
-} from "@fortawesome/free-solid-svg-icons";
 import supabase from "@/app/lib/supabaseClient";
 import { getbudget } from "@/app/lib/getbudget";
 import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
