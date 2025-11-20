@@ -39,7 +39,6 @@ export function ExpensesBox() {
       
         if (error) return
 
-        console.log("recurring: ", data)
         if (!error && data){
           setReccuringItems(data)
         }
@@ -80,7 +79,6 @@ export function ExpensesBox() {
     // Loopa tills vi når dagens år/månad
     while (year < currentYear || (year === currentYear && month <= currentMonth)) {
       const date = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-      console.log("Adding transaction for:", date);
 
       // Skapa transaktion
       await addTransaction({
@@ -103,9 +101,6 @@ export function ExpensesBox() {
       // Avsluta om vi precis lagt till dagens månad
       if (year === currentYear && month > currentMonth) break;
     }
-
-    console.log("All missing transactions added!");
-    console.log(activeItem.id, "     -------    ", activeItem.user_id)
 
     if (activeItem?.id && activeItem?.user_id) {
       await deleteTransaction(activeItem.id, activeItem.user_id);
