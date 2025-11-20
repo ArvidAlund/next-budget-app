@@ -9,7 +9,7 @@ type categoryWProps = {
   image: IconDefinition
   imageclr?: string
   category: string
-  totsum: number
+  budgetsum: number
   percentageValue:number
   expense:number
   name: string
@@ -20,7 +20,7 @@ export function ExpensesCategory({
   imageclr,
   name,
   category,
-  totsum,
+  budgetsum,
   percentageValue,
   expense
 }: categoryWProps) {
@@ -45,7 +45,7 @@ export function ExpensesCategory({
         <div className="flex flex-col text-right  w-1/3 items-end h-10 ml-auto justify-between">
           <p className="text-md font-bold">{formatCurrency(expense) + " kr"}</p>
           <p className="text-xs font-medium text-muted-foreground">
-            {formatCurrency(totsum - expense) + " kr"}
+            {formatCurrency(budgetsum - expense) + " kr"}
           </p>
         </div>
       </div>
