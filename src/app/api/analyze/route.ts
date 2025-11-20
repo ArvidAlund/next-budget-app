@@ -59,7 +59,7 @@ Text att analysera:
       ) {
         try {
           await addTransaction({
-            type: "utgift",
+            type: "expense",
             category: parsed.category,
             amount: parsed.price,
             date: parsed.date,
