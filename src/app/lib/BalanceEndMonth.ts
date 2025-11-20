@@ -77,8 +77,8 @@ export async function BalanceEndMonth(){
             //Räknar ihop alla transaktioner
 
             transactions?.forEach((item) => {
-                if (item.type === "inkomst") income += item.amount;
-                else if (item.type === "utgift") expense += item.amount;
+                if (item.type === "income") income += item.amount;
+                else if (item.type === "expense") expense += item.amount;
             });
 
             if (balances && balances.length > 0) {

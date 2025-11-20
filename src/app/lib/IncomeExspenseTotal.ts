@@ -47,8 +47,8 @@ export async function getIncomeExpenseTotal(userId: string, date: Date) {
   transactions?.forEach((item) => {
     if (parseInt(item.date.split("-")[2], 10) > date.getDate()) return;
     
-    if (item.type === "inkomst") income += item.amount;
-    else if (item.type === "utgift") expense += item.amount;
+    if (item.type === "income") income += item.amount;
+    else if (item.type === "expense") expense += item.amount;
     
     });
 

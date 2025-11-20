@@ -1,7 +1,7 @@
 import supabase from "@/app/lib/supabaseClient"
 
 export async function addTransaction(transaction: {
-  type: string
+  type: "income" | "expense"
   category: string
   amount: number
   date: string
@@ -52,7 +52,7 @@ export async function addTransaction(transaction: {
 }
 
 export async function deleteTransaction(id: string, user_id:string){
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("transactions")  // tabellen du vill ta bort från
     .delete()
     .eq("user_id", user_id.trim())
