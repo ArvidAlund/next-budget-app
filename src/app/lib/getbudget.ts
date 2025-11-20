@@ -5,7 +5,7 @@ export async function getbudget(userId: string) {
   // Försök hämta budgeten
   const { data, error } = await supabase
     .from("budgets")
-    .select("boende, mat, transport, arbete, abonnemang, halsa, shopping, nojen, sparande, ovrigt")
+    .select("*")
     .eq("user_id", userId)
 
   if (error) {
@@ -21,7 +21,7 @@ export async function getbudget(userId: string) {
       // Hämta budgeten igen efter skapande
       const { data: newData, error: fetchError } = await supabase
         .from("budgets")
-        .select("boende, mat, transport, arbete, abonnemang, halsa, shopping, nojen, sparande, ovrigt")
+        .select("*")
         .eq("user_id", userId)
         .single()  // direkt hämta ett objekt, inte array
 

@@ -6,6 +6,15 @@ import { X } from "lucide-react"
 import { addTransaction } from "@/app/lib/transactions"
 import { ScanReceipt } from "./ScanReceipt"
 import { useRouter } from "next/navigation";
+import { getCategories } from "@/app/lib/db/getCategories"
+
+interface CategoryInterface {
+  category_key: string;
+  icon: string;
+  name_en: string;
+  name_sv: string;
+  transaction_type: 'income' | 'expense';
+}
 
 export function AddTransactionModal({
   onClose,
@@ -17,7 +26,7 @@ export function AddTransactionModal({
   const router = useRouter();
 
   // Formulär state
-  const [type, setType] = useState<"inkomst" | "utgift">("inkomst")
+  const [type, setType] = useState<"income" | "expense">("income")
   const [category, setCategory] = useState("")
   const [amount, setAmount] = useState("")
   const [description, setDescription] = useState("")
@@ -25,33 +34,49 @@ export function AddTransactionModal({
   const [loading, setLoading] = useState(false)
   const [showScanner, setShowScanner] = useState(false)
   const [recurring, setRecurring] = useState(false);
+  const [incomeOptions, setIncomeOptions] = useState<CategoryInterface[]>([])
+  const [expenseOptions, setExpenseOptions] = useState<CategoryInterface[]>([])
+  const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([])
+
 
   // Sätt default datum till idag
   useEffect(() => {
-    setDate(new Date().toISOString().split("T")[0])
-  }, [])
+    setDate(new Date().toISOString().split("T")[0]);
 
-  // Kategorier beroende på typ
-  const incomeOptions = [
-    { value: "lon", label: "Lön" },
-    { value: "bidrag", label: "Bidrag" },
-    { value: "bonus", label: "Bonus" },
-    { value: "investeringar", label: "Investeringar" },
-    { value: "annat", label:"Annat"},
-  ]
-  const expenseOptions = [
-    { value: "boende", label: "Boende" },
-    { value: "mat", label: "Mat & Hushåll" },
-    { value: "transport", label: "Transport" },
-    { value: "arbete", label: "Arbete & Studier" },
-    { value: "abonnemang", label: "Abonnemang & Tjänster" },
-    { value: "halsa", label: "Hälsa & Välmående" },
-    { value: "shopping", label: "Shopping & Kläder" },
-    { value: "nojen", label: "Nöjen & Fritid" },
-    { value: "sparande", label: "Sparande & Investeringar" },
-    { value: "ovrigt", label: "Övrigt" },
-  ]
-  const categoryOptions = type === "inkomst" ? incomeOptions : expenseOptions
+    const getOptions = async () => {
+      const categorys: CategoryInterface[] = await getCategories();
+
+      const incomeOpts: CategoryInterface[] = [];
+      const expenseOpts: CategoryInterface[] = [];
+
+      for (const cat of categorys) {
+        if (cat.transaction_type.includes("income")) {
+          incomeOpts.push(cat);
+        }
+        if (cat.transaction_type.includes("expense")) {
+          expenseOpts.push(cat);
+        }
+      }
+
+      incomeOpts.sort((a, b) => a.name_sv.localeCompare(b.name_sv));
+      expenseOpts.sort((a, b) => a.name_sv.localeCompare(b.name_sv));
+
+      setIncomeOptions(incomeOpts);
+      setExpenseOptions(expenseOpts);
+    };
+
+    getOptions();
+  }, []);
+  
+
+  useEffect(() => {
+    const chosenCategoryOptions = (type === "income" ? incomeOptions : expenseOptions).map(cat => ({
+      value: cat.category_key,
+      label: cat.name_sv
+    }));
+    setCategoryOptions(chosenCategoryOptions);
+  }, [incomeOptions, expenseOptions, type]);
+
 
   // Skicka formulär
   async function handleSubmit(e: React.FormEvent) {
@@ -107,10 +132,10 @@ export function AddTransactionModal({
             <ComboBox
               label="Typ*"
               value={type}
-              onChange={(val) => setType(val as "inkomst" | "utgift")}
+              onChange={(val) => setType(val === "income" ? "income" : "expense")}
               options={[
-                { value: "inkomst", label: "Inkomst" },
-                { value: "utgift", label: "Utgift" },
+                { value: "income", label: "Inkomst" },
+                { value: "expense", label: "Utgift" },
               ]}
             />
 

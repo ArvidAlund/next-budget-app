@@ -79,11 +79,10 @@ export function ExpensesBox() {
     // Loopa tills vi når dagens år/månad
     while (year < currentYear || (year === currentYear && month <= currentMonth)) {
       const date = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-      console.log("Adding transaction for:", date);
 
       // Skapa transaktion
       await addTransaction({
-        type: "utgift",
+        type: "expense",
         category: activeItem.category,
         amount: activeItem.amount,
         description: activeItem.description,
@@ -102,9 +101,6 @@ export function ExpensesBox() {
       // Avsluta om vi precis lagt till dagens månad
       if (year === currentYear && month > currentMonth) break;
     }
-
-    console.log("All missing transactions added!");
-    console.log(activeItem.id, "     -------    ", activeItem.user_id)
 
     if (activeItem?.id && activeItem?.user_id) {
       await deleteTransaction(activeItem.id, activeItem.user_id);
@@ -131,13 +127,13 @@ export function ExpensesBox() {
               <p>{truncate(item.description)}</p>
 
               {/* Belopp */}
-              <div className={`${item.type === "utgift" ? "text-red-500": "text-green-500"}`}>{item.type === "utgift" ? "-" : null} {formatCurrency(item.amount)} KR</div>
+              <div className={`${item.type === "expense" ? "text-red-500": "text-green-500"}`}>{item.type === "expense" ? "-" : null} {formatCurrency(item.amount)} KR</div>
             </div>
           
         ))}
       </Container>
       {activeItem ? (
-        <div className="absolute top-0 left-0 w-screen h-screen bg-[rgb(0,0,0,0.5)] backdrop-blur-sm flex items-center justify-center">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-[rgb(0,0,0,0.5)] backdrop-blur-sm flex items-center justify-center">
           <div className="w-1/2 h-fit p-2 bg-secondary text-center font-semibold relative flex flex-col gap-2">
             <button className="absolute -top-[15px] -right-[15px] bg-secondary p-2 rounded-md border-2 border-primary" onClick={handleClose}><FontAwesomeIcon icon={faX}/></button>
             <h4 className="text-center font-bold">{activeItem.description}</h4>

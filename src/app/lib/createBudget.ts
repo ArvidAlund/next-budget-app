@@ -3,16 +3,16 @@ import supabase from "./supabaseClient"
 export async function createBudget(userId: string) {
   const defaultBudget = {
     user_id: userId,
-    boende: 5000,
-    mat: 1500,
+    housing: 5000,
+    food: 1500,
     transport: 750,
-    arbete: 500,
-    abonnemang: 300,
-    halsa: 300,
+    work: 500,
+    subscriptions: 300,
+    health: 300,
     shopping: 500,
-    nojen: 500,
-    sparande: 500,
-    ovrigt: 200,
+    entertainment: 500,
+    savings: 500,
+    other: 200,
   }
 
   const { data, error } = await supabase

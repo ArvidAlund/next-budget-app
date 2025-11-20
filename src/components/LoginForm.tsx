@@ -36,7 +36,7 @@ export function LoginModal() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-500">
       {/* Modalinnehåll */}
       <div className="bg-white p-6 rounded-xl shadow-xl max-w-sm w-full">
         <h2 className="text-xl font-semibold mb-4 text-black text-center">Logga in</h2>

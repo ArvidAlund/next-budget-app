@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Container } from "../ui/container";
 import { ExpensesCategory } from "../ui/ExpensesCategory";
-import {
-  faHouse, faBowlFood, faCarSide, faCartShopping, faBriefcase,
-  faDumbbell, faGamepad, faGlobe, faMoneyBills, faCircleQuestion
-} from "@fortawesome/free-solid-svg-icons";
 import supabase from "@/app/lib/supabaseClient";
 import { getbudget } from "@/app/lib/getbudget";
 import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
+import { getCategories } from "@/app/lib/db/getCategories";
+import { getIcon } from "@/app/lib/iconDefenition";
+import getUserOption from "@/app/lib/db/getUserOption";
 
 type BudgetData = {
   boende: number;
@@ -32,18 +31,13 @@ type Transaction = {
   description: string;
 };
 
-const categoryList = [
-  { image: faHouse, category: "Boende", key: "boende" },
-  { image: faBowlFood, category: "Mat & Hushåll", key: "mat" },
-  { image: faCarSide, category: "Transport", key: "transport" },
-  { image: faBriefcase, category: "Arbete & Studier", key: "arbete" },
-  { image: faGlobe, category: "Abonnemang & Tjänster", key: "abonnemang" },
-  { image: faDumbbell, category: "Hälsa & Välmående", key: "halsa" },
-  { image: faCartShopping, category: "Shopping & Kläder", key: "shopping" },
-  { image: faGamepad, category: "Nöjen & Fritid", key: "nojen" },
-  { image: faMoneyBills, category: "Sparande", key: "sparande" },
-  { image: faCircleQuestion, category: "Övrigt", key: "ovrigt" },
-];
+interface Category {
+  category_key: string;
+  icon: string;
+  name_en: string;
+  name_sv: string;
+  transaction_type: 'income' | 'expense';
+}
 
 // Beräkna procent av budget som spenderats
 function calculatePercentage(totsum: number, expense: number): number {
@@ -55,10 +49,20 @@ function calculatePercentage(totsum: number, expense: number): number {
 export function ExpensesCard() {
   const [budgetData, setBudgetData] = useState<BudgetData | null>(null);
   const [categorySums, setCategorySums] = useState<Record<string, number>>({});
+  const [categorys , setCategorys] = useState<Category[]>([]);
+  const [sortingOrder, setSortingOrder] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const date = new Date();
+
+      const categoryData = await getCategories();
+      setCategorys(categoryData);
+
+      const userSortingOrder = await getUserOption("category_order");
+      if (typeof userSortingOrder === "object" && Array.isArray(userSortingOrder)) {
+        setSortingOrder(userSortingOrder as string[]);
+      }
 
       // Hämta inloggad användare
       const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -114,19 +118,29 @@ export function ExpensesCard() {
         <a href="/transactions" className="text-blue-700">Visa alla</a>
       </div>
       <hr className="bg-primary w-full mt-2 mb-2" />
-
-      {categoryList.map(({ image, category, key }, index) => (
-        <div key={key}>
-          <ExpensesCategory
-            image={image}
-            category={category}
-            totsum={budgetData[key as keyof BudgetData]}
-            expense={categorySums[key] || 0}
-            percentageValue={calculatePercentage(budgetData[key as keyof BudgetData], categorySums[key] || 0)}
-          />
-          {index < categoryList.length - 1 && <hr className="bg-primary w-full mt-2 mb-2" />}
-        </div>
-      ))}
+      
+      {categorys.length > 0 &&
+      categorys
+        .filter((c) => c.transaction_type.includes('expense'))
+        .sort((a, b) => sortingOrder.indexOf(a.category_key) - sortingOrder.indexOf(b.category_key))
+        .map(({ category_key, icon, name_sv }, index) => (
+          <div key={category_key}>
+            <ExpensesCategory
+              image={getIcon(icon)}
+              category={category_key}
+              name={name_sv}
+              budgetsum={budgetData[category_key as keyof BudgetData]}
+              expense={categorySums[category_key] || 0}
+              percentageValue={calculatePercentage(
+                budgetData[category_key as keyof BudgetData],
+                categorySums[category_key] || 0
+              )}
+            />
+            {index < categorys.length - 1 && (
+              <hr className="bg-primary w-full mt-2 mb-2" />
+            )}
+          </div>
+        ))}
     </Container>
   );
 }
