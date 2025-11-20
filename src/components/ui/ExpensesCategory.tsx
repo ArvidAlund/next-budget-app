@@ -12,11 +12,13 @@ type categoryWProps = {
   totsum: number
   percentageValue:number
   expense:number
+  name: string
 }
 
 export function ExpensesCategory({
   image,
   imageclr,
+  name,
   category,
   totsum,
   percentageValue,
@@ -37,7 +39,7 @@ export function ExpensesCategory({
           <FontAwesomeIcon icon={image} className={`${imageclr} text-[2rem] mr-2 text-secondary-100`} />
         </div>
         <div className="flex flex-col text-left  w-[60%] justify-between h-10">
-          <p className="font-medium text-md">{category}</p>
+          <p className="font-medium text-md">{name}</p>
           <ProgressBar value={percentageValue}/>
         </div>
         <div className="flex flex-col text-right  w-1/3 items-end h-10 ml-auto justify-between">
