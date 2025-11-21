@@ -53,7 +53,7 @@ export default function FirstSetup() {
   };
 
   return (
-    <main className="fixed top-0 left-0 z-200 w-full h-full bg-primary flex items-center justify-center">
+    <main className="fixed top-0 left-0 z-200 w-full h-full bg-primary flex items-center justify-center overflow-x-scroll">
         <div className="border min-w-1/2 bg-secondary">
             {renderStage()}
             <div className="mt-2 text-center">

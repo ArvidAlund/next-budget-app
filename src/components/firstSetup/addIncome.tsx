@@ -33,7 +33,7 @@ export default function AddIncome() {
         <div>
           <p className="font-semibold">Lön:</p>
           {salary.map((item, i) => (
-            <div key={i} className="flex gap-2 mb-2">
+            <div key={i} className="grid sm:grid-cols-[3fr_1fr] gap-2 mb-2">
               <input
                 type="number"
                 placeholder="Belopp"
@@ -64,6 +64,7 @@ export default function AddIncome() {
                   })
                 }
               />
+              <hr className="h-[2px] bg-primary col-span-full"/>
             </div>
           ))}
           <button
@@ -78,7 +79,7 @@ export default function AddIncome() {
         <div>
           <p className="font-semibold">Bidrag:</p>
           {grants.map((item, i) => (
-            <div key={i} className="flex gap-2 mb-2">
+            <div key={i} className="grid sm:grid-cols-[3fr_1fr] gap-2 mb-2">
               <input
                 type="number"
                 placeholder="Belopp"
@@ -109,6 +110,7 @@ export default function AddIncome() {
                   })
                 }
               />
+              <hr className="h-[2px] bg-primary col-span-full"/>
             </div>
           ))}
           <button

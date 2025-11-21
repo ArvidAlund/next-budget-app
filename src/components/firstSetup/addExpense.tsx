@@ -47,56 +47,56 @@ export default function AddExpense(){
                 <div>
                     <p className="font-semibold">Utgift:</p>
                     {expense.map((item, i) => (
-                        <div key={i} className="grid grid-cols-2 gap-2 mb-2 items-center justify-center">
-                        <input
-                            type="number"
-                            placeholder="Belopp"
-                            className="border p-1 rounded"
-                            value={item.amount === 0 ? "" : item.amount}
-                            onChange={(e) =>
-                            setExpense((prev) => {
-                                const newArr = [...prev];
-                                newArr[i].amount = parseInt(e.target.value) || 0;
-                                return newArr;
-                            })
-                            }
-                        />
-                        <input
-                            type="number"
-                            placeholder="Dag"
-                            min={1}
-                            max={31}
-                            className="border p-1 rounded"
-                            value={item.day}
-                            onChange={(e) =>
-                            setExpense((prev) => {
-                                const dayValue = parseInt(e.target.value);
-                                if (dayValue < 1 || dayValue > 31) return prev;
-                                const newArr = [...prev];
-                                newArr[i].day = e.target.value;
-                                return newArr;
-                            })
-                            }
-                        />
-                        <input 
-                            type="text" 
-                            placeholder='Namn'
-                            className='border p-1 rounded'
-                            value={item.description}
-                            onChange={(e) =>
+                        <div key={i} className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2 items-center justify-center">
+                            <input
+                                type="number"
+                                placeholder="Belopp"
+                                className="border p-1 rounded h-10 w-full"
+                                value={item.amount === 0 ? "" : item.amount}
+                                onChange={(e) =>
                                 setExpense((prev) => {
-                                    const newArr = [...prev]
-                                    newArr[i].description = e.target.value;
-                                    return newArr
+                                    const newArr = [...prev];
+                                    newArr[i].amount = parseInt(e.target.value) || 0;
+                                    return newArr;
                                 })
-                            }
-                        />
-                        <select className="mt-2 p-2 border rounded w-full bg-primary text-secondary">
-                            {categorys.map((cat) => (
-                                <option key={cat.category_key} value={cat.category_key} >{cat.name_sv}</option>
-                            ))}
-                        </select>
-                        <hr className='col-span-2 bg-primary h-[2px]'/>
+                                }
+                            />
+                            <input
+                                type="number"
+                                placeholder="Dag"
+                                min={1}
+                                max={31}
+                                className="border p-1 rounded h-10 w-full"
+                                value={item.day}
+                                onChange={(e) =>
+                                setExpense((prev) => {
+                                    const dayValue = parseInt(e.target.value);
+                                    if (dayValue < 1 || dayValue > 31) return prev;
+                                    const newArr = [...prev];
+                                    newArr[i].day = e.target.value;
+                                    return newArr;
+                                })
+                                }
+                            />
+                            <input 
+                                type="text" 
+                                placeholder='Namn'
+                                className='border p-1 rounded h-10 w-full'
+                                value={item.description}
+                                onChange={(e) =>
+                                    setExpense((prev) => {
+                                        const newArr = [...prev]
+                                        newArr[i].description = e.target.value;
+                                        return newArr
+                                    })
+                                }
+                            />
+                            <select className="mt-2 p-2 border rounded bg-primary text-secondary h-10 w-full">
+                                {categorys.map((cat) => (
+                                    <option key={cat.category_key} value={cat.category_key} >{cat.name_sv}</option>
+                                ))}
+                            </select>
+                            <hr className='col-span-full bg-primary h-[2px]'/>
                         </div>
                     ))}
                     <button
