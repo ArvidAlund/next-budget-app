@@ -1,13 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddInitalAmount from "./addInitalAmount";
 import LanguageCurrency from "./languageCurrency";
+import AddIncome from "./addIncome";
 import BudgetTypeOption from "../options/optionFunctions/budgetType";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { Button } from "../ui/button";
+import { onEvent } from "@/app/lib/eventbus";
+
+type Income = { day: string; amount: number };
+type IncomeData = {
+  salary: Income[];
+  grants: Income[];
+};
 
 export default function FirstSetup() {
   const [stage, setStage] = useState<number>(1);
   const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
+  const [incomeList, setIncomeList] = useState<IncomeData | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onEvent("Income-data", (data: IncomeData) => {
+        console.log("Data: ", data);
+        setIncomeList(data);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const renderStage = () => {
     switch (stage) {
@@ -15,6 +33,8 @@ export default function FirstSetup() {
             return <LanguageCurrency />;
         case 2:
             return <BudgetTypeOption />;
+        case 3:
+            return <AddIncome />;
       default:
         return null;
     }
