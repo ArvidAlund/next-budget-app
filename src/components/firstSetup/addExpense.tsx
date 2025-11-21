@@ -27,7 +27,8 @@ export default function AddExpense(){
     useEffect(()=> {
         const fetchCategories = async () => {
             const categoryData = await getCategories();
-            setCategorys(categoryData);
+            const filtered = categoryData.filter((cat) => cat.transaction_type.includes("expense"))
+            setCategorys(filtered);
             setLoaded(true)
         }
 
@@ -91,9 +92,13 @@ export default function AddExpense(){
                                     })
                                 }
                             />
-                            <select className="mt-2 p-2 border rounded bg-primary text-secondary h-10 w-full">
+                            <select className="mt-2 p-2 border rounded bg-primary text-secondary h-10 w-full" onChange={(e) => setExpense((prev) => {
+                                const newArr = [...prev]
+                                newArr[i].category = e.target.value;
+                                return newArr
+                            })}>
                                 {categorys.map((cat) => (
-                                    <option key={cat.category_key} value={cat.category_key} >{cat.name_sv}</option>
+                                    <option key={cat.category_key} value={cat.category_key} selected={expense[i].category === cat.category_key}>{cat.name_sv}</option>
                                 ))}
                             </select>
                             <hr className='col-span-full bg-primary h-[2px]'/>
@@ -101,7 +106,7 @@ export default function AddExpense(){
                     ))}
                     <button
                         className="mt-2 px-2 py-1 border rounded bg-gray-100"
-                        onClick={() => setExpense((prev) => [...prev, { day: "", amount: 0, description: "", category:"" }])}
+                        onClick={() => setExpense((prev) => [...prev, { day: "", amount: 0, description: "", category:"other" }])}
                     >
                         Lägg till en utgift
                     </button>
@@ -110,7 +115,7 @@ export default function AddExpense(){
     
             {/* Summering */}
             <div className="mt-4 p-2 border rounded bg-gray-50">
-              <p><strong>Totala utgifter:</strong> {formatCurrency(totalExpense)} kr</p>
+              <div className='grid sm:grid-cols-2 text-center'><strong>Totala utgifter: </strong><p>{formatCurrency(totalExpense)} kr</p></div>
             </div>
           </div>
         </div>
