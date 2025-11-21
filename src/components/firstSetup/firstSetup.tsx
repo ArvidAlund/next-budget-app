@@ -3,6 +3,7 @@ import AddInitalAmount from "./addInitalAmount";
 import LanguageCurrency from "./languageCurrency";
 import AddIncome from "./addIncome";
 import BudgetTypeOption from "../options/optionFunctions/budgetType";
+import AddExpense from "./addExpense";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { Button } from "../ui/button";
 import { onEvent } from "@/app/lib/eventbus";
@@ -13,18 +14,27 @@ type IncomeData = {
   grants: Income[];
 };
 
+type Expense = { day: string; amount: number, description: string, category: string };
+
 export default function FirstSetup() {
   const [stage, setStage] = useState<number>(1);
   const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
   const [incomeList, setIncomeList] = useState<IncomeData | null>(null);
+  const [expenseList, setExpenseList] = useState<Expense[]| null>(null)
 
   useEffect(() => {
     const unsubscribe = onEvent("Income-data", (data: IncomeData) => {
-        console.log("Data: ", data);
         setIncomeList(data);
     });
 
-    return () => unsubscribe();
+    const unsubscribeExpense = onEvent("Expense-data", (data: { expense: Expense[] }) => {
+      setExpenseList(data.expense);
+    });
+
+    return () => {
+        unsubscribe();
+        unsubscribeExpense();
+    }
   }, []);
 
   const renderStage = () => {
@@ -35,6 +45,8 @@ export default function FirstSetup() {
             return <BudgetTypeOption />;
         case 3:
             return <AddIncome />;
+        case 4:
+            return <AddExpense />;
       default:
         return null;
     }
