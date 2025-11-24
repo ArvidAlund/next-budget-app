@@ -49,7 +49,7 @@ function calculatePercentage(totsum: number, expense: number): number {
 export function ExpensesCard() {
   const [budgetData, setBudgetData] = useState<BudgetData | null>(null);
   const [categorySums, setCategorySums] = useState<Record<string, number>>({});
-  const [categorys , setCategorys] = useState<Category[]>([]);
+  const [categorys , setCategorys] = useState<Category[]>([]); 
   const [sortingOrder, setSortingOrder] = useState<string[]>([]);
 
   useEffect(() => {

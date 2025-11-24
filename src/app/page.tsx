@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
+import { supabaseUserID } from "@/app/lib/supabaseClient"
 
 import { ExpensesBox } from "@/components/visibleData/ExpensesBox"
 import { AddExpenseBtn } from "@/components/AddExpenseBtn"
@@ -15,6 +16,7 @@ import type { Session } from '@supabase/supabase-js'
 import { useWindowWidth } from "@/components/useWindowWidth"
 import calcInvestment from "./lib/calcInvestment"
 import TotInvestData from "@/components/Calendar/totInvestData"
+import FirstSetup from "@/components/firstSetup/firstSetup"
 
 /**
  * Root client React component that manages authentication, modal state, alerts, and renders the main overview and expenses UI.
@@ -29,13 +31,13 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [alertType, setAlertType] = useState<"good" | "bad" | "">("")
   const width = useWindowWidth();
+  const [setup, setSetup] = useState<boolean>(true);
 
   // Hämta användarsession
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession()
       setSession(data.session)
-      setLoading(false)
     }
 
     getSession()
@@ -43,6 +45,26 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
+
+    const checkSetup = async () => {
+      const userId = await supabaseUserID();
+
+      const {count, error} = await supabase
+      .from("transactions")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("type", "income")
+      .eq("description", "Inital Amount")
+
+      if (error || !count) return
+
+      if (count > 0) {
+        setSetup(false)
+      }
+      setLoading(false)
+    }
+
+    checkSetup();
 
     calcInvestment();
 
@@ -65,7 +87,11 @@ function App() {
   if (!session) return <LoginModal />
 
   return (
-    <div className="min-h-screen w-full bg-primary flex flex-col items-center gap-6 overflow-x-hidden p-4">
+    <>
+      {setup ? (
+        <FirstSetup />
+      ) : (
+      <div className="min-h-screen w-full bg-primary flex flex-col items-center gap-6 overflow-x-hidden p-4">
       {width < 1024 ? <TopInfo textclr="text-white"/> : null}
       <Overview />
       <ExpensesCard />
@@ -83,6 +109,8 @@ function App() {
       <ExpensesBox/>
       <TotInvestData/>
     </div>
+    )}
+    </>
   )
 }
 
