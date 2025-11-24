@@ -14,7 +14,7 @@ interface Category {
 }
 
 export default function AddExpense(){
-    const [expense, setExpense] = useState<Expense[]>([{ day: "", amount: 0, description: "", category: "" }]);
+    const [expense, setExpense] = useState<Expense[]>([{ day: "", amount: 0, description: "", category: "other" }]);
     const [categorys , setCategorys] = useState<Category[]>([]); 
     const [loaded, setLoaded] = useState<boolean>(false)
 

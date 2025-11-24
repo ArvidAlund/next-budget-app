@@ -6,7 +6,7 @@ export default function AddInitalAmount(){
     const [startAmount, setStartAmount] = useState<number>()
 
     useEffect(()=>{
-        emitEvent('Start-Income', {startAmount})
+        emitEvent('Start-Income', startAmount)
     },[startAmount])
     return(
         <div className="p-4 grid gap-2 grid-cols-2 items-center">

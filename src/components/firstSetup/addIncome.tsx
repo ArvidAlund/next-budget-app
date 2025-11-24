@@ -14,10 +14,8 @@ export default function AddIncome() {
 
   useEffect(() => {
     emitEvent('Income-data', {
-        detail: {
-            salary,
-            grants
-        }
+      salary,
+      grants
     });
   },[salary, grants])
 

@@ -7,6 +7,7 @@ import AddExpense from "./addExpense";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { Button } from "../ui/button";
 import { onEvent, emitEvent } from "@/app/lib/eventbus";
+import SendData from "./sendData";
 
 type Income = { day: string; amount: number };
 type IncomeData = {
@@ -44,8 +45,19 @@ export default function FirstSetup() {
 
   useEffect(()=>{
     if (stage <= totSteps) return
-    console.log("yay")
-  },[stage])
+    if (incomeList === null) return
+    if (expenseList === null) return
+    const combined = [
+      ...incomeList.salary.map(item => ({ ...item, type: 'salary' })),
+      ...incomeList.grants.map(item => ({ ...item, type: 'grant' })),
+      ...expenseList.map(item => ({ ...item, type: 'expense'})),
+      { type: 'startAmount', amount: startAmount ?? 0 }
+    ];
+
+    console.log(combined)
+    setSaveChanges(true);
+    emitEvent('send-data', {combined})
+  },[stage, incomeList, expenseList, startAmount])
 
   const renderStage = () => {
     switch (stage) {
@@ -59,6 +71,8 @@ export default function FirstSetup() {
             return <AddExpense />;
         case 5:
             return <AddInitalAmount/>;
+        case 6:
+            return <SendData/>;
       default:
         return null;
     }
