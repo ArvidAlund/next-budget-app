@@ -46,6 +46,13 @@ function calculatePercentage(totsum: number, expense: number): number {
   return Math.min(Math.round(percentage), 100);
 }
 
+/**
+ * Renders an expenses overview card showing budgeted and spent amounts per expense category for the current month.
+ *
+ * On mount, fetches categories, the user's category ordering, the user's budget, and this month's transactions; displays a loading message until the budget is loaded and then shows each expense category with its budget, spent amount, and percentage used.
+ *
+ * @returns A JSX element that displays budgeted and spent amounts per expense category for the current month.
+ */
 export function ExpensesCard() {
   const [budgetData, setBudgetData] = useState<BudgetData | null>(null);
   const [categorySums, setCategorySums] = useState<Record<string, number>>({});

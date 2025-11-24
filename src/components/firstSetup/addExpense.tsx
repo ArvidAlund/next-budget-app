@@ -13,6 +13,13 @@ interface Category {
   transaction_type: 'income' | 'expense';
 }
 
+/**
+ * Render a form for managing monthly expense entries and display their total.
+ *
+ * Emits an 'Expense-data' event whenever the expense list changes and fetches available expense categories on mount.
+ *
+ * @returns The JSX element containing expense inputs, a button to add an expense, and a total expense summary.
+ */
 export default function AddExpense(){
     const [expense, setExpense] = useState<Expense[]>([{ day: "", amount: 0, description: "", category: "other" }]);
     const [categorys , setCategorys] = useState<Category[]>([]); 

@@ -4,6 +4,13 @@ import { emitEvent } from "@/app/lib/eventbus";
 
 type Income = { day: string; amount: number, description: string; };
 
+/**
+ * Render a UI for adding monthly income entries (salary and grants), editing their day, amount, and description, and displaying formatted totals.
+ *
+ * The component maintains two lists of income items (salary and grants), emits an `Income-data` event with both lists whenever they change, and enforces day values between 1 and 31. Amount inputs are parsed to integers and empty inputs are treated as zero.
+ *
+ * @returns A JSX element containing the editable salary and grant lists and a summary showing total salary, total grants, and total income.
+ */
 export default function AddIncome() {
   const [salary, setSalary] = useState<Income[]>([{ day: "", amount: 0, description: "" }]);
   const [grants, setGrants] = useState<Income[]>([{ day: "", amount: 0, description: "" }]);

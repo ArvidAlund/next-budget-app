@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import getUserOption from "@/app/lib/db/getUserOption";
 import { emitEvent } from "@/app/lib/eventbus";
 
+/**
+ * Renders a budget-style option control that loads the user's saved choice and lets the user change it.
+ *
+ * The component fetches the stored "budget_type" on mount, initializes internal state, displays a select dropdown
+ * (or a loading indicator while fetching), and emits "unsaved-changes" or "remove-unsaved-changes" events on the
+ * event bus when the current selection diverges from or matches the stored value.
+ *
+ * @returns The component's JSX element containing the label and select input (or a loading indicator while loading).
+ */
 export default function BudgetTypeOption(){
     const [budgetType, setBudgetType] = useState<string>("zero");
     const [userBudgetType, setUserBudgetType] = useState<string | null>(null);
