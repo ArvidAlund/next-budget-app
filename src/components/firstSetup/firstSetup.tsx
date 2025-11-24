@@ -10,7 +10,7 @@ import { onEvent } from "@/app/lib/eventbus";
 import saveSetup from "@/app/lib/db/saveSetup";
 import LoadingMessage from "../ui/loadingMessage";
 
-type Income = { day: string; amount: number };
+type Income = { day: string; amount: number, description: string; };
 type IncomeData = {
   salary: Income[];
   grants: Income[];
@@ -20,12 +20,14 @@ type Salary = {
   day: string;
   amount: number;
   type: "salary";
+  description: string;
 };
 
 type Grant = {
   day: string;
   amount: number;
   type: "grant";
+  description: string;
 };
 
 type Expense = {
@@ -83,8 +85,10 @@ export default function FirstSetup() {
 
     const saveSetupFunction = async () => {
       if (!combined) return
-      await saveSetup(combined);
-      // setSaveChanges(true);
+      const success = await saveSetup(combined);
+
+      if(!success) return
+      setSaveChanges(true);
     }
 
     saveSetupFunction();

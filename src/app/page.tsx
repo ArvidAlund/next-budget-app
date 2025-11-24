@@ -54,13 +54,13 @@ function App() {
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId)
       .eq("type", "income")
-      .eq("description", "InitalAmount")
+      .eq("description", "Inital Amount")
 
       if (error || !count) return
 
-      // if (count > 0) {
-      //   setSetup(false)
-      // }
+      if (count > 0) {
+        setSetup(false)
+      }
       setLoading(false)
     }
 

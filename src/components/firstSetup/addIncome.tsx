@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { formatCurrency } from "@/app/lib/formatcurrency";
 import { emitEvent } from "@/app/lib/eventbus";
 
-type Income = { day: string; amount: number };
+type Income = { day: string; amount: number, description: string; };
 
 export default function AddIncome() {
-  const [salary, setSalary] = useState<Income[]>([{ day: "", amount: 0 }]);
-  const [grants, setGrants] = useState<Income[]>([{ day: "", amount: 0 }]);
+  const [salary, setSalary] = useState<Income[]>([{ day: "", amount: 0, description: "" }]);
+  const [grants, setGrants] = useState<Income[]>([{ day: "", amount: 0, description: "" }]);
 
   const totalSalary = salary.reduce((sum, s) => sum + s.amount, 0);
   const totalGrants = grants.reduce((sum, g) => sum + g.amount, 0);
@@ -62,12 +62,25 @@ export default function AddIncome() {
                   })
                 }
               />
+              <input 
+              type="text"
+              placeholder="Namn"
+              className="border p-1 rounded col-span-full"
+              value={item.description}
+              onChange={(e) =>
+                setSalary((prev) => {
+                  const newArr = [...prev];
+                  newArr[i].description = e.target.value;
+                  return newArr;
+                })
+              }
+              />
               <hr className="h-[2px] bg-primary col-span-full"/>
             </div>
           ))}
           <button
             className="mt-2 px-2 py-1 border rounded bg-gray-100"
-            onClick={() => setSalary((prev) => [...prev, { day: "", amount: 0 }])}
+            onClick={() => setSalary((prev) => [...prev, { day: "", amount: 0, description: "" }])}
           >
             Lägg till en till lön
           </button>
@@ -108,12 +121,25 @@ export default function AddIncome() {
                   })
                 }
               />
+              <input 
+              type="text"
+              placeholder="Namn"
+              className="border p-1 rounded col-span-full"
+              value={item.description}
+              onChange={(e) =>
+                setGrants((prev) => {
+                  const newArr = [...prev];
+                  newArr[i].description = e.target.value;
+                  return newArr;
+                })
+              }
+              />
               <hr className="h-[2px] bg-primary col-span-full"/>
             </div>
           ))}
           <button
             className="mt-2 px-2 py-1 border rounded bg-gray-100"
-            onClick={() => setGrants((prev) => [...prev, { day: "", amount: 0 }])}
+            onClick={() => setGrants((prev) => [...prev, { day: "", amount: 0, description: "" }])}
           >
             Lägg till ett bidrag
           </button>
