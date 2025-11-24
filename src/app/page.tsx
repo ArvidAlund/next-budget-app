@@ -19,11 +19,11 @@ import TotInvestData from "@/components/Calendar/totInvestData"
 import FirstSetup from "@/components/firstSetup/firstSetup"
 
 /**
- * Root client React component that manages authentication, modal state, alerts, and renders the main overview and expenses UI.
+ * Application root component that manages authentication state, modal visibility, setup gating, and temporary alerts while rendering the main overview and expenses UI.
  *
- * On mount it obtains the current Supabase session, subscribes to auth state changes, and triggers investment calculation. While loading it renders nothing; when unauthenticated it renders the login modal; when authenticated it renders the app layout including responsive top info, overview, expenses card, the add-transaction flow, and temporary alert messages.
+ * Renders nothing while initializing; shows the login modal when unauthenticated; if the user requires initial setup shows `FirstSetup`; otherwise renders the primary authenticated layout including responsive top info, overview, expenses, the add-transaction flow, temporary alerts, and investment data.
  *
- * @returns The component's rendered UI: `null` while loading, `LoginModal` when there is no session, or the authenticated app layout (overview, expenses, add-transaction modal when opened, and alert container) when a session exists.
+ * @returns `null` while initializing, the `LoginModal` when there is no active session, `FirstSetup` when initial setup is required, or the authenticated app layout otherwise.
  */
 function App() {
   const [modalOpen, setModalOpen] = useState(false)

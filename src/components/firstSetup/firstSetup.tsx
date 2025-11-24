@@ -45,6 +45,13 @@ type StartAmount = {
 
 export type Transaction = Salary | Grant | Expense | StartAmount;
 
+/**
+ * Renders a multi-step initial setup wizard that collects income, expense, and start amount data and persists the combined setup when finished.
+ *
+ * The component manages stage progression, subscribes to event-bus updates for income, expenses, and start amount, and triggers saving of the aggregated transactions when the final confirmation stage is reached.
+ *
+ * @returns The React element for the first-time setup UI.
+ */
 export default function FirstSetup() {
   const [stage, setStage] = useState<number>(1);
   const { unsavedChanges, setSaveChanges } = useUnsavedChanges();

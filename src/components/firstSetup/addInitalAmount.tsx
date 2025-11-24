@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
 
 
+/**
+ * Renders a two-column UI for entering an initial account amount and keeps that value in component state.
+ *
+ * Emits a 'Start-Income' event on the app event bus whenever the entered amount changes, passing the current numeric value or `undefined`.
+ *
+ * @returns The component's JSX element containing the labeled numeric input and descriptive text.
+ */
 export default function AddInitalAmount(){
     const [startAmount, setStartAmount] = useState<number>()
 
