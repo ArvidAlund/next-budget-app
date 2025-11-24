@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
+import { supabaseUserID } from "@/app/lib/supabaseClient"
 
 import { ExpensesBox } from "@/components/visibleData/ExpensesBox"
 import { AddExpenseBtn } from "@/components/AddExpenseBtn"
@@ -37,7 +38,6 @@ function App() {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession()
       setSession(data.session)
-      setLoading(false)
     }
 
     getSession()
@@ -45,6 +45,26 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
+
+    const checkSetup = async () => {
+      const userId = await supabaseUserID();
+
+      const {count, error} = await supabase
+      .from("transactions")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("type", "income")
+      .eq("description", "InitalAmount")
+
+      if (error || !count) return
+
+      // if (count > 0) {
+      //   setSetup(false)
+      // }
+      setLoading(false)
+    }
+
+    checkSetup();
 
     calcInvestment();
 

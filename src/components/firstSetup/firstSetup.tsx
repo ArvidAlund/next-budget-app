@@ -6,8 +6,9 @@ import BudgetTypeOption from "../options/optionFunctions/budgetType";
 import AddExpense from "./addExpense";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { Button } from "../ui/button";
-import { onEvent, emitEvent } from "@/app/lib/eventbus";
-import SendData from "./sendData";
+import { onEvent } from "@/app/lib/eventbus";
+import saveSetup from "@/app/lib/db/saveSetup";
+import LoadingMessage from "../ui/loadingMessage";
 
 type Income = { day: string; amount: number };
 type IncomeData = {
@@ -15,7 +16,32 @@ type IncomeData = {
   grants: Income[];
 };
 
-type Expense = { day: string; amount: number, description: string, category: string };
+type Salary = {
+  day: string;
+  amount: number;
+  type: "salary";
+};
+
+type Grant = {
+  day: string;
+  amount: number;
+  type: "grant";
+};
+
+type Expense = {
+  day: string;
+  amount: number;
+  description: string;
+  category: string;
+  type: "expense";
+};
+
+type StartAmount = {
+  amount: number;
+  type: "startAmount";
+};
+
+export type Transaction = Salary | Grant | Expense | StartAmount;
 
 export default function FirstSetup() {
   const [stage, setStage] = useState<number>(1);
@@ -44,19 +70,24 @@ export default function FirstSetup() {
   }, []);
 
   useEffect(()=>{
-    if (stage <= totSteps) return
-    if (incomeList === null) return
-    if (expenseList === null) return
-    const combined = [
-      ...incomeList.salary.map(item => ({ ...item, type: 'salary' })),
-      ...incomeList.grants.map(item => ({ ...item, type: 'grant' })),
-      ...expenseList.map(item => ({ ...item, type: 'expense'})),
-      { type: 'startAmount', amount: startAmount ?? 0 }
+    if (stage !== totSteps + 1) return;
+    if (!incomeList || !expenseList) return;
+
+    const combined: Transaction[] = [
+      ...incomeList.salary.map(item => ({ ...item, type: "salary" } as Salary)),
+      ...incomeList.grants.map(item => ({ ...item, type: "grant" } as Grant)),
+      ...expenseList.map(item => ({ ...item, type: "expense" } as Expense)),
+      { type: "startAmount", amount: startAmount ?? 0 } as StartAmount,
     ];
 
-    console.log(combined)
-    setSaveChanges(true);
-    emitEvent('send-data', {combined})
+
+    const saveSetupFunction = async () => {
+      if (!combined) return
+      await saveSetup(combined);
+      // setSaveChanges(true);
+    }
+
+    saveSetupFunction();
   },[stage, incomeList, expenseList, startAmount])
 
   const renderStage = () => {
@@ -72,7 +103,7 @@ export default function FirstSetup() {
         case 5:
             return <AddInitalAmount/>;
         case 6:
-            return <SendData/>;
+            return <LoadingMessage message="Sparar inställningar"/>;
       default:
         return null;
     }
