@@ -47,7 +47,7 @@ export default function AutoLockOption() {
             }
             emitEvent("unsaved-changes", { "auto_lock_minutes": enabled ? minutesInput : 0 });
         }
-        emitEvent("unsaved-changes", { "app_lock_minutes": minutesInput });
+        emitEvent("unsaved-changes", { "auto_lock_minutes": minutesInput });
     }, [enabled, minutesInput, loaded]);
 
     return (
