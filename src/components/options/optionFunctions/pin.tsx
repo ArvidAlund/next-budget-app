@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Numpad from "@/components/ui/numpad";
 import { onEvent } from "@/app/lib/eventbus";
+import Switch from "@/components/ui/Switch";
 
 export default function PinOption() {
   const [loading, setLoading] = useState(false);
@@ -38,18 +39,7 @@ export default function PinOption() {
       </div>
       {loading && (
         <div className="m-auto">
-            <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                type="checkbox"
-                checked={enabled}
-                onChange={() => setEnabled(!enabled)}
-                className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer
-                                peer-checked:bg-green-500 transition-colors duration-300"></div>
-                <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full
-                                transition-transform duration-300 peer-checked:translate-x-5"></div>
-            </label>
+            <Switch onChange={(checked) => setEnabled(checked)} />
         </div>
       )}
         {enabled && (
