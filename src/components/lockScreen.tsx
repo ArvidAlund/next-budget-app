@@ -4,6 +4,20 @@ import { useState, useEffect } from "react";
 import { onEvent } from "@/app/lib/eventbus";
 import Countdown from "./ui/countdown";
 
+/**
+ * Render a full-screen PIN lock UI that loads the stored PIN, accepts input (numpad and keyboard),
+ * validates the entered PIN, enforces a lockout after repeated failed attempts, and calls `onUnlock`
+ * when authentication succeeds.
+ *
+ * This component:
+ * - Loads the saved `pin_code` on mount and renders nothing until loaded or if no PIN is set.
+ * - Builds PIN input from global numpad events and keyboard digits, supports delete and Enter/OK.
+ * - Shows a short error animation on incorrect PIN, clears input, and increments attempt count.
+ * - Locks the UI for an increasing countdown after reaching the maximum allowed attempts.
+ *
+ * @param onUnlock - Callback invoked when the entered PIN matches the stored PIN
+ * @returns The lock screen JSX element, or `null` when not loaded or when no PIN is configured
+ */
 export default function LockScreen({onUnlock}: {onUnlock: () => void}) {
     const [loaded, setLoaded] = useState(false);
     const [pinCode, setPinCode] = useState<string>("");

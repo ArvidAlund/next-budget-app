@@ -1,5 +1,12 @@
 import {useState} from "react";
 
+/**
+ * Render a toggle switch UI that manages its own checked state.
+ *
+ * @param start - Initial checked state of the switch (defaults to `false`)
+ * @param onChange - Optional callback invoked with the new checked value after each toggle
+ * @returns A React element representing the switch
+ */
 export default function SwitchButton({start = false, onChange}: {start : boolean, onChange?: (checked: boolean) => void}) {
     const [checked, setChecked] = useState(start);
 

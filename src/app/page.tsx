@@ -20,11 +20,9 @@ import FirstSetup from "@/components/firstSetup/firstSetup"
 import LockScreen from "@/components/lockScreen";
 
 /**
- * Application root component that manages authentication state, modal visibility, setup gating, and temporary alerts while rendering the main overview and expenses UI.
+ * Application root component that manages authentication state, modal visibility, initial-setup gating, transient alerts, and renders the appropriate UI for the current state.
  *
- * Renders nothing while initializing; shows the login modal when unauthenticated; if the user requires initial setup shows `FirstSetup`; otherwise renders the primary authenticated layout including responsive top info, overview, expenses, the add-transaction flow, temporary alerts, and investment data.
- *
- * @returns `null` while initializing, the `LoginModal` when there is no active session, `FirstSetup` when initial setup is required, or the authenticated app layout otherwise.
+ * @returns The top-level UI: `null` while initializing, the `LoginModal` when unauthenticated, the `FirstSetup` flow when initial setup is required, or the authenticated application layout (overview, expenses, add-transaction flow, alerts, and investment data) otherwise.
  */
 function App() {
   const [modalOpen, setModalOpen] = useState(false)

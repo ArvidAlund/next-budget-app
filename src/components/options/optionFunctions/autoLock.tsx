@@ -5,6 +5,11 @@ import getUserOption from "@/app/lib/db/getUserOption";
 import SwitchButton from "@/components/ui/switchButton";
 
 
+/**
+ * Renders the AutoLockOption control and manages its state: loads the stored auto-lock minutes, exposes a toggle and numeric input for minutes, and emits "unsaved-changes" or "remove-unsaved-changes" events when the user modifies the setting.
+ *
+ * @returns The AutoLockOption React element.
+ */
 export default function AutoLockOption() {
     const [loaded, setLoaded] = useState(false);
     const [enabled, setEnabled] = useState<boolean | null>(null);

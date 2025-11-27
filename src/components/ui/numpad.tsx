@@ -1,5 +1,10 @@
 import { emitEvent } from "@/app/lib/eventbus";
 
+/**
+ * Render a 3x4 numpad UI that emits a 'numpad-input' event when a button is pressed.
+ *
+ * @returns A JSX element containing a 3x4 grid of buttons labeled 1–9, 0, a delete key (⌫), and an ok key (✔).
+ */
 export default function Numpad() {
   const buttons = [
     "1", "2", "3",

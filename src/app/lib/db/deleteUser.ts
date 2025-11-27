@@ -1,6 +1,11 @@
 import supabase, { supabaseUserID } from "../supabaseClient";
 
 
+ /**
+  * Deletes the current user's transactions and removes the user from Supabase.
+  *
+  * @returns An object with `success: true` when both the transactions and user were deleted; otherwise `success: false` and an `error` string describing the failure.
+  */
  export default async function deleteUser(){
     const userId = await supabaseUserID();
     if (!userId) {

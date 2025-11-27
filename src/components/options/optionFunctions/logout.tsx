@@ -1,6 +1,13 @@
 import { useState } from "react";
 import supabase from "@/app/lib/supabaseClient";
 
+/**
+ * Render a "Logga ut" option with a button that signs the user out via Supabase.
+ *
+ * Invokes `supabase.auth.signOut({ scope: 'local' })` when the button is clicked and manages a loading state; the button shows "Loggar ut..." and is disabled while the sign-out is in progress.
+ *
+ * @returns A JSX element containing the logout UI
+ */
 export default function LogOutOption() {
     const [loading, setLoading] = useState(false);
 

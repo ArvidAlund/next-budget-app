@@ -2,6 +2,13 @@ import { useState } from "react";
 import deleteUser from "@/app/lib/db/deleteUser";
 
 
+/**
+ * Render a delete-account option that shows a confirmation modal and performs account deletion.
+ *
+ * Displays a two-column UI with a primary "Radera konto" button. When confirmed, initiates the deletion flow, shows loading and error states, and reloads the page on successful deletion.
+ *
+ * @returns A React element rendering the delete-account UI with confirmation, loading, and error handling.
+ */
 export default function DeleteDataOption() {
     const [loading, setLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
