@@ -17,6 +17,7 @@ import { useWindowWidth } from "@/components/useWindowWidth"
 import calcInvestment from "./lib/calcInvestment"
 import TotInvestData from "@/components/Calendar/totInvestData"
 import FirstSetup from "@/components/firstSetup/firstSetup"
+import LockScreen from "@/components/lockScreen";
 
 /**
  * Application root component that manages authentication state, modal visibility, setup gating, and temporary alerts while rendering the main overview and expenses UI.
@@ -32,6 +33,7 @@ function App() {
   const [alertType, setAlertType] = useState<"good" | "bad" | "">("")
   const width = useWindowWidth();
   const [setup, setSetup] = useState<boolean>(true);
+  const [locked, setLocked] = useState<boolean>(false);
 
   // Hämta användarsession
   useEffect(() => {
@@ -85,6 +87,7 @@ function App() {
 
   if (loading) return null
   if (!session) return <LoginModal />
+  if (locked) return <LockScreen onUnlock={() => {setLocked(false)}}/>
 
   return (
     <>

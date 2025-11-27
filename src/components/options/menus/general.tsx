@@ -25,7 +25,7 @@ export default function GeneralOptions() {
         </h1>
         {unsavedChanges && Object.keys(unsavedChanges).length > 0 && (
           <button
-            className="border text-secondary px-4 py-2 rounded-md hover:bg-accent-300 transition-all duration-300 text-sm w-fit"
+            className="border text-secondary px-4 py-2 rounded-md hover:bg-neutral-800 transition-all duration-300 text-sm w-fit"
             onClick={() => setSaveChanges(true)}
           >
             Spara Ändringar
