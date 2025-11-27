@@ -1,3 +1,4 @@
+import AutoLockOption from "../optionFunctions/autoLock";
 import PinOption from "../optionFunctions/pin";
 
 /**
@@ -11,6 +12,7 @@ export default function SecurityOptions() {
             <h1 className="text-2xl font-bold mb-4 w-full text-center">Säkerhets Inställningar</h1>
             <div className="space-y-4 [&>*]:border-b [&>*]:pb-4">
                 <PinOption/>
+                <AutoLockOption/>
             </div>
         </section>
     );

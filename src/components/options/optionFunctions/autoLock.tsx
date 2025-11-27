@@ -1,0 +1,82 @@
+import { useState, useEffect } from "react";
+import Numpad from "@/components/ui/numpad";
+import { emitEvent } from "@/app/lib/eventbus";
+import Switch from "@/components/ui/Switch";
+import getUserOption from "@/app/lib/db/getUserOption";
+
+export default function AutoLockOption() {
+    const [loaded, setLoaded] = useState(false);
+    const [enabled, setEnabled] = useState(false);
+    const [userEnabled, setUserEnabled] = useState<boolean | null>(null);
+    const [minutesInput, setMinutesInput] = useState<number>();
+    const [userMinutes, setUserMinutes] = useState<number | null>(null);
+
+    useEffect(() => {
+        const fetchOption = async () => {
+            const option = await getUserOption('app_lock');
+            if (typeof option === 'boolean') {
+                setEnabled(option);
+                setUserEnabled(option);
+            }
+            setLoaded(true);
+        };
+
+        const fetchMinutes = async () => {
+            const option = await getUserOption('auto_lock_minutes');
+            if (typeof option === 'number') {
+                setMinutesInput(option);
+                setUserMinutes(option);
+            }
+        };
+
+        fetchOption();
+
+        fetchMinutes();
+    }, []);
+
+    useEffect(() => {
+        if (!loaded) return;
+        if (userEnabled === null || userMinutes === null) return;
+        if (enabled === userEnabled && minutesInput === userMinutes) {
+            emitEvent("remove-unsaved-changes", { "app_lock": enabled, "app_lock_minutes": minutesInput });
+            return;
+        }
+        emitEvent("unsaved-changes", { "app_lock": enabled, "app_lock_minutes": minutesInput });
+    }, [enabled, minutesInput, loaded]);
+
+    return (
+        <div className="p-4 grid gap-2 grid-cols-2 items-center">
+              <div className="sm:w-3/4">
+                <h2 className="text-xl font-semibold mb-2">Auto lås</h2>
+                <p>Lås sidan efter X antal minuter av inaktivitet</p>
+              </div>
+              {loaded && (
+                <div className="m-auto">
+                    <Switch onChange={(checked) => setEnabled(checked)} />
+                </div>
+              )}
+                {enabled && (
+                    <>
+                        <div className="mt-4 col-span-full grid grid-cols-2 gap-2 justify-center items-center">
+                            <p className="mb-2 text-center">Antal minuter innan automatisk låsning</p>
+                            <label className="flex flex-col justify-center items-center">
+                                <input
+                                type="number"
+                                name="minutes"
+                                className="border p-2 text-white"
+                                value={minutesInput}
+                                onChange={(e) => setMinutesInput(parseInt(e.target.value)) }
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                />
+            
+                            </label>
+                            <div className="sm:hidden">
+                                <Numpad/>
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
+    );
+}
