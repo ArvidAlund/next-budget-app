@@ -39,8 +39,13 @@ export default function AutoLockOption() {
         if (minutesInput === null) return;
         if (userEnabled === null || userMinutes === null) return;
         if (minutesInput === userMinutes) {
-            emitEvent("remove-unsaved-changes", { "app_lock_minutes": minutesInput });
-            return;
+            const hasChanges = minutesInput !== userMinutes || enabled !== userEnabled;
+
+            if (!hasChanges) {
+                emitEvent("remove-unsaved-changes", { "auto_lock_minutes": enabled ? minutesInput : 0 });
+                return;
+            }
+            emitEvent("unsaved-changes", { "auto_lock_minutes": enabled ? minutesInput : 0 });
         }
         emitEvent("unsaved-changes", { "app_lock_minutes": minutesInput });
     }, [enabled, minutesInput, loaded]);
