@@ -2,7 +2,6 @@ import Numpad from "./ui/numpad";
 import getUserOption from "@/app/lib/db/getUserOption";
 import { useState, useEffect } from "react";
 import { onEvent } from "@/app/lib/eventbus";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 import Countdown from "./ui/countdown";
 
 export default function LockScreen({onUnlock}: {onUnlock: () => void}) {
@@ -13,7 +12,24 @@ export default function LockScreen({onUnlock}: {onUnlock: () => void}) {
     const [attemptCount, setAttemptCount] = useState<number>(0);
     const [locked, setLocked] = useState<boolean>(false);
     const [lockedCount, setLockedCount] = useState<number>(0);
-    const [validAttempts, setValidAttempts] = useState<number>(3);
+    const validAttempts: number = 3;
+
+    const validatePin = (code: string) => {
+        if (code === pinCode) {
+            onUnlock();
+            setInputCode("");
+            setAttemptCount(0);
+            return true;
+        } else {
+            setError(true);
+            setTimeout(() => {
+            setInputCode("");
+            setError(false);
+            setAttemptCount(prev => prev + 1);
+            }, 650);
+            return false;
+        }
+    };
 
     useEffect(() => {
         const fetchPin = async () => {
@@ -36,12 +52,7 @@ export default function LockScreen({onUnlock}: {onUnlock: () => void}) {
                 return;
             }
             if (input === 'ok') {
-                if (inputCode === pinCode) {
-                    onUnlock();
-                    setInputCode("");
-                } else {
-                    setInputCode("");
-                }
+                validatePin(inputCode);
                 return;
             }
             setInputCode(prev => prev + input);
@@ -50,13 +61,14 @@ export default function LockScreen({onUnlock}: {onUnlock: () => void}) {
         return () => {
             unsubscribe();
         }
-    }, [loaded, pinCode]);
+    }, [loaded, inputCode, pinCode, onUnlock]);
 
     useEffect(() => {
         if (!loaded) return;
         if (attemptCount >= validAttempts) {
-            setLockedCount(prev => prev + 1);
+            validatePin(inputCode);
             setLocked(true);
+            setLockedCount((prev) => prev + 1);
             return;
         }
     }, [inputCode]);
@@ -80,16 +92,11 @@ export default function LockScreen({onUnlock}: {onUnlock: () => void}) {
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key >= '0' && e.key <= '9') {
-            setInputCode(prev => prev + e.key);
+                setInputCode(prev => prev + e.key);
             } else if (e.key === 'Backspace') {
-            setInputCode(prev => prev.slice(0, -1));
+                setInputCode(prev => prev.slice(0, -1));
             } else if (e.key === 'Enter') {
-            if (inputCode === pinCode) {
-                onUnlock();
-                setInputCode("");
-            } else {
-                setInputCode("");
-            }
+                validatePin(inputCode);
             }
         };
 
@@ -98,7 +105,7 @@ export default function LockScreen({onUnlock}: {onUnlock: () => void}) {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [loaded, inputCode, pinCode, onUnlock]);
+    }, [loaded, inputCode, pinCode]);
 
     if (!loaded) return null;
     if (pinCode === "") return null;
