@@ -15,18 +15,27 @@ export default function AutoLockOption() {
     useEffect(() => {
 
         const fetchMinutes = async () => {
-            const option = await getUserOption('auto_lock_minutes');
-            if (typeof option === 'number') {
-                setMinutesInput(option);
-                setUserMinutes(option);
+            try {
+                const option = await getUserOption('auto_lock_minutes');
+                if (typeof option === 'number') {
+                    setMinutesInput(option);
+                    setUserMinutes(option);
 
-                if (option > 0) {
-                    setEnabled(true);
-                    setUserEnabled(true);
-                } else {
-                    setEnabled(false);
-                    setUserEnabled(false);
+                    if (option > 0) {
+                        setEnabled(true);
+                        setUserEnabled(true);
+                    } else {
+                        setEnabled(false);
+                        setUserEnabled(false);
+                    }
+                    setLoaded(true);
                 }
+            } catch (error) {
+                console.error('Failed to fetch auto lock minutes:', error);
+                setMinutesInput(0);
+                setUserMinutes(0);
+                setEnabled(false);
+                setUserEnabled(false);
                 setLoaded(true);
             }
         };
@@ -76,7 +85,10 @@ export default function AutoLockOption() {
                                         setMinutesInput(null);
                                         return;
                                     }
-                                    setMinutesInput(parseInt(e.target.value))
+                                    const parsed = parseInt(e.target.value);
+                                    if (!isNaN(parsed) && parsed >= 0) {
+                                        setMinutesInput(parsed);
+                                    }
                                 }}
                                 inputMode="numeric"
                                 pattern="[0-9]*"
