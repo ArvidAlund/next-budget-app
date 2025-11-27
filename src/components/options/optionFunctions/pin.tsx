@@ -14,20 +14,20 @@ export default function PinOption() {
     const unsubscribe = onEvent('numpad-input', (input: string) => {
     setPswInput(prev => {
         if (input === 'delete') {
-        return prev.slice(0, -1); // ta bort sista tecknet
+          return prev.slice(0, -1);
         }
         if (input === 'ok') {
-        emitEvent('unsaved-changes', { 'pin_code': pswInput, "app_lock": enabled });
-        return prev;
+          emitEvent('unsaved-changes', { 'pin_code': prev, "app_lock": enabled });
+          return prev;
         }
-        return prev + input; // lägg till siffran
+        return prev + input;
     });
     });
 
     const fetchOption = async () => {
       const option = await getUserOption('app_lock');
       if (typeof option === 'boolean') {
-          setEnabled(option);
+        setEnabled(option);
       }
       setLoading(false);
     };
@@ -36,7 +36,7 @@ export default function PinOption() {
 
 
     return () => {
-        unsubscribe();
+      unsubscribe();
     }
   }, []);
 
