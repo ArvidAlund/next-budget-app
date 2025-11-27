@@ -4,6 +4,14 @@ import { onEvent, emitEvent } from "@/app/lib/eventbus";
 import getUserOption from "@/app/lib/db/getUserOption";
 import SwitchButton from "@/components/ui/switchButton";
 
+/**
+ * Renders the "App-lås" (app lock) settings UI that lets the user enable/disable app lock and set a numeric PIN.
+ *
+ * Subscribes to 'numpad-input' events to build or edit the PIN, fetches the stored `app_lock` user option on mount,
+ * emits 'unsaved-changes' with `{ pin_code, app_lock }` when the PIN or switch changes, and unsubscribes from the event on unmount.
+ *
+ * @returns A JSX element containing the app lock toggle, masked numeric PIN input, and an on-screen numpad for small screens
+ */
 export default function PinOption() {
   const [loading, setLoading] = useState(true);
   const [enabled, setEnabled] = useState<boolean | null>(null);

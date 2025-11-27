@@ -3,9 +3,9 @@ import PinOption from "../optionFunctions/pin";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 /**
- * Renders the security settings section with a centered Swedish heading and an empty container for option items.
+ * Displays the security settings section with a centered Swedish title, option controls, and a conditional "Spara Ändringar" button when there are unsaved changes.
  *
- * @returns The JSX element representing the security settings section.
+ * @returns The JSX element for the security settings section
  */
 export default function SecurityOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
