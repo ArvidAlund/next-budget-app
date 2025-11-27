@@ -16,7 +16,7 @@ export default function DeleteDataOption() {
             if (result.success) {
                 window.location.reload();
             } else {
-                setError("Deletion failed");
+                setError(result.error || "Deletion failed");
             }
         } catch (err) {
             setError("An unexpected error occurred");
@@ -26,7 +26,7 @@ export default function DeleteDataOption() {
             setConfirm(false);
         }
     };
-    
+
     return (
         <div className="p-4 grid gap-2 grid-cols-2 items-center">
             <div className="sm:w-3/4">
