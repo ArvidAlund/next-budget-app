@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import Numpad from "@/components/ui/numpad";
 import { emitEvent } from "@/app/lib/eventbus";
-import Switch from "@/components/ui/switch";
 import getUserOption from "@/app/lib/db/getUserOption";
+import SwitchButton from "@/components/ui/switchButton";
 
 
 export default function AutoLockOption() {
@@ -58,7 +58,7 @@ export default function AutoLockOption() {
               </div>
               {loaded && enabled !== null && (
                 <div className="m-auto">
-                    <Switch start={enabled} onChange={(checked) => setEnabled(checked)} />
+                    <SwitchButton start={enabled} onChange={(checked) => setEnabled(checked)} />
                 </div>
               )}
                 {enabled && (
