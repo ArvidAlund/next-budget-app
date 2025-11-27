@@ -4,6 +4,7 @@ import { emitEvent } from "@/app/lib/eventbus";
 import Switch from "@/components/ui/switch";
 import getUserOption from "@/app/lib/db/getUserOption";
 
+
 export default function AutoLockOption() {
     const [loaded, setLoaded] = useState(false);
     const [enabled, setEnabled] = useState<boolean | null>(null);
