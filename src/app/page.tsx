@@ -33,7 +33,7 @@ function App() {
   const [alertType, setAlertType] = useState<"good" | "bad" | "">("")
   const width = useWindowWidth();
   const [setup, setSetup] = useState<boolean>(true);
-  const [locked, setLocked] = useState<boolean>(true);
+  const [locked, setLocked] = useState<boolean>(false);
 
   // Hämta användarsession
   useEffect(() => {

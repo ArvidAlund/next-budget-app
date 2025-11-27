@@ -1,7 +1,7 @@
 import {useState} from "react";
 
-export default function Switch({onChange}: {onChange?: (checked: boolean) => void}) {
-    const [checked, setChecked] = useState(false);
+export default function Switch({start = false, onChange}: {start : boolean, onChange?: (checked: boolean) => void}) {
+    const [checked, setChecked] = useState(start);
 
     const toggleSwitch = () => {
         const newChecked = !checked;

@@ -1,29 +1,38 @@
 import { useState, useEffect } from "react";
 import Numpad from "@/components/ui/numpad";
-import { onEvent } from "@/app/lib/eventbus";
-import Switch from "@/components/ui/Switch";
+import { onEvent, emitEvent } from "@/app/lib/eventbus";
+import Switch from "@/components/ui/switch";
+import getUserOption from "@/app/lib/db/getUserOption";
 
 export default function PinOption() {
-  const [loading, setLoading] = useState(false);
-  const [enabled, setEnabled] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [enabled, setEnabled] = useState<boolean | null>(null);
   const [pswInput, setPswInput] = useState<string>(""); 
 
 
   useEffect(() => {
-    setLoading(true);
     const unsubscribe = onEvent('numpad-input', (input: string) => {
     setPswInput(prev => {
         if (input === 'delete') {
         return prev.slice(0, -1); // ta bort sista tecknet
         }
         if (input === 'ok') {
-        // här kan du trigga validering eller skicka PIN-koden
-        console.log("PIN skickad:", prev);
+        emitEvent('unsaved-changes', { 'pin_code': pswInput, "app_lock": enabled });
         return prev;
         }
         return prev + input; // lägg till siffran
     });
     });
+
+    const fetchOption = async () => {
+      const option = await getUserOption('app_lock');
+      if (typeof option === 'boolean') {
+          setEnabled(option);
+      }
+      setLoading(false);
+    };
+
+    fetchOption();
 
 
     return () => {
@@ -37,13 +46,13 @@ export default function PinOption() {
         <h2 className="text-xl font-semibold mb-2">App-lås</h2>
         <p>Skydda ditt konto med en pinkod</p>
       </div>
-      {loading && (
+      {!loading && enabled !== null && (
         <div className="m-auto">
-            <Switch onChange={(checked) => setEnabled(checked)} />
+            <Switch start={enabled} onChange={(checked) => setEnabled(checked)} />
         </div>
       )}
         {enabled && (
-            <div className="col-span-full mt-4">
+            <div className="col-span-full mt-4 flex flex-col sm:justify-between sm:items-center gap-4">
                 <label className="flex flex-col justify-center items-center">
                     <p>Pinkod</p>
                     <input
@@ -54,6 +63,7 @@ export default function PinOption() {
                     onChange={(e) => {
                         const onlyDigits = e.target.value.replace(/\D/g, "");
                         setPswInput(onlyDigits);
+                        emitEvent('unsaved-changes', { 'pin_code': onlyDigits, "app_lock": enabled });
                     }}
                     inputMode="numeric"
                     pattern="[0-9]*"

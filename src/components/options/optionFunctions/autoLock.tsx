@@ -1,47 +1,47 @@
 import { useState, useEffect } from "react";
 import Numpad from "@/components/ui/numpad";
 import { emitEvent } from "@/app/lib/eventbus";
-import Switch from "@/components/ui/Switch";
+import Switch from "@/components/ui/switch";
 import getUserOption from "@/app/lib/db/getUserOption";
 
 export default function AutoLockOption() {
     const [loaded, setLoaded] = useState(false);
-    const [enabled, setEnabled] = useState(false);
+    const [enabled, setEnabled] = useState<boolean | null>(null);
     const [userEnabled, setUserEnabled] = useState<boolean | null>(null);
-    const [minutesInput, setMinutesInput] = useState<number>();
+    const [minutesInput, setMinutesInput] = useState<number | null>(null);
     const [userMinutes, setUserMinutes] = useState<number | null>(null);
 
     useEffect(() => {
-        const fetchOption = async () => {
-            const option = await getUserOption('app_lock');
-            if (typeof option === 'boolean') {
-                setEnabled(option);
-                setUserEnabled(option);
-            }
-            setLoaded(true);
-        };
 
         const fetchMinutes = async () => {
             const option = await getUserOption('auto_lock_minutes');
             if (typeof option === 'number') {
                 setMinutesInput(option);
                 setUserMinutes(option);
+
+                if (option > 0) {
+                    setEnabled(true);
+                    setUserEnabled(true);
+                } else {
+                    setEnabled(false);
+                    setUserEnabled(false);
+                }
+                setLoaded(true);
             }
         };
-
-        fetchOption();
 
         fetchMinutes();
     }, []);
 
     useEffect(() => {
         if (!loaded) return;
+        if (minutesInput === null) return;
         if (userEnabled === null || userMinutes === null) return;
-        if (enabled === userEnabled && minutesInput === userMinutes) {
-            emitEvent("remove-unsaved-changes", { "app_lock": enabled, "app_lock_minutes": minutesInput });
+        if (minutesInput === userMinutes) {
+            emitEvent("remove-unsaved-changes", { "app_lock_minutes": minutesInput });
             return;
         }
-        emitEvent("unsaved-changes", { "app_lock": enabled, "app_lock_minutes": minutesInput });
+        emitEvent("unsaved-changes", { "app_lock_minutes": minutesInput });
     }, [enabled, minutesInput, loaded]);
 
     return (
@@ -50,9 +50,9 @@ export default function AutoLockOption() {
                 <h2 className="text-xl font-semibold mb-2">Auto lås</h2>
                 <p>Lås sidan efter X antal minuter av inaktivitet</p>
               </div>
-              {loaded && (
+              {loaded && enabled !== null && (
                 <div className="m-auto">
-                    <Switch onChange={(checked) => setEnabled(checked)} />
+                    <Switch start={enabled} onChange={(checked) => setEnabled(checked)} />
                 </div>
               )}
                 {enabled && (
@@ -64,8 +64,14 @@ export default function AutoLockOption() {
                                 type="number"
                                 name="minutes"
                                 className="border p-2 text-white"
-                                value={minutesInput}
-                                onChange={(e) => setMinutesInput(parseInt(e.target.value)) }
+                                value={minutesInput === null ? "" : minutesInput}
+                                onChange={(e) => {
+                                    if (e.target.value === "") {
+                                        setMinutesInput(null);
+                                        return;
+                                    }
+                                    setMinutesInput(parseInt(e.target.value))
+                                }}
                                 inputMode="numeric"
                                 pattern="[0-9]*"
                                 />
