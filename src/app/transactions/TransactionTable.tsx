@@ -16,7 +16,7 @@ gsap.registerPlugin(useGSAP);
 
 type Transaction = {
   id: string;
-  type: "inkomst" | "utgift";
+  type: "income" | "expense";
   category: string;
   amount: number;
   date: string;
@@ -47,12 +47,13 @@ export function TransactionTable(){
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [inputValue, setInputvalue] = useState<string>("")
     const [sortBy, setSortBy] = useState("date_desc");
-    const [activeButtons, setActiveButtons] = useState({ inkomst: true, utgift: true });
+    const [activeButtons, setActiveButtons] = useState({ income: true, expense: true });
     const transactionRefs = useRef<HTMLDivElement[]>([]);
 
     useEffect(() =>{
       const fetchData = async() =>{
         const { data, error } = await GetTransactionsMonth();
+        console.log("Fetched transactions:", data, "Error:", error);
         if (!error && data) {
           setTransactions(data);
         }
@@ -80,14 +81,8 @@ export function TransactionTable(){
           <input type="text" name="search" id=""  placeholder="Sök efter transaktion" value={inputValue} className="border w-full p-2 text-white rounded" onChange={(e) => {setInputvalue(e.target.value)}}/>
           <div className="w-full mt-2 flex justify-between items-center text-white">
             <div className="flex gap-2 [&>button]:text-white [&>button]:border [&>button]:rounded [&>button]:p-1 [&>button]:cursor-pointer [&>button]:transition-all [&>button]:duration-300">
-              <button className={`${activeButtons.inkomst ? "bg-white text-black!" : ""}`} onClick={() => setActiveButtons(prev => ({...prev,inkomst: !prev.inkomst}))}
-              >
-                <p>Inkomster</p>
-              </button>
-              <button className={`${activeButtons.utgift ? "bg-white text-black!" : ""}`} onClick={() => setActiveButtons(prev => ({...prev,utgift: !prev.utgift}))}
-              >
-                <p>Utgifter</p>
-              </button>
+              <button onClick={() => setActiveButtons(prev => ({...prev, income: !prev.income}))} className={`${activeButtons.income ? "bg-white text-black!" : ""}`}>Inkomster</button>
+              <button onClick={() => setActiveButtons(prev => ({...prev, expense: !prev.expense}))} className={`${activeButtons.expense ? "bg-white text-black!" : ""}`}>Utgifter</button>
             </div>
             <select value={sortBy} className="bg-primary p-1 rounded" onChange={(e) => setSortBy(e.target.value)}>
               {sortList.map((item, index) => (
@@ -130,7 +125,7 @@ export function TransactionTable(){
               >
                 <div className="flex justify-between items-center h-fit">
                   <h4 className="font-bold tracking-wide text-lg">{t.description ?? ""}</h4>
-                  <p className={`${t.type === "inkomst" ? "text-green-500" : "text-red-500"}`}>
+                  <p className={`${t.type === "income" ? "text-green-500" : "text-red-500"}`}>
                     {formatCurrency(t.amount)} kr
                   </p>
                 </div>

@@ -57,7 +57,7 @@ export function Navbar() {
 
     >
       <div className="w-[30%] hidden lg:flex">
-        {width > 1024 ? <TopInfo textclr="text-black"/> : null}
+        {width > 1024 ? <TopInfo /> : null}
       </div>
 
       <div className="flex justify-around items-center h-full w-[90%] lg:w-[70%]">
