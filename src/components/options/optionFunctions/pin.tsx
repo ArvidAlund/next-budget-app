@@ -53,7 +53,7 @@ export default function PinOption() {
   useEffect(() => {
     if (enabled === null || userEnabled === null) return;
     if (userEnabled === enabled) return;
-    emitEvent('unsaved-changes', { 'pin_code': pswInput, "app_lock": enabled });
+    emitEvent('unsaved-changes', { "app_lock": enabled });
   }, [enabled, pswInput]);
 
   return (
