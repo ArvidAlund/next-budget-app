@@ -86,8 +86,8 @@ export default function OptionsPage() {
           const lockSetting = await getUserOption('app_lock');
           if (typeof lockSetting === 'boolean' && lockSetting) {
             setLocked(true);
-            setLoading(false);
           }
+          setLoading(false);
         }
 
         checkLock();
@@ -98,7 +98,7 @@ export default function OptionsPage() {
 
     if (loading) return null;
     if (locked) return <LockScreen onUnlock={handleUnlock} />;
-    
+
   return (
     <>
         <main className="grid sm:grid-cols-2 h-screen w-full relative sm:fixed sm:z-200">
