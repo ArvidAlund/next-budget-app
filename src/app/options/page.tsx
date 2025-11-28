@@ -14,6 +14,8 @@ import BudgetOptions from "@/components/options/menus/budget";
 import CategoriesOptions from "@/components/options/menus/categories";
 import NotificationsOptions from "@/components/options/menus/notifications";
 import QuickOptions from "@/components/options/menus/quick";
+import getUserOption from "../lib/db/getUserOption";
+import LockScreen from "@/components/lockScreen";
 
 const optionsList = [
   { id: 'general', name: 'Allmänt' },
@@ -69,6 +71,8 @@ function renderContent(selectedOption:string | null) {
 export default function OptionsPage() {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const [locked, setLocked] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         gsap.fromTo(contentRef.current,
@@ -76,6 +80,25 @@ export default function OptionsPage() {
             { x: 0, duration: 0.5, ease: "power2.out" }
         );
     }, [selectedOption]);
+
+    useEffect(() => {
+        const checkLock = async () => {
+          const lockSetting = await getUserOption('app_lock');
+          if (typeof lockSetting === 'boolean' && lockSetting) {
+            setLocked(true);
+            setLoading(false);
+          }
+        }
+
+        checkLock();
+    }, []);
+    const handleUnlock = () => {
+        setLocked(false);
+    }
+
+    if (loading) return null;
+    if (locked) return <LockScreen onUnlock={handleUnlock} />;
+    
   return (
     <>
         <main className="grid sm:grid-cols-2 h-screen w-full relative sm:fixed sm:z-200">
