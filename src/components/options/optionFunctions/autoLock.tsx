@@ -16,23 +16,34 @@ export default function AutoLockOption() {
     const [userEnabled, setUserEnabled] = useState<boolean | null>(null);
     const [minutesInput, setMinutesInput] = useState<number | null>(null);
     const [userMinutes, setUserMinutes] = useState<number | null>(null);
+    const [showOption, setShowOption] = useState<boolean>(false);
 
     useEffect(() => {
 
         const fetchMinutes = async () => {
             try {
-                const option = await getUserOption('auto_lock_minutes');
-                if (typeof option === 'number') {
-                    setMinutesInput(option);
-                    setUserMinutes(option);
+                const active = await getUserOption('app_lock');
+                if (typeof active === 'boolean' && active) {
+                    setShowOption(true);
+                    const option = await getUserOption('auto_lock_minutes');
+                    if (typeof option === 'number') {
+                        setMinutesInput(option);
+                        setUserMinutes(option);
 
-                    if (option > 0) {
-                        setEnabled(true);
-                        setUserEnabled(true);
-                    } else {
-                        setEnabled(false);
-                        setUserEnabled(false);
+                        if (option > 0) {
+                            setEnabled(true);
+                            setUserEnabled(true);
+                        } else {
+                            setEnabled(false);
+                            setUserEnabled(false);
+                        }
+                        setLoaded(true);
                     }
+                } else {
+                    setMinutesInput(0);
+                    setUserMinutes(0);
+                    setEnabled(false);
+                    setUserEnabled(false);
                     setLoaded(true);
                 }
             } catch (error) {
@@ -64,6 +75,8 @@ export default function AutoLockOption() {
         emitEvent("unsaved-changes", { "auto_lock_minutes": minutesInput });
     }, [enabled, minutesInput, loaded]);
 
+    
+    if (!showOption) return null;
     return (
         <div className="p-4 grid gap-2 grid-cols-2 items-center">
               <div className="sm:w-3/4">
