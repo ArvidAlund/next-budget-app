@@ -1,13 +1,16 @@
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons"
 import { NavIcon } from "./ui/navicon"
 
+type TopInfoProps = {
+  textclr?: string;
+};
 
 /**
  * TopInfo
  * ----------------
  * Visar aktuell månad och datumintervall för månaden tillsammans med en ikon.
  */
-export function TopInfo() {
+export function TopInfo({ textclr }: TopInfoProps) {
   // Månadsnamn på svenska
   const months: { [key: number]: string } = {
     0: "Januari",
@@ -43,7 +46,7 @@ export function TopInfo() {
       </div>
 
       {/* Texten – ligger direkt till höger om ikonen */}
-      <div className={`flex flex-col text-left text-black`}>
+      <div className={`flex flex-col text-left ${textclr ?? ""}`}>
         {/* Aktuell månad */}
         <div className="text-xl font-semibold">{currentMonth}</div>
         {/* Datumintervall för månaden */}
