@@ -1,6 +1,7 @@
 import { emitEvent } from "@/app/lib/eventbus";
 import { useState, useEffect } from "react";
 import getUserOption from "@/app/lib/db/getUserOption";
+import SwitchButton from "@/components/ui/switchButton";
 
 /**
  * Render a UI control for viewing and toggling the user's automatic backup setting.
@@ -51,16 +52,11 @@ export default function AutoBackupOption() {
                 <p>Aktivera eller inaktivera automatisk säkerhetskopiering av dina data.</p>
             </div>
             {loaded ? (
-                <div className="flex justify-center items-center">
-                    <label className="inline-flex items-center">
-                        <input
-                            type="checkbox"
-                            className="form-checkbox h-5 w-5 accent-accent-300 text-secondary bg-primary border-secondary"
-                            checked={autoBackup}
-                            onChange={(e) => setAutoBackup(e.target.checked)}
-                        />
-                        <span className="ml-2">{autoBackup ? "Aktiverad" : "Inaktiverad"}</span>
-                    </label>
+                <div className="flex flex-col justify-center items-center">
+                    <SwitchButton
+                        start={autoBackup}
+                        onChange={() => setAutoBackup(!autoBackup)}
+                    />
                 </div>
             ) : (
                 <p className="w-full text-center">Laddar...</p>

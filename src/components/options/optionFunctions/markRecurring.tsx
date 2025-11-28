@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
 import getUserOption from "@/app/lib/db/getUserOption";
+import SwitchButton from "@/components/ui/switchButton";
 
 /**
  * Renders a settings panel that displays and controls the user's "mark recurring transactions" preference.
@@ -50,15 +51,10 @@ export default function MarkRecurringOption() {
             </div>
             {loaded ? (
                 <div className="flex justify-center items-center">
-                    <label className="inline-flex items-center">
-                        <input
-                            type="checkbox"
-                            className="form-checkbox h-5 w-5 accent-accent-300 text-secondary bg-primary border-secondary"
-                            checked={markRecurring}
-                            onChange={(e) => setMarkRecurring(e.target.checked)}
-                        />
-                        <span className="ml-2">{markRecurring ? "Aktiverad" : "Inaktiverad"}</span>
-                    </label>
+                    <SwitchButton
+                        start={markRecurring}
+                        onChange={() => setMarkRecurring(!markRecurring)}
+                    />
                 </div>
             ) : (
                 <p className="w-full text-center">Laddar...</p>
