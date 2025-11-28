@@ -46,7 +46,7 @@ export function TopInfo({ textclr }: TopInfoProps) {
       </div>
 
       {/* Texten – ligger direkt till höger om ikonen */}
-      <div className={`flex flex-col text-left ${textclr ?? ""}`}>
+      <div className={`flex flex-col text-left ${textclr ?? "text-black"}`}>
         {/* Aktuell månad */}
         <div className="text-xl font-semibold">{currentMonth}</div>
         {/* Datumintervall för månaden */}
