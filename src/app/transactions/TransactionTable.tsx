@@ -53,7 +53,6 @@ export function TransactionTable(){
     useEffect(() =>{
       const fetchData = async() =>{
         const { data, error } = await GetTransactionsMonth();
-        console.log("Fetched transactions:", data, "Error:", error);
         if (!error && data) {
           setTransactions(data);
         }
