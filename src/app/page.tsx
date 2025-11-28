@@ -18,6 +18,7 @@ import calcInvestment from "./lib/calcInvestment"
 import TotInvestData from "@/components/Calendar/totInvestData"
 import FirstSetup from "@/components/firstSetup/firstSetup"
 import LockScreen from "@/components/lockScreen";
+import getUserOption from "./lib/db/getUserOption"
 
 /**
  * Application root component that manages authentication state, modal visibility, initial-setup gating, transient alerts, and renders the appropriate UI for the current state.
@@ -45,6 +46,16 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
+
+    const checkLock = async () => {
+      const lockSetting = await getUserOption('app_lock');
+      if (typeof lockSetting === 'boolean' && lockSetting) {
+        setLocked(true);
+        setLoading(false);   
+      }
+    }
+
+    checkLock();
 
     const checkSetup = async () => {
       const userId = await supabaseUserID();

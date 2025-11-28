@@ -15,6 +15,7 @@ import SwitchButton from "@/components/ui/switchButton";
 export default function PinOption() {
   const [loading, setLoading] = useState(true);
   const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [userEnabled, setUserEnabled] = useState<boolean | null>(null);
   const [pswInput, setPswInput] = useState<string>(""); 
 
 
@@ -36,6 +37,7 @@ export default function PinOption() {
       const option = await getUserOption('app_lock');
       if (typeof option === 'boolean') {
         setEnabled(option);
+        setUserEnabled(option);
       }
       setLoading(false);
     };
@@ -47,6 +49,12 @@ export default function PinOption() {
       unsubscribe();
     }
   }, []);
+
+  useEffect(() => {
+    if (enabled === null || userEnabled === null) return;
+    if (userEnabled === enabled) return;
+    emitEvent('unsaved-changes', { 'pin_code': pswInput, "app_lock": enabled });
+  }, [enabled, pswInput]);
 
   return (
     <div className="p-4 grid gap-2 grid-cols-2 items-center">
