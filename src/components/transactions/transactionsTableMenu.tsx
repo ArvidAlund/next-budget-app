@@ -7,6 +7,16 @@ type TransactionsTableMenuProps = {
   setActiveOptions: (options: string[]) => void;
 };
 
+/**
+ * Render a collapsible transactions filter menu with animated open/close behavior.
+ *
+ * Renders controls to filter transactions by month range and transaction type, and a button to clear all filters. The menu animates its height and opacity when opened or closed.
+ *
+ * @param menuOpen - Whether the menu is visible.
+ * @param activeOptions - Array of active filter option keys (e.g. "income", "expense", "recurring", "1", "3", "all").
+ * @param setActiveOptions - State updater to replace the activeOptions array.
+ * @returns The rendered filter menu element when `menuOpen` is true, otherwise `null`.
+ */
 export function TransactionsTableMenu({
   menuOpen,
   activeOptions,

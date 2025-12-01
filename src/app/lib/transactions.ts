@@ -51,6 +51,14 @@ export async function addTransaction(transaction: {
   }
 }
 
+/**
+ * Deletes the transaction with the given id that belongs to the specified user.
+ *
+ * If the delete operation fails, an error is logged to the console.
+ *
+ * @param id - The transaction id to remove
+ * @param user_id - The id of the user who owns the transaction
+ */
 export async function deleteTransaction(id: string, user_id:string){
   const { error } = await supabase
     .from("transactions")  // tabellen du vill ta bort från

@@ -5,6 +5,13 @@ type HamburgerMenuProps = {
   height?: number;
 };
 
+/**
+ * Render a clickable hamburger menu icon that toggles its open/closed state and invokes an optional handler.
+ *
+ * @param onClick - Optional callback invoked each time the menu is clicked.
+ * @param height - Height of the menu in pixels; defaults to `20`.
+ * @returns A React element representing a responsive, three-line hamburger menu button whose line widths change when open.
+ */
 export default function HamburgerMenu({onClick, height = 20}: HamburgerMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
   return (

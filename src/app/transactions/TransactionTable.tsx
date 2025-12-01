@@ -42,13 +42,11 @@ const activeOptionsTable = [
 ]
 
 /**
- * Render a searchable, filterable, and sortable list of the current month's transactions with animated entry.
+ * Renders an interactive transactions table with search, filtering, and sorting controls.
  *
- * The component fetches the current month's transactions and maintains client-side state for text search,
- * visibility toggles for income ("inkomst") and expense ("utgift"), and sorting (alphabetical or by amount).
- * The rendered UI includes a search input, type filter buttons, a sort selector, and a list of transaction cards
- * showing description, formatted amount (colored by type), and date. List items animate into view when the
- * displayed set changes.
+ * Supports text search, type (income/expense) and recurring filters, month-range selection (including "all"),
+ * and sort orders (date, alphabetical, amount). Fetches transactions on mount and when the selected month window changes,
+ * and displays the filtered and sorted list of transactions.
  *
  * @returns The JSX element for the transaction table UI.
  */

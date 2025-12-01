@@ -1,6 +1,13 @@
 import { supabaseUserID } from "../supabaseClient";
 import supabase from "../supabaseClient";
 
+/**
+ * Retrieve transactions for the current user, optionally limited to those on or after a past date calculated by subtracting a number of months from today.
+ *
+ * @param numberOfMonths - If a number greater than 0 and less than 100, the function returns transactions dated on or after the date obtained by subtracting `numberOfMonths` months from today; otherwise all transactions for the user are returned. Accepts a number or string.
+ * @returns An object `{ data, error }` where `data` is the array of matching transactions (or `undefined` if none) and `error` is `null` when the call completes successfully.
+ * @throws Error - Throws an Error with the upstream error message when the database query returns an error.
+ */
 export default async function getTransactions({ numberOfMonths }: { numberOfMonths: number | string }) {
     const userId = await supabaseUserID();
     let data;

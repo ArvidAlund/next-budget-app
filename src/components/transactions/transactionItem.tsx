@@ -17,6 +17,15 @@ type Props = {
     index: number;
 }
 
+/**
+ * Render a transaction row that animates into view and can expand to show an inline edit form.
+ *
+ * The row displays the transaction description (or "Ingen beskrivning"), date, and a color-coded formatted amount. Clicking the row toggles an expanded edit view; the row animates on mount with a delay derived from `index`.
+ *
+ * @param transaction - The transaction data to display (id, type, category, amount, date, optional description).
+ * @param index - The zero-based position of the item used to stagger the mount animation and to alternate row background styling.
+ * @returns The transaction item element.
+ */
 export default function TransactionItem({ transaction, index, }: Props) {
     const itemRef = useRef<HTMLDivElement>(null);
     const [extended, setExtended] = useState(false);

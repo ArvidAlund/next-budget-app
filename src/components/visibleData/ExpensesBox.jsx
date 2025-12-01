@@ -20,9 +20,13 @@ export function truncate(text){
 
 
 /**
- * ExpensesBox
- * ----------------
- * Visar en enkel lista av utgifter i en box med rubrik
+ * Render a box displaying the user's recurring expenses and provide controls to inspect or terminate a recurring item.
+ *
+ * Fetches recurring transactions for the current user on mount, displays them in a list, allows selecting an item to open a modal,
+ * and lets the user end the recurring entry. Ending a recurring entry creates individual expense transactions for each month
+ * from the recurring start date up to the current month, deletes the original recurring transaction, and reloads the page.
+ *
+ * @returns {JSX.Element} The ExpensesBox component UI: a container with a list of recurring expenses and an optional modal for the active item.
  */
 export function ExpensesBox() {
   const [reccuringItems, setReccuringItems] = useState([]);
