@@ -64,17 +64,13 @@ export function ExpensesBox() {
     // Dagens datum
     const today = new Date();
     const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth() + 1; // getMonth() är 0-indexerad
-    const currentDay = today.getDate();
+    const currentMonth = today.getMonth() + 1;
 
     // Startdatum från aktivt objekt
     const [startYearStr, startMonthStr, startDayStr] = activeItem.date.split("-");
     let year = parseInt(startYearStr);
     let month = parseInt(startMonthStr);
     const day = parseInt(startDayStr);
-
-    console.log("Start:", year, month, day);
-    console.log("Today:", currentYear, currentMonth, currentDay);
 
     // Loopa tills vi når dagens år/månad
     while (year < currentYear || (year === currentYear && month <= currentMonth)) {

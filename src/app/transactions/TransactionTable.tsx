@@ -1,18 +1,13 @@
 "use client"
-import {
-  Table,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@/components/ui/table"
 
 import { GetTransactionsMonth } from "../lib/getTransactionsMonth"
-import { useEffect, useState, useRef } from "react"
-import { formatCurrency } from "../lib/formatcurrency"
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+import { useEffect, useState } from "react"
+import HamburgerMenu from "@/components/hamburgerMenu";
+import { TransactionsTableMenu } from "@/components/transactions/transactionsTableMenu";
+import { X } from "lucide-react";
+import TransactionItem from "@/components/transactions/transactionItem";
+import getTransactions from "../lib/db/getTransactions";
 
-gsap.registerPlugin(useGSAP);
 
 type Transaction = {
   id: string;
@@ -21,6 +16,8 @@ type Transaction = {
   amount: number;
   date: string;
   description?: string;
+  user_id: string;
+  recurring: boolean;
 };
 
 const sortList = [
@@ -30,6 +27,18 @@ const sortList = [
   { label: "Ö–A", value: "alpha_desc" },
   { label: "Pris: Högst → Lägst", value: "price_desc" },
   { label: "Pris: Lägst → Högst", value: "price_asc" },
+]
+
+const activeOptionsTable = [
+  { label: "Aktiv månad", value: "0" },
+  { label: "1 månad", value: "1" },
+  { label: "3 månader", value: "3" },
+  { label: "6 månader", value: "6" },
+  { label: "12 månader", value: "12" },
+  { label: "Alla", value: "all" },
+  { label: "Inkomster", value: "income" },
+  { label: "Utgifter", value: "expense" },
+  { label: "Återkommande", value: "recurring" },
 ]
 
 /**
@@ -47,8 +56,9 @@ export function TransactionTable(){
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [inputValue, setInputvalue] = useState<string>("")
     const [sortBy, setSortBy] = useState("date_desc");
-    const [activeButtons, setActiveButtons] = useState({ income: true, expense: true });
-    const transactionRefs = useRef<HTMLDivElement[]>([]);
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const [activeOptions, setActiveOptions] = useState<string[]>(["income", "expense", "0"]);
+    const [monthsBack, setMonthsBack] = useState<number>(0);
 
     useEffect(() =>{
       const fetchData = async() =>{
@@ -61,40 +71,97 @@ export function TransactionTable(){
       fetchData();
     },[])
 
-    useEffect(() => {
-      if (transactions.length === 0) return;
 
-      transactionRefs.current.forEach((el, i) => {
-        if (el) {
-          gsap.fromTo(
-            el,
-            { opacity: 0, y:50 },
-            { opacity: 1, y:0, ease: "power2.in", duration: 0.6, delay: i * 0.05 }
-          );
+    useEffect(() => {
+      const monthOption = activeOptions.find(opt => ["0","1","3","6","12","all"].includes(opt));
+      if (monthOption) {
+        if (monthOption === "all") {
+          if (monthsBack === 100) return;
+          setMonthsBack(100);
+        } else {
+          const monthNumber = parseInt(monthOption);
+          if (monthsBack > monthNumber) return;
+          setMonthsBack(monthNumber);
         }
-      });
-    }, [transactions, activeButtons, sortBy, inputValue]);
+      }
+    }, [monthsBack, activeOptions]);
+
+    useEffect(() => {
+      if (monthsBack === 0) return;
+      const fetchData = async() =>{
+        const { data, error } = await getTransactions({ numberOfMonths: monthsBack });
+        if (!error && data) {
+          setTransactions(data);
+        }
+      };
+
+      fetchData();
+    }, [monthsBack]);
 
     return(
         <section className="w-full overflow-hidden">
           <input type="text" name="search" id=""  placeholder="Sök efter transaktion" value={inputValue} className="border w-full p-2 text-white rounded" onChange={(e) => {setInputvalue(e.target.value)}}/>
           <div className="w-full mt-2 flex justify-between items-center text-white">
-            <div className="flex gap-2 [&>button]:text-white [&>button]:border [&>button]:rounded [&>button]:p-1 [&>button]:cursor-pointer [&>button]:transition-all [&>button]:duration-300">
-              <button onClick={() => setActiveButtons(prev => ({...prev, income: !prev.income}))} className={`${activeButtons.income ? "bg-white text-black!" : ""}`}>Inkomster</button>
-              <button onClick={() => setActiveButtons(prev => ({...prev, expense: !prev.expense}))} className={`${activeButtons.expense ? "bg-white text-black!" : ""}`}>Utgifter</button>
-            </div>
-            <select value={sortBy} className="bg-primary p-1 rounded" onChange={(e) => setSortBy(e.target.value)}>
+            {activeOptions && (
+              <div>
+                {activeOptions.length > 0 && (
+                  <div className="flex gap-2 [&>button]:text-white [&>button]:border [&>button]:rounded [&>button]:p-1 [&>button]:cursor-pointer [&>button]:transition-all [&>button]:duration-300">
+                    {activeOptions.map((option, index) => (
+                      <button key={index} 
+                      className="flex justify-center items-center gap-1"
+                      onClick={() => {
+                        setActiveOptions(prev => prev.filter(opt => opt !== option))
+                      }}>
+                        <p>{activeOptionsTable.find(item => item.value === option)?.label || option}</p>
+                        <X className="h-1/2"/>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            <HamburgerMenu height={25} onClick={() => setMenuOpen(!menuOpen)} />
+          </div>
+          <TransactionsTableMenu menuOpen={menuOpen} activeOptions={activeOptions} setActiveOptions={setActiveOptions} />
+          <select value={sortBy} className="bg-primary rounded text-white mt-4" onChange={(e) => setSortBy(e.target.value)}>
               {sortList.map((item, index) => (
                 <option value={item.value} key={index}>{item.label}</option>
               ))}
-            </select>
-          </div>
+          </select>
 
           <div className="w-full flex flex-col gap-2 mt-4 overflow-hidden">
             {transactions
             .filter((t) =>t.description?.toLowerCase().includes(inputValue.toLowerCase()))
-            .filter((t) => activeButtons[t.type])
-            .sort((a, b) => {
+            .filter((t) => {
+              const hasTypeFilter = activeOptions.includes("income") || activeOptions.includes("expense");
+              return !hasTypeFilter || activeOptions.includes(t.type);
+            })
+            .filter((t) => {
+              const recurringSelected = activeOptions.includes("recurring");
+              if (recurringSelected) {
+                return t.recurring === true;
+              } else {
+                return true;
+              }
+            })
+            .filter((t) => {
+              const monthOption = activeOptions.find(opt => ["0","1","3","6","12","all"].includes(opt));  
+              if (monthOption) {
+                if (monthOption === "0") {
+                  const now = new Date();
+                  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                  return new Date(t.date) >= firstDayOfMonth;
+                } else if (monthOption === "all") {
+                  return true;
+                } else {
+                  const monthsBackNumber = parseInt(monthOption);
+                  const now = new Date();
+                  const pastDate = new Date(now.getFullYear(), now.getMonth() - monthsBackNumber, now.getDate());
+                  return new Date(t.date) >= pastDate;
+                } 
+              }
+              return true;
+            }).sort((a, b) => {
               const descA = a.description ?? "";
               const descB = b.description ?? "";
               switch (sortBy) {
@@ -115,23 +182,8 @@ export function TransactionTable(){
               }
             })
             .map((t, i) => (
-              <div
-                key={i}
-                ref={(el) => {
-                  transactionRefs.current[i] = el!;
-                }}
-                className="w-full bg-neutral-800 rounded p-1 text-white"
-              >
-                <div className="flex justify-between items-center h-fit">
-                  <h4 className="font-bold tracking-wide text-lg">{t.description ?? ""}</h4>
-                  <p className={`${t.type === "income" ? "text-green-500" : "text-red-500"}`}>
-                    {formatCurrency(t.amount)} kr
-                  </p>
-                </div>
-                <p className="text-sm h-fit">{t.date}</p>
-              </div>
-              ))
-            }
+              <TransactionItem key={t.id} transaction={t} index={i} />
+            ))}
           </div>
         </section>
     )

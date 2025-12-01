@@ -56,7 +56,7 @@ export async function deleteTransaction(id: string, user_id:string){
     .from("transactions")  // tabellen du vill ta bort från
     .delete()
     .eq("user_id", user_id.trim())
-    .eq("id", id.trim());         // filtrera på ID eller något annat fält
+    .eq("id", id.trim());    
 
   if (error) {
     console.error("Failed to delete:", error);
