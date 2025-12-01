@@ -55,11 +55,12 @@ export function TransactionsTableMenu({
               onChange={(e) => {
                 const value = e.target.value;
                 setActiveOptions(prev => {
-                  const filtered = prev.filter(opt => !["1","3","6","12","all"].includes(opt));
+                  const filtered = prev.filter(opt => !["0","1","3","6","12","all"].includes(opt));
                   return value === "all" ? [...filtered, "all"] : [...filtered, value];
                 });
               }}
             >
+              <option value="0">Aktiv månad</option>
               <option value="1">1 månad</option>
               <option value="3">3 månader</option>
               <option value="6">6 månader</option>

@@ -29,6 +29,7 @@ const sortList = [
 ]
 
 const activeOptionsTable = [
+  { label: "Aktiv månad", value: "0" },
   { label: "1 månad", value: "1" },
   { label: "3 månader", value: "3" },
   { label: "6 månader", value: "6" },
@@ -56,8 +57,8 @@ export function TransactionTable(){
     const [sortBy, setSortBy] = useState("date_desc");
     const transactionRefs = useRef<HTMLDivElement[]>([]);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-    const [activeOptions, setActiveOptions] = useState<string[]>(["income", "expense", "1"]);
-    const [monthsBack, setMonthsBack] = useState<number | null>(1);
+    const [activeOptions, setActiveOptions] = useState<string[]>(["income", "expense", "0"]);
+    const [monthsBack, setMonthsBack] = useState<number>(0);
 
     useEffect(() =>{
       const fetchData = async() =>{
@@ -84,6 +85,21 @@ export function TransactionTable(){
       });
     }, [transactions, activeOptions, sortBy, inputValue]);
 
+
+    useEffect(() => {
+      const monthOption = activeOptions.find(opt => ["0","1","3","6","12","all"].includes(opt));
+      if (monthOption) {
+        if (monthOption === "all") {
+          if (monthsBack === 100) return;
+          setMonthsBack(100);
+        } else {
+          const monthNumber = parseInt(monthOption);
+          if (monthsBack > monthNumber) return;
+          setMonthsBack(monthNumber);
+        }
+      }
+    }, [monthsBack, activeOptions]);
+
     return(
         <section className="w-full overflow-hidden">
           <input type="text" name="search" id=""  placeholder="Sök efter transaktion" value={inputValue} className="border w-full p-2 text-white rounded" onChange={(e) => {setInputvalue(e.target.value)}}/>
@@ -109,7 +125,7 @@ export function TransactionTable(){
             <HamburgerMenu height={25} onClick={() => setMenuOpen(!menuOpen)} />
           </div>
           <TransactionsTableMenu menuOpen={menuOpen} activeOptions={activeOptions} setActiveOptions={setActiveOptions} />
-          <select value={sortBy} className="bg-primary p-1 rounded text-white" onChange={(e) => setSortBy(e.target.value)}>
+          <select value={sortBy} className="bg-primary rounded text-white mt-4" onChange={(e) => setSortBy(e.target.value)}>
               {sortList.map((item, index) => (
                 <option value={item.value} key={index}>{item.label}</option>
               ))}
