@@ -1,18 +1,14 @@
 "use client"
-import {
-  Table,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@/components/ui/table"
 
 import { GetTransactionsMonth } from "../lib/getTransactionsMonth"
 import { useEffect, useState, useRef } from "react"
 import { formatCurrency } from "../lib/formatcurrency"
 import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+import HamburgerMenu from "@/components/hamburgerMenu";
+import { TransactionsTableMenu } from "@/components/transactions/transactionsTableMenu";
+import { X } from "lucide-react";
+import { Label } from "@radix-ui/react-label";
 
-gsap.registerPlugin(useGSAP);
 
 type Transaction = {
   id: string;
@@ -32,6 +28,17 @@ const sortList = [
   { label: "Pris: Lägst → Högst", value: "price_asc" },
 ]
 
+const activeOptionsTable = [
+  { label: "1 månad", value: "1" },
+  { label: "3 månader", value: "3" },
+  { label: "6 månader", value: "6" },
+  { label: "12 månader", value: "12" },
+  { label: "Alla", value: "all" },
+  { label: "Inkomster", value: "income" },
+  { label: "Utgifter", value: "expense" },
+  { label: "Återkommande", value: "recurring" },
+]
+
 /**
  * Render a searchable, filterable, and sortable list of the current month's transactions with animated entry.
  *
@@ -47,8 +54,10 @@ export function TransactionTable(){
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [inputValue, setInputvalue] = useState<string>("")
     const [sortBy, setSortBy] = useState("date_desc");
-    const [activeButtons, setActiveButtons] = useState({ income: true, expense: true });
     const transactionRefs = useRef<HTMLDivElement[]>([]);
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const [activeOptions, setActiveOptions] = useState<string[]>(["income", "expense", "1"]);
+    const [monthsBack, setMonthsBack] = useState<number | null>(1);
 
     useEffect(() =>{
       const fetchData = async() =>{
@@ -73,27 +82,43 @@ export function TransactionTable(){
           );
         }
       });
-    }, [transactions, activeButtons, sortBy, inputValue]);
+    }, [transactions, activeOptions, sortBy, inputValue]);
 
     return(
         <section className="w-full overflow-hidden">
           <input type="text" name="search" id=""  placeholder="Sök efter transaktion" value={inputValue} className="border w-full p-2 text-white rounded" onChange={(e) => {setInputvalue(e.target.value)}}/>
           <div className="w-full mt-2 flex justify-between items-center text-white">
-            <div className="flex gap-2 [&>button]:text-white [&>button]:border [&>button]:rounded [&>button]:p-1 [&>button]:cursor-pointer [&>button]:transition-all [&>button]:duration-300">
-              <button onClick={() => setActiveButtons(prev => ({...prev, income: !prev.income}))} className={`${activeButtons.income ? "bg-white text-black!" : ""}`}>Inkomster</button>
-              <button onClick={() => setActiveButtons(prev => ({...prev, expense: !prev.expense}))} className={`${activeButtons.expense ? "bg-white text-black!" : ""}`}>Utgifter</button>
-            </div>
-            <select value={sortBy} className="bg-primary p-1 rounded" onChange={(e) => setSortBy(e.target.value)}>
+            {activeOptions && (
+              <div>
+                {activeOptions.length > 0 && (
+                  <div className="flex gap-2 [&>button]:text-white [&>button]:border [&>button]:rounded [&>button]:p-1 [&>button]:cursor-pointer [&>button]:transition-all [&>button]:duration-300">
+                    {activeOptions.map((option, index) => (
+                      <button key={index} 
+                      className="flex justify-center items-center gap-1"
+                      onClick={() => {
+                        setActiveOptions(prev => prev.filter(opt => opt !== option))
+                      }}>
+                        <p>{activeOptionsTable.find(item => item.value === option)?.label || option}</p>
+                        <X className="h-1/2"/>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            <HamburgerMenu height={25} onClick={() => setMenuOpen(!menuOpen)} />
+          </div>
+          <TransactionsTableMenu menuOpen={menuOpen} activeOptions={activeOptions} setActiveOptions={setActiveOptions} />
+          <select value={sortBy} className="bg-primary p-1 rounded text-white" onChange={(e) => setSortBy(e.target.value)}>
               {sortList.map((item, index) => (
                 <option value={item.value} key={index}>{item.label}</option>
               ))}
-            </select>
-          </div>
+          </select>
 
           <div className="w-full flex flex-col gap-2 mt-4 overflow-hidden">
             {transactions
             .filter((t) =>t.description?.toLowerCase().includes(inputValue.toLowerCase()))
-            .filter((t) => activeButtons[t.type])
+            .filter((t) => activeOptions.includes(t.type))
             .sort((a, b) => {
               const descA = a.description ?? "";
               const descB = b.description ?? "";
