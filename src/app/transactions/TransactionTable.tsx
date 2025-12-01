@@ -1,14 +1,12 @@
 "use client"
 
 import { GetTransactionsMonth } from "../lib/getTransactionsMonth"
-import { useEffect, useState, useRef } from "react"
-import { formatCurrency } from "../lib/formatcurrency"
-import { gsap } from "gsap";
+import { useEffect, useState } from "react"
 import HamburgerMenu from "@/components/hamburgerMenu";
 import { TransactionsTableMenu } from "@/components/transactions/transactionsTableMenu";
 import { X } from "lucide-react";
-import { Label } from "@radix-ui/react-label";
 import TransactionItem from "@/components/transactions/transactionItem";
+import getTransactions from "../lib/db/getTransactions";
 
 
 type Transaction = {
@@ -18,6 +16,8 @@ type Transaction = {
   amount: number;
   date: string;
   description?: string;
+  user_id: string;
+  recurring: boolean;
 };
 
 const sortList = [
@@ -56,7 +56,6 @@ export function TransactionTable(){
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [inputValue, setInputvalue] = useState<string>("")
     const [sortBy, setSortBy] = useState("date_desc");
-    const transactionRefs = useRef<HTMLDivElement[]>([]);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [activeOptions, setActiveOptions] = useState<string[]>(["income", "expense", "0"]);
     const [monthsBack, setMonthsBack] = useState<number>(0);
@@ -72,20 +71,6 @@ export function TransactionTable(){
       fetchData();
     },[])
 
-    useEffect(() => {
-      if (transactions.length === 0) return;
-
-      transactionRefs.current.forEach((el, i) => {
-        if (el) {
-          gsap.fromTo(
-            el,
-            { opacity: 0, y:50 },
-            { opacity: 1, y:0, ease: "power2.in", duration: 0.6, delay: i * 0.05 }
-          );
-        }
-      });
-    }, [transactions, activeOptions, sortBy, inputValue]);
-
 
     useEffect(() => {
       const monthOption = activeOptions.find(opt => ["0","1","3","6","12","all"].includes(opt));
@@ -100,6 +85,18 @@ export function TransactionTable(){
         }
       }
     }, [monthsBack, activeOptions]);
+
+    useEffect(() => {
+      if (monthsBack === 0) return;
+      const fetchData = async() =>{
+        const { data, error } = await getTransactions({ numberOfMonths: monthsBack });
+        if (!error && data) {
+          setTransactions(data);
+        }
+      };
+
+      fetchData();
+    }, [monthsBack]);
 
     return(
         <section className="w-full overflow-hidden">
@@ -136,7 +133,32 @@ export function TransactionTable(){
             {transactions
             .filter((t) =>t.description?.toLowerCase().includes(inputValue.toLowerCase()))
             .filter((t) => activeOptions.includes(t.type))
-            .sort((a, b) => {
+            .filter((t) => {
+              const recurringSelected = activeOptions.includes("recurring");
+              if (recurringSelected) {
+                return t.recurring === true;
+              } else {
+                return true;
+              }
+            })
+            .filter((t) => {
+              const monthOption = activeOptions.find(opt => ["0","1","3","6","12","all"].includes(opt));  
+              if (monthOption) {
+                if (monthOption === "0") {
+                  const now = new Date();
+                  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                  return new Date(t.date) >= firstDayOfMonth;
+                } else if (monthOption === "all") {
+                  return true;
+                } else {
+                  const monthsBackNumber = parseInt(monthOption);
+                  const now = new Date();
+                  const pastDate = new Date(now.getFullYear(), now.getMonth() - monthsBackNumber, now.getDate());
+                  return new Date(t.date) >= pastDate;
+                } 
+              }
+              return true;
+            }).sort((a, b) => {
               const descA = a.description ?? "";
               const descB = b.description ?? "";
               switch (sortBy) {

@@ -17,7 +17,6 @@ export default function EditTransaction({transaction, onClose}: {transaction: Tr
     const [amount, setAmount] = useState<number>(transaction.amount);
 
     const SaveData = async () => {
-        console.log("Sparar data:", {description, amount});
         const user_id = await supabaseUserID();
         const { error } = await supabase
         .from("transactions")
