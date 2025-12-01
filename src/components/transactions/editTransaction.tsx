@@ -12,6 +12,17 @@ type Transaction = {
   };
 
 
+/**
+ * Render a full-screen modal for editing a transaction and persist description and amount updates.
+ *
+ * The component displays inputs prefilled from `transaction` for description and amount, provides
+ * "Spara" to save changes (updates the current user's transaction record and reloads the page)
+ * and "Avbryt" to close the modal without saving.
+ *
+ * @param transaction - The transaction to edit; `description` and `amount` are shown and can be modified.
+ * @param onClose - Callback invoked when the user cancels editing.
+ * @returns The modal JSX element for editing the provided transaction.
+ */
 export default function EditTransaction({transaction, onClose}: {transaction: Transaction, onClose: () => void}) {
     const [description, setDescription] = useState<string>(transaction.description || "");
     const [amount, setAmount] = useState<number>(transaction.amount);
