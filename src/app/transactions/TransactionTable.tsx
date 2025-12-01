@@ -8,6 +8,7 @@ import HamburgerMenu from "@/components/hamburgerMenu";
 import { TransactionsTableMenu } from "@/components/transactions/transactionsTableMenu";
 import { X } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
+import TransactionItem from "@/components/transactions/transactionItem";
 
 
 type Transaction = {
@@ -156,23 +157,8 @@ export function TransactionTable(){
               }
             })
             .map((t, i) => (
-              <div
-                key={i}
-                ref={(el) => {
-                  transactionRefs.current[i] = el!;
-                }}
-                className="w-full bg-neutral-800 rounded p-1 text-white"
-              >
-                <div className="flex justify-between items-center h-fit">
-                  <h4 className="font-bold tracking-wide text-lg">{t.description ?? ""}</h4>
-                  <p className={`${t.type === "income" ? "text-green-500" : "text-red-500"}`}>
-                    {formatCurrency(t.amount)} kr
-                  </p>
-                </div>
-                <p className="text-sm h-fit">{t.date}</p>
-              </div>
-              ))
-            }
+              <TransactionItem key={t.id} transaction={t} index={i} />
+            ))}
           </div>
         </section>
     )
