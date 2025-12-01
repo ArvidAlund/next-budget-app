@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 type TransactionsTableMenuProps = {
   menuOpen: boolean;
   activeOptions: string[];
-  setActiveOptions: (options: string[]) => void;
+  setActiveOptions: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export function TransactionsTableMenu({
