@@ -18,6 +18,7 @@ export default function EditTransaction({transaction, onClose}: {transaction: Tr
 
     const SaveData = async () => {
         const user_id = await supabaseUserID();
+        if (!user_id) return;
         const { error } = await supabase
         .from("transactions")
         .update({ description: description, amount: amount })
@@ -47,8 +48,8 @@ export default function EditTransaction({transaction, onClose}: {transaction: Tr
                 </form>
             </div>
             <div className="flex gap-4 p-4 [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-lg [&>button]:font-semibold [&>button]:border [&>button]:border-white [&>button]:text-white [&>button]:transition-colors [&>button]:duration-300">
-                <button className="hover:bg-green-500" onClick={SaveData}>Spara</button>
-                <button className="hover:bg-red-500" onClick={onClose}>Avbryt</button>
+                <button type="button" className="hover:bg-green-500" onClick={SaveData}>Spara</button>
+                <button type="button" className="hover:bg-red-500" onClick={onClose}>Avbryt</button>
             </div>
         </div>
     )

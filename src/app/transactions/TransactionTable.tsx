@@ -132,7 +132,10 @@ export function TransactionTable(){
           <div className="w-full flex flex-col gap-2 mt-4 overflow-hidden">
             {transactions
             .filter((t) =>t.description?.toLowerCase().includes(inputValue.toLowerCase()))
-            .filter((t) => activeOptions.includes(t.type))
+            .filter((t) => {
+              const hasTypeFilter = activeOptions.includes("income") || activeOptions.includes("expense");
+              return !hasTypeFilter || activeOptions.includes(t.type);
+            })
             .filter((t) => {
               const recurringSelected = activeOptions.includes("recurring");
               if (recurringSelected) {

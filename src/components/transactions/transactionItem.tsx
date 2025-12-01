@@ -33,7 +33,7 @@ export default function TransactionItem({ transaction, index, }: Props) {
         <div
             ref={itemRef}
             key={transaction.id}
-            className={`${extended ? "h-50" : ""}`}
+            className={`${extended ? "h-52" : ""}`}
             >
             {extended && (
                 <EditTransaction transaction={transaction} onClose={() => setExtended(false)}/>

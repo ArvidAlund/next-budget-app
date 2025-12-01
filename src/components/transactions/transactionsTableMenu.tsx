@@ -59,6 +59,7 @@ export function TransactionsTableMenu({
                   return value === "all" ? [...filtered, "all"] : [...filtered, value];
                 });
               }}
+              value={activeOptions.find(opt => ["0","1","3","6","12","all"].includes(opt)) ?? "0"}
             >
               <option value="0">Aktiv månad</option>
               <option value="1">1 månad</option>
