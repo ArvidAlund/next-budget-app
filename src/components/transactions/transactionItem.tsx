@@ -1,6 +1,7 @@
 import { formatCurrency } from "@/app/lib/formatcurrency";
 import gsap from "gsap";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import EditTransaction from "./editTransaction";
 
 
 type Transaction = {
@@ -18,6 +19,7 @@ type Props = {
 
 export default function TransactionItem({ transaction, index, }: Props) {
     const itemRef = useRef<HTMLDivElement>(null);
+    const [extended, setExtended] = useState(false);
     useEffect(() => {
         if (itemRef.current) {
             gsap.fromTo(
@@ -31,8 +33,12 @@ export default function TransactionItem({ transaction, index, }: Props) {
         <div
             ref={itemRef}
             key={transaction.id}
+            className={`${extended ? "h-50" : ""}`}
             >
-            <div className={`w-full flex justify-between items-center p-4 rounded-lg mb-2 text-white ${index % 2 === 0 ? "bg-neutral-800" : "bg-neutral-700"}`}>
+            {extended && (
+                <EditTransaction transaction={transaction} onClose={() => setExtended(false)}/>
+            )}
+            <div className={`w-full flex justify-between items-center p-4 rounded-lg mb-2 text-white hover:bg-neutral-600 transition-colors duration-300 cursor-pointer ${index % 2 === 0 ? "bg-neutral-800" : "bg-neutral-700"}`} onClick={() => setExtended(!extended)}>
                 <div>
                     <h4 className="font-bold text-lg">{transaction.description ?? "Ingen beskrivning"}</h4>
                     <p className="text-sm">{transaction.date}</p>
