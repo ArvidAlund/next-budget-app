@@ -38,7 +38,7 @@ export function ExpensesCategory({
         <div className="flex justify-center items-center min-w-fit">
           <FontAwesomeIcon icon={image} className={`${imageclr} text-[2rem] mr-2 text-secondary-100`} />
         </div>
-        <div className="flex flex-col text-left  w-[60%] justify-between h-10">
+        <div className="flex flex-col text-left  w-[60%] justify-center sm:justify-between h-10">
           <p className="font-medium text-md">{name}</p>
           <ProgressBar value={percentageValue}/>
         </div>
