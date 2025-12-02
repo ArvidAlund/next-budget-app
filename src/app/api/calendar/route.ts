@@ -1,8 +1,8 @@
 // src/app/api/calendar/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createEvents, EventAttributes } from "ics";
-import supabase from "@/app/lib/supabaseClient";
-import getUserOption from "@/app/lib/db/getUserOption";
+import {supabaseAdmin} from "@/app/lib/supabaseClient";
+import getUserOptionAdmin from "@/app/lib/db/getUserOptionAdmin";
 
 type Transaction = {
   date: string;
@@ -20,31 +20,32 @@ export async function GET(req: NextRequest) {
     return new NextResponse("Ingen userId angiven", { status: 400 });
   }
 
-  const highlightRecurring = await getUserOption("highlight_recurring");
-  if (typeof highlightRecurring !== "boolean") {
-    return new NextResponse("Kunde inte hämta användarinställningar", { status: 500 });
+  const highlightRecurring = await getUserOptionAdmin("highlight_recurring", userId);
+  if (highlightRecurring === null || typeof highlightRecurring !== "boolean") {
+    return new NextResponse("Ogiltigt värde för highlight_recurring", { status: 500 });
   }
 
   if (!highlightRecurring) {
-    return new NextResponse("Användaren har inte aktiverat återkommande markering", { status: 400 });
+    return new NextResponse("Återkommande transaktioner är inte aktiverade för denna användare", { status: 403 });
   }
 
-  const { data: transactions, error } = await supabase
+  const { data: transactions, error } = await supabaseAdmin
     .from("transactions")
     .select("*")
     .eq("user_id", userId)
-    .eq("recurring", true);
+    .eq("recurring", highlightRecurring);
 
   if (error) {
     return new NextResponse("Fel vid hämtning av transaktioner", { status: 500 });
   }
-  const reminders = await getUserOption("bill_reminders");
-  if (typeof reminders !== "boolean" || !reminders) {
-    return new NextResponse("Användaren har inte aktiverat räkningpåminnelser", { status: 400 });
-  }
 
   if (!transactions || transactions.length === 0) {
     return new NextResponse("Inga återkommande transaktioner hittades", { status: 404 });
+  }
+
+  const remindersSetting = await getUserOptionAdmin("bill_reminders", userId);
+  if (remindersSetting === null || typeof remindersSetting !== "boolean") {
+    return new NextResponse("Ogiltigt värde för bill_reminders", { status: 500 });
   }
   
   const events: EventAttributes[] = transactions.map((transaction: Transaction) => {
@@ -59,8 +60,7 @@ export async function GET(req: NextRequest) {
     recurrenceRule: "FREQ=MONTHLY",
     categories: [transaction.category || "övrigt"],
   };
-
-  if (reminders) {
+  if (remindersSetting){
     event.alarms = [
       {
         action: "display",
