@@ -3,6 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 
+/**
+ * Render a centered mascot element that displays a fallback image and, when enabled and ready, a looping muted video.
+ *
+ * Shows a static image until the video is ready; if video rendering is enabled the video will autoplay, loop, and replace the image once it can play through. A blurred decorative background element is rendered behind the mascot.
+ *
+ * @returns A JSX element containing the centered mascot (image or video) and its decorative background
+ */
 export default function Mascot404Page() {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const canShowVideo = false;
