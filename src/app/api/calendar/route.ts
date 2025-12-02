@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createEvents, EventAttributes } from "ics";
 import {supabaseAdmin} from "@/app/lib/supabaseClient";
 import getUserOptionAdmin from "@/app/lib/db/getUserOptionAdmin";
+import { formatCurrency } from "@/app/lib/formatcurrency";
 
 type Transaction = {
   date: string;
@@ -55,8 +56,8 @@ export async function GET(req: NextRequest) {
   const event: EventAttributes = {
     start: eventDate,
     duration: { days: 1 },
-    title: `Återkommande transaktion: ${transaction.description || "Ingen beskrivning"}`,
-    description: `Belopp: ${transaction.amount} kr\nKategori: ${transaction.category || "Ingen kategori"}`,
+    title: `${transaction.description || "Ingen Titel"}`,
+    description: `Belopp: ${formatCurrency(transaction.amount)} kr\nKategori: ${transaction.category || "Ingen kategori"}`,
     recurrenceRule: "FREQ=MONTHLY",
     categories: [transaction.category || "övrigt"],
   };
@@ -64,7 +65,7 @@ export async function GET(req: NextRequest) {
     event.alarms = [
       {
         action: "display",
-        description: `Påminnelse: ${transaction.description || "Transaktion"} på ${transaction.amount} kr kommer snart.`,
+        description: `Påminnelse: ${transaction.description || "Transaktion"} på ${formatCurrency(transaction.amount)} kr kommer snart.`,
         trigger: { days: 1, before: true },
       },
     ];
@@ -73,7 +74,11 @@ export async function GET(req: NextRequest) {
   return event;
 });
 
-  const { error: icsError, value } = createEvents(events);
+  const { error: icsError, value } = createEvents(events, { 
+    method: "PUBLISH",
+    calName: "BudgetBuddy",
+    productId: "BudgetBuddy",
+  });
 
   if (icsError) {
     return new NextResponse("Fel vid skapande av kalenderhändelser", { status: 500 });
