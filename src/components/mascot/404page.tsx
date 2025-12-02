@@ -8,7 +8,7 @@ export default function Mascot404Page() {
   const canShowVideo = false;
 
   return (
-    <div className="w-full h-full flex items-center justify-center fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 user-noselect pointer-events-none">
+    <div className="w-full h-full flex items-center justify-center fixed top-1/2 left-1/2 z-100 -translate-x-1/2 -translate-y-1/2 user-noselect pointer-events-none">
       {/* Bilden visas tills videon är redo */}
       {!isVideoReady && (
         <Image
@@ -28,12 +28,12 @@ export default function Mascot404Page() {
             loop
             muted
             playsInline
-            className={`object-contain mix-blend-multiply ${!isVideoReady ? "hidden" : "block"}`}
+            className={`object-contain mix-blend-multiply ${!isVideoReady ? "hidden" : "block"} aspect-video`}
             width={1024}
-            height={1024}
             onCanPlayThrough={() => setIsVideoReady(true)}
         />
       )}
+      <div className="bg-neutral-700/30 blur-sm w-70 h-6 rounded-[100%] absolute top-[69%] left-[52%] -translate-y-1/2 -translate-x-1/2 -z-10"></div>
     </div>
   );
 }
