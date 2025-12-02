@@ -19,8 +19,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Budget app",
-  description: "Budget app to me",
+  title: "BudgetBuddy",
+  description: "Budget app to for personal finance management",
 };
 
 /**
