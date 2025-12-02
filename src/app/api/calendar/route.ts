@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createEvents, EventAttributes } from "ics";
 import supabase from "@/app/lib/supabaseClient";
+import getUserOption from "@/app/lib/db/getUserOption";
 
 type Transaction = {
   date: string;
@@ -19,52 +20,70 @@ export async function GET(req: NextRequest) {
     return new NextResponse("Ingen userId angiven", { status: 400 });
   }
 
-  const { data, error } = await supabase
+  const highlightRecurring = await getUserOption("highlight_recurring");
+  if (typeof highlightRecurring !== "boolean") {
+    return new NextResponse("Kunde inte hämta användarinställningar", { status: 500 });
+  }
+
+  if (!highlightRecurring) {
+    return new NextResponse("Användaren har inte aktiverat återkommande markering", { status: 400 });
+  }
+
+  const { data: transactions, error } = await supabase
     .from("transactions")
     .select("*")
     .eq("user_id", userId)
     .eq("recurring", true);
 
   if (error) {
-    return new NextResponse(error.message, { status: 500 });
+    return new NextResponse("Fel vid hämtning av transaktioner", { status: 500 });
+  }
+  const reminders = await getUserOption("bill_reminders");
+  if (typeof reminders !== "boolean" || !reminders) {
+    return new NextResponse("Användaren har inte aktiverat räkningpåminnelser", { status: 400 });
   }
 
-  const transactions: Transaction[] = (data ?? []) as Transaction[];
+  if (!transactions || transactions.length === 0) {
+    return new NextResponse("Inga återkommande transaktioner hittades", { status: 404 });
+  }
+  
+  const events: EventAttributes[] = transactions.map((transaction: Transaction) => {
+  const dateParts = transaction.date.split("-").map(Number);
+  const eventDate: [number, number, number] = [dateParts[0], dateParts[1], dateParts[2]];
 
-  const events: EventAttributes[] = transactions.map((tx) => {
-    const startDate = new Date(tx.date);
-    const untilDate = new Date(startDate);
-    untilDate.setMonth(untilDate.getMonth() + 4);
+  const event: EventAttributes = {
+    start: eventDate,
+    duration: { days: 1 },
+    title: `Återkommande transaktion: ${transaction.description || "Ingen beskrivning"}`,
+    description: `Belopp: ${transaction.amount} kr\nKategori: ${transaction.category || "Ingen kategori"}`,
+    recurrenceRule: "FREQ=MONTHLY",
+    categories: [transaction.category || "övrigt"],
+  };
 
-    return {
-      start: [
-        startDate.getFullYear(),
-        startDate.getMonth() + 1,
-        startDate.getDate(),
-        7,
-        0,
-      ] as [number, number, number, number, number],
-      duration: { hours: 1 },
-      title: tx.description || "Transaktion",
-      description: `Belopp: ${tx.amount}` || `${tx.category}`,
-      recurrenceRule: `FREQ=MONTHLY;UNTIL=${untilDate
-        .toISOString()
-        .replace(/[-:]/g, "")
-        .split(".")[0]}Z`,
-    };
-  });
+  if (reminders) {
+    event.alarms = [
+      {
+        action: "display",
+        description: `Påminnelse: ${transaction.description || "Transaktion"} på ${transaction.amount} kr kommer snart.`,
+        trigger: { days: 1, before: true },
+      },
+    ];
+  }
+
+  return event;
+});
 
   const { error: icsError, value } = createEvents(events);
 
   if (icsError) {
-    return new NextResponse(icsError.message, { status: 500 });
-  }
+    return new NextResponse("Fel vid skapande av kalenderhändelser", { status: 500 });
+  } 
 
   return new NextResponse(value, {
     status: 200,
     headers: {
       "Content-Type": "text/calendar; charset=utf-8",
-      "Content-Disposition": `attachment; filename=Budget-${userId}.ics`,
+      "Content-Disposition": 'attachment; filename="calendar.ics"',
     },
   });
 }
