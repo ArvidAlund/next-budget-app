@@ -15,6 +15,18 @@ type categoryWProps = {
   name: string
 }
 
+/**
+ * Render a clickable expense category row with icon, progress bar, and budget summary, and show an expanded detail panel when opened.
+ *
+ * @param image - FontAwesome icon definition for the category icon
+ * @param imageclr - Optional CSS class(es) applied to the icon for color/styling
+ * @param name - Display name of the category
+ * @param category - Identifier or key used to load the expanded category details
+ * @param budgetsum - Total budget amount for the category
+ * @param percentageValue - Progress value (0–100) shown in the progress bar
+ * @param expense - Amount spent in the category
+ * @returns A JSX element containing the category row and, when opened, the expanded category menu
+ */
 export function ExpensesCategory({
   image,
   imageclr,

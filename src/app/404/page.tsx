@@ -6,6 +6,13 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useEffect } from "react";
 
+/**
+ * Render the client-side 404 Not Found page with an animated "404" heading, mascot on larger screens, and a link back to the homepage.
+ *
+ * On mount, the three elements with class "digit" are animated into view with a staggered bounce effect.
+ *
+ * @returns The rendered 404 page as a JSX element.
+ */
 export default function NotFoundPage() {
 
 
