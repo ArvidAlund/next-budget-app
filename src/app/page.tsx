@@ -112,7 +112,7 @@ function App() {
       ) : (
         <>
           <Navbar />
-          <main style={{ minHeight: `calc(100vh - ${NavbarHeight}px)` }} className={`p-4 ${styles.gridAreaHome} gap-4`}>
+          <main style={{ minHeight: `calc(100vh - ${NavbarHeight}px)` }} className={`p-4 ${styles.gridAreaHome} gap-4 overflow-hidden`}>
             <Summary className={styles.summary} />
             <Spending className={styles.spending} />
             <Transactions className={styles.transactions} />
