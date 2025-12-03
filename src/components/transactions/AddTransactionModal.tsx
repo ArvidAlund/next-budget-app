@@ -112,7 +112,7 @@ export function AddTransactionModal({
   return (
     <>
       {/* Overlay */}
-      <div className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center px-4 text-black">
+      <div className="fixed min-w-full min-h-screen inset-0 z-50 bg-black/60 flex justify-center items-center px-4 text-black">
         <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] p-6 overflow-y-auto relative shadow-lg">
           
           {/* Stäng-knapp */}

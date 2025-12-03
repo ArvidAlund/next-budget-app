@@ -5,6 +5,7 @@ import { ArrowBigLeftDash } from "lucide-react";
 import Link from "next/link";
 import gsap from "gsap";
 import { useEffect } from "react";
+import CloudAnimation from "@/components/404/clouds/cloudAnimation";
 
 /**
  * Render the client-side 404 Not Found page with an animated "404" heading, mascot on larger screens, and a link back to the homepage.
@@ -41,6 +42,7 @@ export default function NotFoundPage() {
         </div>
       <div>
         <div className="hidden md:block">
+            <CloudAnimation />
             <Mascot404Page />
         </div>
         <h1 className="text-[10rem] md:text-[30rem] font-bold select-none tracking-wide m-0 p-0 h-fit w-fit sm:-mt-20 mt-60 text-white/50 flex space-x-4">

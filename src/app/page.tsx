@@ -19,6 +19,7 @@ import TotInvestData from "@/components/Calendar/totInvestData"
 import FirstSetup from "@/components/firstSetup/firstSetup"
 import LockScreen from "@/components/lockScreen";
 import getUserOption from "./lib/db/getUserOption"
+import { Navbar } from "@/components/Navbar"
 
 /**
  * Application root component that manages authentication state, modal visibility, initial-setup gating, transient alerts, and renders the appropriate UI for the current state.
@@ -103,24 +104,17 @@ function App() {
       {setup ? (
         <FirstSetup />
       ) : (
-      <div className="min-h-screen w-full bg-primary flex flex-col items-center gap-6 overflow-x-hidden p-4">
-      {width < 1024 ? <TopInfo textclr="text-white"/> : null}
-      <Overview />
-      <ExpensesCard />
-      <AddExpenseBtn onClick={() => setModalOpen(true)} />
+        <>
+          <Navbar />
+          <div className="min-h-screen w-full bg-primary flex flex-col items-center gap-6 overflow-x-hidden p-4">
+          {width < 1024 ? <TopInfo textclr="text-white"/> : null}
+          <Overview />
+          <ExpensesCard />
 
-      {modalOpen && (
-        <AddTransactionModal
-          onClose={() => setModalOpen(false)}
-          onSuccess={(type) => setAlertType(type)} // "good" eller "bad"
-        />
-      )}
-
-      {alertType && <AlertboxContainer type={alertType} />}
-
-      <ExpensesBox/>
-      <TotInvestData/>
-    </div>
+          <ExpensesBox/>
+          <TotInvestData/>
+        </div>
+    </>
     )}
     </>
   )

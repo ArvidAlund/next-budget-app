@@ -1,0 +1,14 @@
+.clouds {
+  display: flex;
+  width: 200%;
+  animation: moveClouds 120s linear infinite;
+}
+
+@keyframes moveClouds {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
