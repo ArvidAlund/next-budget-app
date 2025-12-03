@@ -109,7 +109,7 @@ export default function Summary({ className }: SummaryProps) {
           <>
             <h1 className="my-4">{formatCurrency(valueData.total)} kr</h1>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-green-900/20 border border-green-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="bg-green-900/10 border border-green-500/50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
                 <div className="flex items-center gap-2">
                   <ArrowUpRight className="w-5 h-5 text-green-400" />
                   <span className="text-green-400 md:text-lg font-bold">
@@ -119,7 +119,7 @@ export default function Summary({ className }: SummaryProps) {
                 <p className="text-sm text-neutral-300 mt-1">Inkomster</p>
               </div>
 
-              <div className="bg-red-900/20 border border-red-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="bg-red-900/10 border border-red-500/50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
                 <div className="flex items-center gap-2">
                   <ArrowDownLeft className="w-5 h-5 text-red-400" />
                   <span className="text-red-400 md:text-lg font-bold">

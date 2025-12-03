@@ -17,6 +17,7 @@ import Summary from "@/components/home/summary"
 import Transactions from "@/components/home/transactions"
 import Expenses from "@/components/home/expenses"
 import Tips from "@/components/home/tips"
+import { useWindowWidth } from "@/components/useWindowWidth"
 
 /**
  * Application root component that manages authentication state, modal visibility, initial-setup gating, transient alerts, and renders the appropriate UI for the current state.
@@ -29,6 +30,7 @@ function App() {
   const [alertType, setAlertType] = useState<"good" | "bad" | "">("")
   const [setup, setSetup] = useState<boolean>(true);
   const [locked, setLocked] = useState<boolean>(false);
+  const windowWidth = useWindowWidth();
 
   // Hämta användarsession
   useEffect(() => {
@@ -103,10 +105,10 @@ function App() {
           <Navbar />
           <main style={{ minHeight: `calc(100vh - ${NavbarHeight}px)` }} className={`p-4 ${styles.gridAreaHome} gap-4 overflow-hidden`}>
             <Summary className={styles.summary} />
-            <Spending className={`${styles.spending} hidden md:block`} />
             <Transactions className={styles.transactions} />
-            <Expenses className={`${styles.expenses} hidden md:block`} />
-            <Tips className={`${styles.tips} hidden md:block`} />
+            {windowWidth >= 768 && (<Spending className={styles.spending} />)}
+            {windowWidth >= 768 && (<Expenses className={styles.expenses} />)}
+            {windowWidth >= 768 && (<Tips className={styles.tips} />)}
           </main>
         </>
       )}

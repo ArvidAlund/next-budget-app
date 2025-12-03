@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import getTransactions from '@/app/lib/db/getTransactions';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { formatCurrency } from '@/app/lib/formatcurrency';
 
 type Transaction = {
   id: string;
@@ -104,7 +105,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
         <p className="font-semibold text-blue-400 mb-1">{label}</p>
         <p>
           <span className="text-neutral-400">Total kostnad:</span>{" "}
-          <span className="text-red-400 font-medium">{day.totalExpense} kr</span>
+          <span className="text-red-400 font-medium">{formatCurrency(day.totalExpense)} kr</span>
         </p>
       </div>
     );

@@ -92,7 +92,7 @@ export function Navbar() {
           ))}
         </ul>
       </nav>
-      <button onClick={() => setAddTransaction(true)} className="text-secondary justify-center items-center col-start-9 col-span-2 md:col-start-10 md:col-span-1 flex cursor-pointer">
+      <button aria-label="Add expense" onClick={() => setAddTransaction(true)} className="text-secondary justify-center items-center col-start-9 col-span-2 md:col-start-10 md:col-span-1 flex cursor-pointer">
         <Plus size={35}/>
       </button>
       {AddTransaction && (
