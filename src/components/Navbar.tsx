@@ -8,6 +8,9 @@ import { useState } from "react"
 import { AddTransactionModal } from "./transactions/AddTransactionModal"
 import { AlertboxContainer } from "./AlertboxContainer"
 
+const NavbarHeight = 64; // Höjd i pixlar för navbaren
+export { NavbarHeight };
+
 const navbarOptions = {
   home: {
     href: "/",
@@ -38,7 +41,7 @@ export function Navbar() {
   const [AddTransaction, setAddTransaction] = useState(false);
   const [ alertType, setAlertType] = useState<"good" | "bad" | "">("");
   return (
-    <header className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full h-16 bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2">
+    <header style={{ height: NavbarHeight + "px" }} className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2">
       <Link href="/" className="text-secondary justify-center items-center col-start-1 col-span-2 hidden md:flex">
         <Image
           src="/mascot/img/mascot.png"

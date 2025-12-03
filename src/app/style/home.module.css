@@ -1,0 +1,47 @@
+.gridAreaHome {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "summary summary spending transactions transactions"
+    "summary summary tips transactions transactions"
+    "expenses expenses expenses transactions transactions";
+  gap: 1rem;
+}
+
+/* Mobilanpassning: stapla sektioner vertikalt */
+@media (max-width: 768px) {
+  .gridAreaHome {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "summary"
+      "spending"
+      "credit"
+      "cards"
+      "tips"
+      "expenses"
+      "transactions";
+  }
+}
+
+.summary {
+  grid-area: summary;
+}
+.spending {
+  grid-area: spending;
+}
+.credit {
+  grid-area: credit;
+}
+.cards {
+  grid-area: cards;
+}
+.tips {
+  grid-area: tips;
+}
+.expenses {
+  grid-area: expenses;
+}
+.transactions {
+  grid-area: transactions;
+}

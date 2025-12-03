@@ -19,7 +19,13 @@ import TotInvestData from "@/components/Calendar/totInvestData"
 import FirstSetup from "@/components/firstSetup/firstSetup"
 import LockScreen from "@/components/lockScreen";
 import getUserOption from "./lib/db/getUserOption"
-import { Navbar } from "@/components/Navbar"
+import { Navbar, NavbarHeight } from "@/components/Navbar"
+import styles from "@/app/style/home.module.css"
+import Spending from "@/components/home/spending"
+import Summary from "@/components/home/summary"
+import Transactions from "@/components/home/transactions"
+import Expenses from "@/components/home/expenses"
+import Tips from "@/components/home/tips"
 
 /**
  * Application root component that manages authentication state, modal visibility, initial-setup gating, transient alerts, and renders the appropriate UI for the current state.
@@ -106,16 +112,15 @@ function App() {
       ) : (
         <>
           <Navbar />
-          <div className="min-h-screen w-full bg-primary flex flex-col items-center gap-6 overflow-x-hidden p-4">
-          {width < 1024 ? <TopInfo textclr="text-white"/> : null}
-          <Overview />
-          <ExpensesCard />
-
-          <ExpensesBox/>
-          <TotInvestData/>
-        </div>
-    </>
-    )}
+          <main style={{ minHeight: `calc(100vh - ${NavbarHeight}px)` }} className={`p-4 ${styles.gridAreaHome} gap-4`}>
+            <Summary className={styles.summary} />
+            <Spending className={styles.spending} />
+            <Transactions className={styles.transactions} />
+            <Expenses className={styles.expenses} />
+            <Tips className={styles.tips} />
+          </main>
+        </>
+      )}
     </>
   )
 }
