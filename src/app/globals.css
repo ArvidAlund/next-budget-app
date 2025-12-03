@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @plugin "@midudev/tailwind-animations";
+@tailwind utilities;
 
 @custom-variant dark (&:is(.dark *));
 
@@ -246,4 +247,10 @@ body {
 
 button {
   cursor: pointer;
+}
+
+@layer utilities {
+  .bg-mascot {
+    @apply bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500;
+  }
 }
