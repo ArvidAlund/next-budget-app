@@ -60,7 +60,7 @@ const ExpensesChart = () => {
     const map = new Map<string, number>();
 
     transactions.forEach((t) => {
-        const dateKey = new Date(t.date).toLocaleDateString("sv-SE"); // t.ex. "2025-12-03"
+        const dateKey = new Date(t.date).toLocaleDateString("sv-SE");
         const current = map.get(dateKey) || 0;
 
         // summera bara utgifter, eller ta med inkomster också beroende på behov
@@ -104,7 +104,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
       <div className="bg-neutral-900 border border-neutral-700 rounded-md p-3 text-sm text-white shadow-lg">
         <p className="font-semibold text-blue-400 mb-1">{label}</p>
         <p>
-          <span className="text-neutral-400">Total kostnad:</span>{" "}
+          <span className="text-neutral-400">Total kostnad:</span>
           <span className="text-red-400 font-medium">{formatCurrency(day.totalExpense)} kr</span>
         </p>
       </div>

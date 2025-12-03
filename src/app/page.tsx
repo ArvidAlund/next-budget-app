@@ -12,12 +12,13 @@ import LockScreen from "@/components/lockScreen";
 import getUserOption from "./lib/db/getUserOption"
 import { Navbar, NavbarHeight } from "@/components/Navbar"
 import styles from "@/app/style/home.module.css"
-import Spending from "@/components/home/spending"
+import Spending from "@/components/home/investment"
 import Summary from "@/components/home/summary"
 import Transactions from "@/components/home/transactions"
 import Expenses from "@/components/home/expenses"
 import Tips from "@/components/home/tips"
 import { useWindowWidth } from "@/components/useWindowWidth"
+import Investment from "@/components/home/investment"
 
 /**
  * Application root component that manages authentication state, modal visibility, initial-setup gating, transient alerts, and renders the appropriate UI for the current state.
@@ -31,6 +32,8 @@ function App() {
   const [setup, setSetup] = useState<boolean>(true);
   const [locked, setLocked] = useState<boolean>(false);
   const windowWidth = useWindowWidth();
+  const date = new Date();
+  const day = date.getDate();
 
   // Hämta användarsession
   useEffect(() => {
@@ -103,12 +106,12 @@ function App() {
       ) : (
         <>
           <Navbar />
-          <main style={{ minHeight: `calc(100vh - ${NavbarHeight}px)` }} className={`p-4 ${styles.gridAreaHome} gap-4 overflow-hidden`}>
+          <main style={{ minHeight: `calc(100vh - ${NavbarHeight}px)` }} className={`p-4 ${day >= 25 ? styles.gridAreaAfter25th : styles.gridAreaBefore25th} ${styles.gridArea} gap-4 overflow-hidden`}>
             <Summary className={styles.summary} />
             <Transactions className={styles.transactions} />
-            {windowWidth >= 768 && (<Spending className={styles.spending} />)}
+            {day >= 25 && (<Investment className={styles.investment} />)}
             {windowWidth >= 768 && (<Expenses className={styles.expenses} />)}
-            {windowWidth >= 768 && (<Tips className={styles.tips} />)}
+            {windowWidth >= 768 && (<Tips className={`${styles.investment} ${styles.tips}`} />)}
           </main>
         </>
       )}

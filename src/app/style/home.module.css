@@ -1,12 +1,21 @@
-.gridAreaHome {
+.gridArea {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto auto auto;
+  gap: 1rem;
+}
+
+.gridAreaBefore25th {
   grid-template-areas:
-    "summary summary spending transactions transactions"
+    "summary summary tips transactions transactions"
     "summary summary tips transactions transactions"
     "expenses expenses expenses transactions transactions";
-  gap: 1rem;
+}
+.gridAreaAfter25th {
+  grid-template-areas:
+    "summary summary investment transactions transactions"
+    "summary summary tips transactions transactions"
+    "expenses expenses expenses transactions transactions";
 }
 
 /* Mobilanpassning: stapla sektioner vertikalt */
@@ -27,8 +36,8 @@
 .summary {
   grid-area: summary;
 }
-.spending {
-  grid-area: spending;
+.investment {
+  grid-area: investment;
 }
 .credit {
   grid-area: credit;
