@@ -1,4 +1,4 @@
-# Next Budget App 💰
+# BudgetBuddy | Budget app
 
 En modern och enkel budgetapp byggd med **Next.js 15**, **React 19** och **Tailwind CSS 4**.  
 Appen hjälper dig att hantera inkomster, utgifter och hålla koll på din ekonomi – med stöd för Supabase-autentisering, datalagring, tabeller och smarta UI-komponenter.
@@ -26,8 +26,8 @@ Appen hjälper dig att hantera inkomster, utgifter och hålla koll på din ekono
 | [shadcn/ui](https://ui.shadcn.com/) | UI-komponenter |
 | [Radix UI](https://www.radix-ui.com/) | Tillgänglighetskomponenter |
 | [Supabase](https://supabase.com/) | Backend + Auth |
-| [TanStack React Table](https://tanstack.com/table) | Tabeller |
-| [Lucide Icons](https://lucide.dev/) + FontAwesome | Ikoner |
+| [Recharts](https://recharts.github.io/en-US/) | Grafer |
+| [Lucide Icons](https://lucide.dev/) | Ikoner |
 | [Tesseract.js](https://tesseract.projectnaptha.com/) | OCR |
 | [OpenAI SDK](https://www.npmjs.com/package/openai) | AI-stöd |
 | [Vercel](https://vercel.com/) | Deployment |
