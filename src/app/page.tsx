@@ -4,18 +4,9 @@ import { useEffect, useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
 import { supabaseUserID } from "@/app/lib/supabaseClient"
 
-import { ExpensesBox } from "@/components/visibleData/ExpensesBox"
-import { AddExpenseBtn } from "@/components/AddExpenseBtn"
-import { TopInfo } from "@/components/Topinfo"
-import { Overview } from "@/components/visibleData/Overview"
-import { ExpensesCard } from "@/components/visibleData/ExpensesCard"
-import { AddTransactionModal } from "@/components/transactions/AddTransactionModal"
 import { LoginModal } from "@/components/LoginForm"
-import { AlertboxContainer } from "@/components/AlertboxContainer"
 import type { Session } from '@supabase/supabase-js'
-import { useWindowWidth } from "@/components/useWindowWidth"
 import calcInvestment from "./lib/calcInvestment"
-import TotInvestData from "@/components/Calendar/totInvestData"
 import FirstSetup from "@/components/firstSetup/firstSetup"
 import LockScreen from "@/components/lockScreen";
 import getUserOption from "./lib/db/getUserOption"
@@ -33,11 +24,9 @@ import Tips from "@/components/home/tips"
  * @returns The top-level UI: `null` while initializing, the `LoginModal` when unauthenticated, the `FirstSetup` flow when initial setup is required, or the authenticated application layout (overview, expenses, add-transaction flow, alerts, and investment data) otherwise.
  */
 function App() {
-  const [modalOpen, setModalOpen] = useState(false)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [alertType, setAlertType] = useState<"good" | "bad" | "">("")
-  const width = useWindowWidth();
   const [setup, setSetup] = useState<boolean>(true);
   const [locked, setLocked] = useState<boolean>(false);
 
@@ -114,10 +103,10 @@ function App() {
           <Navbar />
           <main style={{ minHeight: `calc(100vh - ${NavbarHeight}px)` }} className={`p-4 ${styles.gridAreaHome} gap-4 overflow-hidden`}>
             <Summary className={styles.summary} />
-            <Spending className={styles.spending} />
+            <Spending className={`${styles.spending} hidden md:block`} />
             <Transactions className={styles.transactions} />
-            <Expenses className={styles.expenses} />
-            <Tips className={styles.tips} />
+            <Expenses className={`${styles.expenses} hidden md:block`} />
+            <Tips className={`${styles.tips} hidden md:block`} />
           </main>
         </>
       )}

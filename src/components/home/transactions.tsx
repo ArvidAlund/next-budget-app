@@ -61,7 +61,7 @@ export default function Transactions({ className }: SpendingProps) {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-white">Senaste transaktioner</h3>
           <Link href="/transactions" className="text-sm text-blue-400 hover:underline inline-block">
-            <p>Visa alla transaktioner</p>
+            <p>Visa alla</p>
           </Link>
         </div>
 
