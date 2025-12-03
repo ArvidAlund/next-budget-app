@@ -4,7 +4,7 @@ import { House, ArrowLeftRight, Settings, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import HoverIcon from "./ui/hoverIcon"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { AddTransactionModal } from "./transactions/AddTransactionModal"
 import { AlertboxContainer } from "./AlertboxContainer"
 
@@ -40,8 +40,37 @@ const navbarOptions = {
 export function Navbar() {
   const [AddTransaction, setAddTransaction] = useState(false);
   const [ alertType, setAlertType] = useState<"good" | "bad" | "">("");
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    const handleScroll = () => {
+      const navbar = document.querySelector("header");
+      if (!navbar) return;
+      if (window.scrollY > lastScrollY) {
+        // Scrollar ner
+        navbar.classList.add("translate-y-full");
+      } else {
+        // Scrollar upp
+        navbar.classList.remove("translate-y-full");
+      }
+      lastScrollY = window.scrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (alertType) {
+      const timer = setTimeout(() => {
+        setAlertType("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertType]);
+
   return (
-    <header style={{ height: NavbarHeight + "px" }} className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2">
+    <header style={{ height: NavbarHeight + "px" }} className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2 transition-all duration-300">
       <Link href="/" className="text-secondary justify-center items-center col-start-1 col-span-2 hidden md:flex">
         <Image
           src="/mascot/img/mascot.png"
