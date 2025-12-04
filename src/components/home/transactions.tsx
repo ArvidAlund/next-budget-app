@@ -21,6 +21,12 @@ type Transaction = {
   recurring: boolean;
 };
 
+/**
+ * Render a section showing recent transactions for the home view.
+ *
+ * @param className - Optional additional CSS class applied to the section container
+ * @returns A section element containing a header with a link to view all transactions and a height-constrained list of the most recent transactions
+ */
 export default function Transactions({ className }: SpendingProps) {
   const [loaded, setLoaded] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);

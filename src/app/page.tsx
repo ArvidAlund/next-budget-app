@@ -20,7 +20,9 @@ import { useWindowWidth } from "@/components/useWindowWidth"
 import Investment from "@/components/home/investment"
 
 /**
- * Application root component that manages authentication state, modal visibility, initial-setup gating, transient alerts, and renders the appropriate UI for the current state.
+ * Root React component that controls authentication, initial-setup gating, lock screen, transient alerts, and renders the main dashboard layout.
+ *
+ * @returns The rendered application UI as a JSX element, chosen based on authentication, lock state, and setup completion.
  */
 function App() {
   const [session, setSession] = useState<Session | null>(null)

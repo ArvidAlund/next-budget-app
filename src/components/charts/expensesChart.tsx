@@ -67,6 +67,14 @@ const ExpensesChart = ({maxHeight}: { maxHeight: number }) => {
         };
     }, []);
 
+    /**
+     * Aggregate transactions into daily total expenses.
+     *
+     * Sums amounts of transactions with type "expense" per calendar day (formatted using the "sv-SE" locale), rounding each day's total to the nearest integer.
+     *
+     * @param transactions - Array of transactions to aggregate
+     * @returns An array of objects where each entry represents a date and its `totalExpense` (the rounded sum of expenses for that date, date formatted as `YYYY-MM-DD`)
+     */
     function aggregateByDay(transactions: Transaction[]): DailyExpense[] {
     const map = new Map<string, number>();
 
@@ -124,5 +132,4 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   }
   return null;
 };
-
 

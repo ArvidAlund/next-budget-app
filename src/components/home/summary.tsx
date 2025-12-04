@@ -31,6 +31,15 @@ type Category = {
   transaction_type: string;
 };
 
+/**
+ * Render the account summary dashboard showing total balance, income/expenses, and quick statistics.
+ *
+ * Fetches the current user ID, income/expense totals, monthly transactions and categories on mount,
+ * computes derived values (total balance, total saved this month, largest expense by category) and
+ * displays them. Shows a loading placeholder until data is loaded.
+ *
+ * @returns The component's JSX element that renders the summary section.
+ */
 export default function Summary({ className }: SummaryProps) {
   const [loaded, setLoaded] = useState(false);
   const [valueData, setValueData] = useState<{ income: number; expense: number; total: number }>({
