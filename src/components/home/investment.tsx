@@ -16,7 +16,10 @@ export default function Investment({ className }: InvestmentProps) {
   useEffect(()=>{
       const getInvestmentAmount = async ()=>{
           const result: number = await calcInvestment();
-          if (result === 0) return console.error("Något gick fel försök igen senare");
+          if (result === 0){
+            setInvestmentAmount(0);
+            return;
+          }
           setInvestmentAmount(result);
 
           await getAvanzaInvestment(result);

@@ -40,7 +40,7 @@ export default function Summary({ className }: SummaryProps) {
   });
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalSaving, setTotalSaving] = useState<number | null>(null);
-  const [biggetstExpense, setBiggestExpense] = useState<{ category: string; amount: number } | null>(null);
+  const [biggestExpense, setBiggestExpense] = useState<{ category: string; amount: number } | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -134,8 +134,8 @@ export default function Summary({ className }: SummaryProps) {
               <h4 className="text-md font-semibold mb-2">Snabbstatistik</h4>
               <div className="flex flex-wrap gap-3">
                 <Statistic Icon={ArrowLeftRight} text={`${transactions.length} antal transaktioner`} type="neutral" />
-                {biggetstExpense && (
-                  <Statistic Icon={TrendingDown} text={`Störst utgift: ${categories.find(cat => cat.category_key === biggetstExpense.category)?.name_sv || biggetstExpense.category} ${formatCurrency(biggetstExpense.amount)} kr`} type="bad" />
+                {biggestExpense && (
+                  <Statistic Icon={TrendingDown} text={`Störst utgift: ${categories.find(cat => cat.category_key === biggestExpense.category)?.name_sv || biggestExpense.category} ${formatCurrency(biggestExpense.amount)} kr`} type="bad" />
                 )}
                 {totalSaving !== null && totalSaving > 0 && (
                   <Statistic Icon={HandCoins} text={`Totalt sparat denna månad: ${formatCurrency(totalSaving)} kr`} type="good" />
