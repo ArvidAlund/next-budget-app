@@ -8,6 +8,7 @@ import { useState, useEffect } from "react"
 import { AddTransactionModal } from "./transactions/AddTransactionModal"
 import { AlertboxContainer } from "./AlertboxContainer"
 import { useWindowWidth } from "./useWindowWidth"
+import { emitEvent } from "@/app/lib/eventbus"
 
 const NavbarHeight = 64; // Höjd i pixlar för navbaren
 export { NavbarHeight };
@@ -100,7 +101,10 @@ export function Navbar() {
         <Plus size={35}/>
       </button>
       {AddTransaction && (
-        <AddTransactionModal onClose={() => setAddTransaction(false)} onSuccess={(type) => setAlertType(type)}/>
+        <AddTransactionModal onClose={() => {
+          setAddTransaction(false)
+          emitEvent("modalChange", {opened: false});
+        }} onSuccess={(type) => setAlertType(type)}/>
       )}
       {alertType && <AlertboxContainer type={alertType} />}
     </header>

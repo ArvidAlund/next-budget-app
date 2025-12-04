@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import getTransactions from '@/app/lib/db/getTransactions';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { formatCurrency } from '@/app/lib/formatcurrency';
+import { onEvent } from '@/app/lib/eventbus';
 
 type Transaction = {
   id: string;
@@ -36,6 +37,7 @@ interface CustomTooltipProps {
 const ExpensesChart = ({maxHeight}: { maxHeight: number }) => {
     const [chartData, setChartData] = useState<DailyExpense[]>([]);
     const [loading, setLoading] = useState(true);
+    const [show, setShow] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -54,6 +56,14 @@ const ExpensesChart = ({maxHeight}: { maxHeight: number }) => {
         };
 
         fetchData();
+
+        const unsubscribe = onEvent("modalChange", (e: { opened: boolean }) => {
+          setShow(!e.opened);
+        });
+
+        return () => {
+          unsubscribe();
+        };
     }, []);
 
     function aggregateByDay(transactions: Transaction[]): DailyExpense[] {
@@ -79,7 +89,7 @@ const ExpensesChart = ({maxHeight}: { maxHeight: number }) => {
     if (loading) {
         return <div>Loading chart...</div>;
     }
-  return (
+  if (show) return (
     <AreaChart
     style={{ width: '100%', maxWidth: '1200px', maxHeight: `${maxHeight}px`, aspectRatio: 1.618 }}
     data={chartData}

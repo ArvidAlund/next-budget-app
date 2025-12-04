@@ -7,6 +7,8 @@ import { addTransaction } from "@/app/lib/transactions"
 import { ScanReceipt } from "./ScanReceipt"
 import { useRouter } from "next/navigation";
 import { getCategories } from "@/app/lib/db/getCategories"
+import { emitEvent } from "@/app/lib/eventbus"
+import { emit } from "process"
 
 interface CategoryInterface {
   category_key: string;
@@ -42,6 +44,7 @@ export function AddTransactionModal({
   // Sätt default datum till idag
   useEffect(() => {
     setDate(new Date().toISOString().split("T")[0]);
+    emitEvent("modalChange", {opened: true});
 
     const getOptions = async () => {
       const categorys: CategoryInterface[] = await getCategories();
@@ -106,6 +109,7 @@ export function AddTransactionModal({
       }
     } finally {
       setLoading(false)
+      emitEvent("modalChange", {opened: false});
     }
   }
 
