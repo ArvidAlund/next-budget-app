@@ -1,11 +1,35 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { NavIcon } from "./ui/navicon"
-import { faHouseUser, faGear } from "@fortawesome/free-solid-svg-icons"
+import { House, ArrowLeftRight, Settings, Plus } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
-import { TopInfo } from "./Topinfo"
+import HoverIcon from "./ui/hoverIcon"
+import { useState, useEffect, useRef } from "react"
+import { AddTransactionModal } from "./transactions/AddTransactionModal"
+import { AlertboxContainer } from "./AlertboxContainer"
 import { useWindowWidth } from "./useWindowWidth"
+import { emitEvent } from "@/app/lib/eventbus"
+
+const NavbarHeight = 64; // Höjd i pixlar för navbaren
+export { NavbarHeight };
+
+const navbarOptions = {
+  home: {
+    href: "/",
+    icon: House,
+    description: "Hem",
+  },
+  transactions: {
+    href: "/transactions",
+    icon: ArrowLeftRight,
+    description: "Transaktioner",
+  },
+  options: {
+    href: "/options",
+    icon: Settings,
+    description: "Inställningar",
+  },
+}
 
 /**
  * Bottom navigation bar that hides when scrolling down and reappears when scrolling up.
@@ -16,55 +40,73 @@ import { useWindowWidth } from "./useWindowWidth"
  * @returns The navbar React element.
  */
 export function Navbar() {
-  const [hidden, setHidden] = useState(false) // Om navbaren ska döljas
-  const lastScrollY = useRef(0)              // Senaste scroll-positionen
-  const width = useWindowWidth();
+  const [AddTransaction, setAddTransaction] = useState(false);
+  const [ alertType, setAlertType] = useState<"good" | "bad" | "">("");
+  const windowWidth = useWindowWidth();
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-
-      // Scrollar ner → dölj navbar
-      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
-        setHidden(true)
+      const navbar = headerRef.current;
+      if (!navbar) return;
+      const translateClass = windowWidth && windowWidth >= 768 ? "-translate-y-full" : "translate-y-full";
+      if (window.scrollY > lastScrollY) {
+        // Scrollar ner
+        navbar.classList.add(translateClass);
+      } else {
+        // Scrollar upp
+        navbar.classList.remove(translateClass);
       }
-      // Scrollar upp → visa navbar
-      else {
-        setHidden(false)
-      }
+      lastScrollY = window.scrollY;
+    };
 
-      // Uppdatera senaste scroll-position
-      lastScrollY.current = currentScrollY
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [windowWidth]);
+
+  useEffect(() => {
+    if (alertType) {
+      const timer = setTimeout(() => {
+        setAlertType("");
+      }, 3000);
+      return () => clearTimeout(timer);
     }
-
-    // Lyssna på scroll-event
-    window.addEventListener("scroll", handleScroll)
-
-    // Rensa eventlistener vid unmount
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
+  }, [alertType]);
 
   return (
-    <nav
-      className={`
-        fixed flex flex-row bottom-0 left-0 w-full h-16 bg-secondary text-white rounded-t-xl shadow-md
-        transition-transform duration-300 ease-in-out z-100 overflow-hidden
-        ${hidden ? "translate-y-full" : "translate-y-0"} 
-        lg:static lg:rounded-md
-    `}
-
-    >
-      <div className="w-[30%] hidden lg:flex">
-        {width > 1024 ? <TopInfo /> : null}
-      </div>
-
-      <div className="flex justify-around items-center h-full w-[90%] lg:w-[70%]">
-        <Link href="/"><NavIcon icon={faHouseUser} label="Hem" /></Link>
-        <Link href="/options"><NavIcon icon={faGear} label="Options"/></Link>
-
-      </div>
-    </nav>
+    <header ref={headerRef} style={{ height: NavbarHeight + "px" }} className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2 transition-all duration-300">
+      <Link href="/" className="text-secondary justify-center items-center col-start-1 col-span-2 hidden md:flex">
+        <Image
+          src="/mascot/img/mascot.png"
+          alt="BudgetBuddy Logo"
+          className="ml-4 mt-2 mb-2"
+          width={50}
+          height={50}
+        />
+        <h5 className="ml-2">BudgetBuddy</h5>
+      </Link>
+      <nav className="col-start-1 col-span-8 md:col-start-3 md:col-span-4">
+        <ul className="h-full flex justify-evenly items-center gap-4">
+          {Object.entries(navbarOptions).map(([key, { href, icon, description }]) => (
+            <li key={key} className="h-full w-fit flex justify-center items-center">
+              <Link href={href} className="relative flex justify-center items-center group">
+                <HoverIcon Icon={icon} description={description} />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <button aria-label="Add expense" onClick={() => setAddTransaction(true)} className="text-secondary justify-center items-center col-start-9 col-span-2 md:col-start-10 md:col-span-1 flex cursor-pointer">
+        <Plus size={35}/>
+      </button>
+      {AddTransaction && (
+        <AddTransactionModal onClose={() => {
+          setAddTransaction(false)
+          emitEvent("modalChange", {opened: false});
+        }} onSuccess={(type) => setAlertType(type)}/>
+      )}
+      {alertType && <AlertboxContainer type={alertType} />}
+    </header>
   )
 }

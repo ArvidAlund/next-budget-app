@@ -77,7 +77,7 @@ export function Overview() {
   const sum = income - expense
 
   return (
-    <Container sizeClass="w-full h-40">
+    <Container>
       {/* Saldo-sektion */}
       <div className="flex flex-col mb-3">
         <h3>Saldo</h3>
