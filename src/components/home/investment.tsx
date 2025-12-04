@@ -63,8 +63,8 @@ export default function Investment({ className }: InvestmentProps) {
 
             <div
               className={`w-full max-w-md px-6 py-4 flex flex-col items-center justify-center rounded-xl border ${
-                hasInvested ? "border-green-400/60 bg-gradient-to-r from-green-900/40 to-green-700/30" 
-                            : "border-red-400/60 bg-gradient-to-r from-red-900/40 to-red-700/30"
+                hasInvested ? "border-green-400/60 bg-linear-to-r from-green-900/40 to-green-700/30" 
+                            : "border-red-400/60 bg-linear-to-r from-red-900/40 to-red-700/30"
               } shadow-lg backdrop-blur-sm transition-all duration-300`}
             >
               <p className="text-white text-center font-medium">

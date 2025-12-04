@@ -4,7 +4,6 @@ import getTransactions from "@/app/lib/db/getTransactions";
 import TransactionContainer from "./transactions/transactionContainer";
 import { NavbarHeight } from "@/components/Navbar";
 import Link from "next/link";
-import { useWindowWidth } from "../useWindowWidth";
 
 interface SpendingProps {
   className?: string;
@@ -31,7 +30,6 @@ export default function Transactions({ className }: SpendingProps) {
   const [loaded, setLoaded] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [limit, setLimit] = useState<number>(6);
-  const windowWidth = useWindowWidth();
   const height = 60;
   const ulRef = useRef<HTMLUListElement>(null);
 

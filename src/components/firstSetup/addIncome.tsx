@@ -82,7 +82,7 @@ export default function AddIncome() {
                 })
               }
               />
-              <hr className="h-[2px] bg-primary col-span-full"/>
+              <hr className="h-0.5 bg-primary col-span-full"/>
             </div>
           ))}
           <button
@@ -141,7 +141,7 @@ export default function AddIncome() {
                 })
               }
               />
-              <hr className="h-[2px] bg-primary col-span-full"/>
+              <hr className="h-0.5 bg-primary col-span-full"/>
             </div>
           ))}
           <button

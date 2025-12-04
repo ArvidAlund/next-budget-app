@@ -108,7 +108,7 @@ export default function AddExpense(){
                                     <option key={cat.category_key} value={cat.category_key} selected={expense[i].category === cat.category_key}>{cat.name_sv}</option>
                                 ))}
                             </select>
-                            <hr className='col-span-full bg-primary h-[2px]'/>
+                            <hr className='col-span-full bg-primary h-0.5'/>
                         </div>
                     ))}
                     <button
