@@ -111,14 +111,14 @@ export function ExpensesCard() {
   // Visas medan budgetData laddas
   if (!budgetData) {
     return (
-      <Container sizeClass="w-full" colorClass="bg-accent">
+      <Container>
         <p>Laddar budget...</p>
       </Container>
     );
   }
 
   return (
-    <Container sizeClass="w-full">
+    <Container>
       {/* Header med titel och länk */}
       <div className="flex w-full justify-between">
         <p>Utgifter</p>
