@@ -4,11 +4,9 @@ import { useState, useEffect } from "react"
 import { ComboBox } from "../ui/combobox"
 import { X } from "lucide-react"
 import { addTransaction } from "@/app/lib/transactions"
-import { ScanReceipt } from "./ScanReceipt"
 import { useRouter } from "next/navigation";
 import { getCategories } from "@/app/lib/db/getCategories"
 import { emitEvent } from "@/app/lib/eventbus"
-import { emit } from "process"
 
 interface CategoryInterface {
   category_key: string;
@@ -45,7 +43,6 @@ export function AddTransactionModal({
   const [description, setDescription] = useState("")
   const [date, setDate] = useState("")
   const [loading, setLoading] = useState(false)
-  const [showScanner, setShowScanner] = useState(false)
   const [recurring, setRecurring] = useState(false);
   const [incomeOptions, setIncomeOptions] = useState<CategoryInterface[]>([])
   const [expenseOptions, setExpenseOptions] = useState<CategoryInterface[]>([])
@@ -228,25 +225,14 @@ export function AddTransactionModal({
             {/* Spara knapp */}
             <button
               type="submit"
-              className="!bg-amber-500 text-white py-2 rounded hover:bg-amber-600 mt-2"
+              className="bg-amber-500! text-white py-2 rounded hover:bg-amber-600 mt-2"
               disabled={loading}
             >
               {loading ? "Sparar..." : "Spara"}
             </button>
           </form>
-
-          {/* Skanna kvitto */}
-          {/* <button
-            className="!bg-gray-700 text-white py-2 rounded hover:bg-amber-600 mt-2 w-full"
-            onClick={() => setShowScanner(true)}
-          >
-            Skanna kvitto
-          </button> */}
         </div>
       </div>
-
-      {/* OCR Scanner */}
-      {showScanner && <ScanReceipt onClose={() => setShowScanner(false)} />}
     </>
   )
 }

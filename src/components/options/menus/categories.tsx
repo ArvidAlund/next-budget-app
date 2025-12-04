@@ -27,7 +27,7 @@ export default function CategoriesOptions() {
                 </button>
                 )}
             </div>
-            <div className="space-y-4 [&>*]:border-b [&>*]:pb-4">
+            <div className="space-y-4 *:border-b *:pb-4">
                 <SortCategoriesOption />
             </div>
         </section>

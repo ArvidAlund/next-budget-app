@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import supabase from "@/app/lib/supabaseClient";
-import { Button } from "../ui/button";
 
 /**
  * Renders a button that copies the current user's ICS calendar URL to the clipboard and shows temporary feedback.
