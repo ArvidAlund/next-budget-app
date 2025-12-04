@@ -1,7 +1,6 @@
 .gridArea {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: auto auto auto;
   gap: 1rem;
 }
 
@@ -20,7 +19,8 @@
 
 /* Mobilanpassning: stapla sektioner vertikalt */
 @media (max-width: 768px) {
-  .gridAreaHome {
+  .gridAreaBefore25th,
+  .gridAreaAfter25th {
     grid-template-columns: 1fr;
     grid-template-areas:
       "summary"

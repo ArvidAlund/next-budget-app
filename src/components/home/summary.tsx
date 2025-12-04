@@ -6,7 +6,6 @@ import { formatCurrency } from "@/app/lib/formatcurrency";
 import { ArrowUpRight, ArrowDownLeft, TrendingDown, TrendingUp, ArrowLeftRight, HandCoins } from "lucide-react";
 import Statistic from "./summary/statistics";
 import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
-import getUserOption from "@/app/lib/db/getUserOption";
 import { getCategories } from "@/app/lib/db/getCategories";
 
 interface SummaryProps {
@@ -108,8 +107,8 @@ export default function Summary({ className }: SummaryProps) {
         {loaded ? (
           <>
             <h1 className="my-4">{formatCurrency(valueData.total)} kr</h1>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-green-900/10 border border-green-500/50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="grid grid-cols-2 gap-4 h-15">
+              <div className="bg-green-900/10 border border-green-500/50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300 h-full w-full">
                 <div className="flex items-center gap-2">
                   <ArrowUpRight className="w-5 h-5 text-green-400" />
                   <span className="text-green-400 md:text-lg font-bold">
@@ -119,7 +118,7 @@ export default function Summary({ className }: SummaryProps) {
                 <p className="text-sm text-neutral-300 mt-1">Inkomster</p>
               </div>
 
-              <div className="bg-red-900/10 border border-red-500/50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="bg-red-900/10 border border-red-500/50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300 h-full w-full">
                 <div className="flex items-center gap-2">
                   <ArrowDownLeft className="w-5 h-5 text-red-400" />
                   <span className="text-red-400 md:text-lg font-bold">
@@ -134,9 +133,9 @@ export default function Summary({ className }: SummaryProps) {
             <section className="mt-6">
               <h4 className="text-md font-semibold mb-2">Snabbstatistik</h4>
               <div className="flex flex-wrap gap-3">
-                <Statistic Icon={ArrowLeftRight} text={`${transactions.length} transaktioner denna månad`} type="neutral" />
+                <Statistic Icon={ArrowLeftRight} text={`${transactions.length} antal transaktioner`} type="neutral" />
                 {biggetstExpense && (
-                  <Statistic Icon={TrendingDown} text={`Största utgift: ${categories.find(cat => cat.category_key === biggetstExpense.category)?.name_sv || biggetstExpense.category} ${formatCurrency(biggetstExpense.amount)} kr`} type="bad" />
+                  <Statistic Icon={TrendingDown} text={`Störst utgift: ${categories.find(cat => cat.category_key === biggetstExpense.category)?.name_sv || biggetstExpense.category} ${formatCurrency(biggetstExpense.amount)} kr`} type="bad" />
                 )}
                 {totalSaving !== null && totalSaving > 0 && (
                   <Statistic Icon={HandCoins} text={`Totalt sparat denna månad: ${formatCurrency(totalSaving)} kr`} type="good" />

@@ -33,7 +33,7 @@ interface CustomTooltipProps {
 
 
 // #endregion
-const ExpensesChart = () => {
+const ExpensesChart = ({maxHeight}: { maxHeight: number }) => {
     const [chartData, setChartData] = useState<DailyExpense[]>([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -81,7 +81,7 @@ const ExpensesChart = () => {
     }
   return (
     <AreaChart
-    style={{ width: '100%', maxWidth: '1200px', maxHeight: '300px', aspectRatio: 1.618 }}
+    style={{ width: '100%', maxWidth: '1200px', maxHeight: `${maxHeight}px`, aspectRatio: 1.618 }}
     data={chartData}
     margin={{ top: 20, right: 0, left: 0, bottom: 0 }}
     >
