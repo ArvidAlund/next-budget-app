@@ -47,12 +47,11 @@ export default function Transactions({ className }: SpendingProps) {
   }, []);
 
   useEffect(() => {
-    if (!loaded && !ulRef.current) return;
+    if (!loaded || !ulRef.current) return;
     let conHeight = ulRef.current?.clientHeight || 0;
     conHeight = conHeight - 30;
     const lim = Math.floor(conHeight / height);
-    console.log("Container height:", conHeight, "Limit calculated:", lim);
-    setLimit(Math.floor(conHeight / height));
+    setLimit(lim);
   }, [loaded, transactions]);
 
   // sortera på datum

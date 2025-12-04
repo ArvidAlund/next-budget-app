@@ -44,6 +44,7 @@ const ExpensesChart = ({maxHeight}: { maxHeight: number }) => {
             const result = await getTransactions({ numberOfMonths: 1 });
             if (result.error) {
                 console.error("Error fetching chart data:", result.error);
+                setLoading(false);
                 return;
             }
             const aggregated = aggregateByDay(result.data || []);
@@ -89,7 +90,8 @@ const ExpensesChart = ({maxHeight}: { maxHeight: number }) => {
     if (loading) {
         return <div>Loading chart...</div>;
     }
-  if (show) return (
+    if (!show) return null;
+    return (
     <AreaChart
     style={{ width: '100%', maxWidth: '1200px', maxHeight: `${maxHeight}px`, aspectRatio: 1.618 }}
     data={chartData}

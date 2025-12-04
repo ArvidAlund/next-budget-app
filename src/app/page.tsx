@@ -124,7 +124,7 @@ function App() {
             {day >= 25 && <Investment className={styles.investment} />}
             {windowWidth >= 768 && <Expenses className={styles.expenses} />}
             {windowWidth >= 768 && (
-              <Tips className={`${styles.investment} ${styles.tips}`} />
+              <Tips className={`${styles.tips}`} />
             )}
           </main>
         </>

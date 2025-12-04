@@ -4,7 +4,7 @@ import { House, ArrowLeftRight, Settings, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import HoverIcon from "./ui/hoverIcon"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { AddTransactionModal } from "./transactions/AddTransactionModal"
 import { AlertboxContainer } from "./AlertboxContainer"
 import { useWindowWidth } from "./useWindowWidth"
@@ -43,20 +43,20 @@ export function Navbar() {
   const [AddTransaction, setAddTransaction] = useState(false);
   const [ alertType, setAlertType] = useState<"good" | "bad" | "">("");
   const windowWidth = useWindowWidth();
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
-      const navbar = document.querySelector("header");
+      const navbar = headerRef.current;
       if (!navbar) return;
+      const translateClass = windowWidth && windowWidth >= 768 ? "-translate-y-full" : "translate-y-full";
       if (window.scrollY > lastScrollY) {
         // Scrollar ner
-        const choice = windowWidth && windowWidth >= 768 ? " -translate-y-full" : " translate-y-full";
-        navbar.classList.add(choice);
+        navbar.classList.add(translateClass);
       } else {
         // Scrollar upp
-        const choice = windowWidth && windowWidth >= 768 ? " -translate-y-full" : " translate-y-full";
-        navbar.classList.remove(choice);
+        navbar.classList.remove(translateClass);
       }
       lastScrollY = window.scrollY;
     };
@@ -75,7 +75,7 @@ export function Navbar() {
   }, [alertType]);
 
   return (
-    <header style={{ height: NavbarHeight + "px" }} className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2 transition-all duration-300">
+    <header ref={headerRef} style={{ height: NavbarHeight + "px" }} className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2 transition-all duration-300">
       <Link href="/" className="text-secondary justify-center items-center col-start-1 col-span-2 hidden md:flex">
         <Image
           src="/mascot/img/mascot.png"
