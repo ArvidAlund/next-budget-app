@@ -112,8 +112,8 @@ export function AddTransactionModal({
   return (
     <>
       {/* Overlay */}
-      <div className="fixed min-w-full min-h-screen inset-0 z-50 bg-black/60 flex justify-center items-center px-4 text-black">
-        <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] p-6 overflow-y-auto relative shadow-lg">
+      <div className="fixed min-w-full min-h-screen inset-0 bg-black/60 flex justify-center items-center px-4 text-black z-10">
+        <div className="bg-primary text-secondary rounded-2xl w-full max-w-md max-h-[90vh] p-6 overflow-y-auto relative shadow-lg">
           
           {/* Stäng-knapp */}
           <button
@@ -170,7 +170,7 @@ export function AddTransactionModal({
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <label htmlFor="recurring" className="text-sm font-medium text-gray-800 select-none">
+              <label htmlFor="recurring" className="text-sm font-medium select-none">
                 Återkommande
               </label>
             </div>
@@ -221,12 +221,12 @@ export function AddTransactionModal({
           </form>
 
           {/* Skanna kvitto */}
-          <button
+          {/* <button
             className="!bg-gray-700 text-white py-2 rounded hover:bg-amber-600 mt-2 w-full"
             onClick={() => setShowScanner(true)}
           >
             Skanna kvitto
-          </button>
+          </button> */}
         </div>
       </div>
 

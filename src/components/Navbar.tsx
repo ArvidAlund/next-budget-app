@@ -7,6 +7,7 @@ import HoverIcon from "./ui/hoverIcon"
 import { useState, useEffect } from "react"
 import { AddTransactionModal } from "./transactions/AddTransactionModal"
 import { AlertboxContainer } from "./AlertboxContainer"
+import { useWindowWidth } from "./useWindowWidth"
 
 const NavbarHeight = 64; // Höjd i pixlar för navbaren
 export { NavbarHeight };
@@ -40,6 +41,7 @@ const navbarOptions = {
 export function Navbar() {
   const [AddTransaction, setAddTransaction] = useState(false);
   const [ alertType, setAlertType] = useState<"good" | "bad" | "">("");
+  const windowWidth = useWindowWidth();
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -48,17 +50,19 @@ export function Navbar() {
       if (!navbar) return;
       if (window.scrollY > lastScrollY) {
         // Scrollar ner
-        navbar.classList.add("translate-y-full");
+        const choice = windowWidth && windowWidth >= 768 ? " -translate-y-full" : " translate-y-full";
+        navbar.classList.add(choice);
       } else {
         // Scrollar upp
-        navbar.classList.remove("translate-y-full");
+        const choice = windowWidth && windowWidth >= 768 ? " -translate-y-full" : " translate-y-full";
+        navbar.classList.remove(choice);
       }
       lastScrollY = window.scrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [windowWidth]);
 
   useEffect(() => {
     if (alertType) {
