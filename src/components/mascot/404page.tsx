@@ -14,7 +14,7 @@ export default function Mascot404Page() {
   const [isVideoReady, setIsVideoReady] = useState(false);
 
   return (
-    <div className="w-full h-full flex items-center justify-center fixed top-1/2 left-1/2 z-100 -translate-x-1/2 -translate-y-1/2 user-noselect pointer-events-none">
+    <div className="w-full h-full flex items-center justify-center fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 user-noselect pointer-events-none">
       {!isVideoReady && (
         <Image
           src="/mascot/img/confused.png"
