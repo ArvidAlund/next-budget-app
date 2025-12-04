@@ -7,6 +7,14 @@ type StatisticProps = {
     type: "good" | "bad" | "neutral";
 }
 
+/**
+ * Render a compact pill-shaped statistic element with an optional icon and color styling based on `type`.
+ *
+ * @param Icon - Optional Lucide icon component to display before the text
+ * @param text - Text content to display inside the pill
+ * @param type - Visual variant: `"good"` applies green tones, `"bad"` applies red tones, `"neutral"` applies neutral tones
+ * @returns A JSX element representing the styled statistic pill
+ */
 export default function Statistic({Icon, text, type}: StatisticProps) {
 
     return (

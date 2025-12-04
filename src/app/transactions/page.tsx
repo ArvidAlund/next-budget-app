@@ -2,9 +2,9 @@ import { TransactionTable } from "@/app/transactions/TransactionTable"
 import { Navbar } from "@/components/Navbar"
 
 /**
- * Renders the transactions page with the transactions table.
+ * Render the transactions page including the top navigation and transactions table.
  *
- * @returns A JSX element: a <main> wrapper (classes "md:mt-4 p-2") that contains the TransactionTable component.
+ * @returns The page's JSX element: a fragment containing the `Navbar` component and a `<main>` element (classes "md:mt-4 p-2") that wraps `TransactionTable`.
  */
 export default function TransactionsPage(){
     return(

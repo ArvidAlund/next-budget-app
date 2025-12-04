@@ -9,6 +9,13 @@ interface InvestmentProps {
   className?: string;
 }
 
+/**
+ * Renders an investment status card that shows the recommended monthly investment or confirms the user has invested.
+ *
+ * This component computes the recommended investment amount, checks the user's transactions to determine whether that amount has been invested (via a Supabase query), and displays a styled card whose content and appearance reflect the investment status.
+ *
+ * @returns The rendered JSX element displaying the investment status card.
+ */
 export default function Investment({ className }: InvestmentProps) {
   const [investmentAmount, setInvestmentAmount] = useState<number>();
   const [hasInvested, setHasInvested] = useState(false);

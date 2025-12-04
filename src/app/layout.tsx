@@ -52,9 +52,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root layout for the application that sets global fonts and renders the navbar and page content.
+ * Root layout component that applies global fonts and wraps page content.
  *
- * @returns The top-level HTML layout element containing a body with global font classes, the Navbar, and `children`.
+ * @returns An `<html lang="se">` element whose `<body>` has the global font classes and contains `children`.
  */
 export default function RootLayout({
   children,

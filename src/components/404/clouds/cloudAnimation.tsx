@@ -2,12 +2,12 @@ import Image from "next/image";
 import styles from "./CloudAnimation.module.css";
 
 /**
- * Render a full-screen cloud animation background element.
+ * Renders a full-viewport decorative cloud background.
  *
- * This component displays a full-screen image of clouds that serves as a decorative background animation. 
- * It is positioned absolutely to cover the entire viewport and is non-interactive. 
- * @returns A JSX element containing the cloud animation background.
-**/
+ * The element is non-interactive and intended purely for visual decoration.
+ *
+ * @returns A JSX element containing the cloud background
+ */
 export default function CloudAnimation() {
   return (
     <div className="absolute top-1/4 left-0 w-full h-full overflow-hidden pointer-events-none z-0">

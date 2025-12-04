@@ -18,6 +18,17 @@ interface CategoryInterface {
   transaction_type: 'income' | 'expense';
 }
 
+/**
+ * Modal dialog for creating a new transaction.
+ *
+ * Initializes the form (date set to today), loads and partitions categories into income/expense options,
+ * validates required fields, and submits a new transaction. Emits modal visibility events and calls
+ * the provided callbacks on close or on successful submission.
+ *
+ * @param onClose - Callback invoked to close the modal.
+ * @param onSuccess - Callback invoked with `"good"` on successful save or `"bad"` to signal failure.
+ * @returns The modal's JSX element containing the add-transaction form.
+ */
 export function AddTransactionModal({
   onClose,
   onSuccess,

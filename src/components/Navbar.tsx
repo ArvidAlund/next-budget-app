@@ -32,10 +32,11 @@ const navbarOptions = {
 }
 
 /**
- * Bottom navigation bar that hides when scrolling down and reappears when scrolling up.
+ * Render the responsive site navbar that hides when scrolling down and reappears when scrolling up.
  *
- * Renders a fixed, responsive bottom nav for small viewports with navigation icons (Home, Options).
- * On viewports wider than 1024px the TopInfo panel is shown in the left area.
+ * The navbar shows branding on medium+ viewports, renders navigation icons, an Add button that opens
+ * the AddTransactionModal, and a transient Alertbox that clears after three seconds. Closing the modal
+ * emits a `"modalChange"` event with `{ opened: false }`.
  *
  * @returns The navbar React element.
  */

@@ -15,9 +15,11 @@ function isNegative(num: number) {
 }
 
 /**
- * Overview
- * ----------------
- * Visar saldo, inkomster och utgifter för aktuell användare.
+ * Render an account overview showing the current balance, total income, and total expenses for the logged-in user.
+ *
+ * The component fetches user-specific income and expense totals on mount and displays loading placeholders while data is being retrieved.
+ *
+ * @returns A JSX element that displays the balance, income, and expenses; shows "..." while loading and applies a red color when the balance is negative and green when it is non-negative.
  */
 export function Overview() {
   const [income, setIncome] = useState(0)   // Total inkomst
