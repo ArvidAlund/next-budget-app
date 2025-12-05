@@ -9,6 +9,7 @@ import { AddTransactionModal } from "./transactions/AddTransactionModal"
 import { AlertboxContainer } from "./AlertboxContainer"
 import { useWindowWidth } from "./useWindowWidth"
 import { emitEvent } from "@/app/lib/eventbus"
+import { addTransaction } from "@/app/lib/transactions"
 
 const NavbarHeight = 64; // Höjd i pixlar för navbaren
 export { NavbarHeight };
@@ -41,7 +42,7 @@ const navbarOptions = {
  * @returns The navbar React element.
  */
 export function Navbar() {
-  const [AddTransaction, setAddTransaction] = useState(false);
+  const [ addTransaction, setAddTransaction] = useState(false);
   const [ alertType, setAlertType] = useState<"good" | "bad" | "">("");
   const windowWidth = useWindowWidth();
   const headerRef = useRef<HTMLElement>(null);
@@ -76,7 +77,7 @@ export function Navbar() {
   }, [alertType]);
 
   return (
-    <header ref={headerRef} style={{ height: NavbarHeight + "px" }} className="fixed md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2 transition-all duration-300">
+    <header ref={headerRef} style={{ height: NavbarHeight + "px" }} className={`${addTransaction ? 'statc' : 'fixed'} md:static grid grid-cols-10 bottom-0 left-0 w-full bg-primary/20 backdrop-blur-md md:border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2 transition-all duration-300`}>
       <Link href="/" className="text-secondary justify-center items-center col-start-1 col-span-2 hidden md:flex">
         <Image
           src="/mascot/img/mascot.png"
@@ -101,7 +102,7 @@ export function Navbar() {
       <button aria-label="Add expense" onClick={() => setAddTransaction(true)} className="text-secondary justify-center items-center col-start-9 col-span-2 md:col-start-10 md:col-span-1 flex cursor-pointer">
         <Plus size={35}/>
       </button>
-      {AddTransaction && (
+      {addTransaction && (
         <AddTransactionModal onClose={() => {
           setAddTransaction(false)
           emitEvent("modalChange", {opened: false});
