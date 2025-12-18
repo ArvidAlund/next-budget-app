@@ -7,6 +7,7 @@ import { ArrowUpRight, ArrowDownLeft, TrendingDown, TrendingUp, ArrowLeftRight, 
 import Statistic from "./summary/statistics";
 import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
 import { getCategories } from "@/app/lib/db/getCategories";
+import incomeDiffMonth from "@/app/lib/incomeDiffMonth";
 
 interface SummaryProps {
   className?: string;
@@ -51,6 +52,7 @@ export default function Summary({ className }: SummaryProps) {
   const [totalSaving, setTotalSaving] = useState<number | null>(null);
   const [biggestExpense, setBiggestExpense] = useState<{ category: string; amount: number } | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [incomeDiff, setIncomeDiff] = useState<{ percentage: number; positive: boolean } | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,6 +103,14 @@ export default function Summary({ className }: SummaryProps) {
         const responseCategories = await getCategories();
         
         setCategories(responseCategories || []);
+
+        try {
+          const res = await incomeDiffMonth();
+          setIncomeDiff(res);
+        } catch (error) {
+          console.error("Error fetching income difference:", error);
+        }
+        
         setLoaded(true);
       } catch (error) {
         console.error("Error fetching income and expense total:", error);
@@ -149,13 +159,30 @@ export default function Summary({ className }: SummaryProps) {
                 {totalSaving !== null && totalSaving > 0 && (
                   <Statistic Icon={HandCoins} text={`Totalt sparat denna månad: ${formatCurrency(totalSaving)} kr`} type="good" />
                 )}
-                <Statistic Icon={TrendingUp} text="+12% mer inkomster än förra månaden" type="good" />
+                {incomeDiff && (
+                  <Statistic
+                    Icon={incomeDiff.positive ? TrendingUp : TrendingDown}
+                    text={`${incomeDiff.positive ? "+" : "-"}${incomeDiff.percentage}% ${incomeDiff.positive ? "mer" : "mindre"} inkomster än förra månaden`}
+                    type={incomeDiff.positive ? "good" : "bad"}
+                  />
+                )}
               </div>
             </section>
           </>
         ) : (
           <>
-            <div className="w-50 h-10 bg-neutral-500 animate-pulse rounded-md" />
+            <div className="w-50 h-10 bg-neutral-500 animate-pulse rounded-md my-4" />
+            <div className="grid grid-cols-2 gap-4 min-h-25">
+              <div className="bg-neutral-500 border border-neutral-500/50 rounded-lg p-4 shadow-sm h-full w-full animate-pulse" />
+              <div className="bg-neutral-500 border border-neutral-500/50 rounded-lg p-4 h-full w-full animate-pulse" />
+            </div>
+            <h4 className="text-md font-semibold mb-2">Snabbstatistik</h4>
+            <div>
+              <div className="bg-neutral-500 rounded-lg p-4 h-10 w-32 animate-pulse inline-block mr-3 mb-3" />
+              <div className="bg-neutral-500 rounded-lg p-4 h-10 w-48 animate-pulse inline-block mr-3 mb-3" />
+              <div className="bg-neutral-500 rounded-lg p-4 h-10 w-40 animate-pulse inline-block mr-3 mb-3" />
+              <div className="bg-neutral-500 rounded-lg p-4 h-10 w-36 animate-pulse inline-block mr-3 mb-3" />
+            </div>
           </>
         )}
       </Container>
