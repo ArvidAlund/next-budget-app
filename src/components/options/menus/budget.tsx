@@ -1,5 +1,6 @@
 import CarryoverOption from "../optionFunctions/carryover";
 import ExportTransactionsOption from "../optionFunctions/exportTransactions";
+import TransactionFormatOption from "../optionFunctions/transactionFormat";
 
 
 /**
@@ -13,6 +14,7 @@ export default function BudgetOptions() {
             <h1 className="text-2xl font-bold mb-4 w-full text-center">Budget Inställningar</h1>
             <div className="space-y-4 *:border-b *:pb-4">
                 <CarryoverOption />
+                <TransactionFormatOption />
                 <ExportTransactionsOption />
             </div>
         </section>
