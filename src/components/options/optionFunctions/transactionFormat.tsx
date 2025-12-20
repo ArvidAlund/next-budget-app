@@ -76,10 +76,10 @@ export default function TransactionFormatOption() {
                             onChange={(e) => setThousandSeparator(e.target.value)}
                             className="border rounded p-1 bg-black"
                         >
-                            <option value="none">Ingen</option>
-                            <option value="comma">Komma (,)</option>
-                            <option value="dot">Punkt (.)</option>
-                            <option value="space">Mellanslag ( )</option>
+                            <option value="none">Ingen (10000)</option>
+                            <option value="comma">Komma (10,000)</option>
+                            <option value="dot">Punkt (10.000)</option>
+                            <option value="space">Mellanslag (10 000)</option> 
                         </select>
                     </div>
                 </div>

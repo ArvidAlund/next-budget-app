@@ -1,3 +1,4 @@
+import ShowDiagramsOption from "../optionFunctions/showDiagrams";
 import ThemeOption from "../optionFunctions/theme";
 
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
@@ -28,6 +29,7 @@ export default function AppearanceOptions() {
             </div>
             <div className="space-y-4 *:border-b *:pb-4">
                 <ThemeOption />
+                <ShowDiagramsOption />
             </div>
         </section>
     );
