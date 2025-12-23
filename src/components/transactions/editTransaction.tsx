@@ -1,6 +1,7 @@
 import { useState } from "react";
 import supabase from "@/app/lib/supabaseClient";
 import { supabaseUserID } from "@/app/lib/supabaseClient";
+import StopRecurring from "@/app/lib/db/stopRecurring";
 
 type Transaction = {
     id: string;
@@ -9,6 +10,7 @@ type Transaction = {
     amount: number;
     date: string;
     description?: string;
+    recurring?: boolean;
   };
 
 
@@ -41,6 +43,18 @@ export default function EditTransaction({transaction, onClose}: {transaction: Tr
         }
         document.location.reload();
     }
+
+    const stopRecurring = async () => {
+        const res = await StopRecurring(transaction.id);
+        if (res && res.error) {
+            console.error("Fel vid avslutning av återkommande transaktion:", res.error);
+            return;
+        }
+        if (res && res.success) {
+            document.location.reload();
+        }
+    }
+        
     return (
         <div className="fixed inset-0 bg-neutral-800 z-50 rounded-lg w-full h-full overflow-hidden flex items-center justify-start flex-col">
             <div className="flex flex-wrap items-center h-full w-full justify-between p-4">
@@ -58,9 +72,13 @@ export default function EditTransaction({transaction, onClose}: {transaction: Tr
                     </div>
                 </form>
             </div>
-            <div className="flex gap-4 p-4 [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-lg [&>button]:font-semibold [&>button]:border [&>button]:border-white [&>button]:text-white [&>button]:transition-colors [&>button]:duration-300">
-                <button type="button" className="hover:bg-green-500" onClick={SaveData}>Spara</button>
-                <button type="button" className="hover:bg-red-500" onClick={onClose}>Avbryt</button>
+            <div className="w-full grid grid-cols-4 p-4 [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-lg [&>button]:font-semibold [&>button]:border [&>button]:border-white [&>button]:text-white [&>button]:transition-colors [&>button]:duration-300">
+                <div className="gap-4 flex justify-center [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-lg [&>button]:font-semibold [&>button]:border [&>button]:border-white [&>button]:text-white [&>button]:transition-colors [&>button]:duration-300 col-start-2 col-span-2">
+                    <button type="button" className="hover:bg-green-500" onClick={SaveData}>Spara</button>
+                    <button type="button" className="hover:bg-red-500" onClick={onClose}>Avbryt</button>
+                </div>
+                {transaction.recurring && (<button type="button" className="hover:bg-red-700" onClick={stopRecurring}>Avsluta Återkommande</button>
+                )}
             </div>
         </div>
     )
