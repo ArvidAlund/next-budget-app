@@ -40,5 +40,7 @@ export default async function getTransactions({ numberOfMonths }: { numberOfMont
         throw new Error(error.message);
     }
 
+    data = data?.filter(item => item.date <= new Date().toISOString().split('T')[0]);
+
     return {data, error: error ?? null};
 }
