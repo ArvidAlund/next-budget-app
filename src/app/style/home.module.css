@@ -24,12 +24,13 @@
     grid-template-columns: 1fr;
     grid-template-areas:
       "summary"
+      "investment"
+      "transactions"
       "spending"
       "credit"
       "cards"
       "tips"
-      "expenses"
-      "transactions";
+      "expenses";
   }
 }
 
