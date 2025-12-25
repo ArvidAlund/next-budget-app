@@ -4,6 +4,7 @@ import { supabaseUserID } from "@/app/lib/supabaseClient";
 import calcInvestment from "@/app/lib/calcInvestment";
 import { Container } from "../ui/container";
 import { formatCurrency } from "@/app/lib/formatcurrency";
+import { onEvent } from "@/app/lib/eventbus";
 
 interface InvestmentProps {
   className?: string;
@@ -19,6 +20,7 @@ interface InvestmentProps {
 export default function Investment({ className }: InvestmentProps) {
   const [investmentAmount, setInvestmentAmount] = useState<number>();
   const [hasInvested, setHasInvested] = useState(false);
+  const [show, setShow] = useState(true);
 
   useEffect(()=>{
       const getInvestmentAmount = async ()=>{
@@ -53,8 +55,17 @@ export default function Investment({ className }: InvestmentProps) {
             setHasInvested(data && data.length > 0);
         };
 
+        const unsubscribe = onEvent("modalChange", (e: { opened: boolean }) => {
+          setShow(!e.opened);
+        });
+
         getInvestmentAmount()
-    },[])
+
+        return () => {
+          unsubscribe();
+        }
+    },[]);
+
 
     return (
     <section className={`${className} w-full h-full`}>
@@ -62,10 +73,13 @@ export default function Investment({ className }: InvestmentProps) {
             <h3 className="text-white mb-6 tracking-wide">Investera</h3>
 
             <div
-              className={`w-full max-w-md px-6 py-4 flex flex-col items-center justify-center rounded-xl border ${
+              className={`w-full max-w-md px-6 py-4 flex-col items-center justify-center rounded-xl border shadow-lg backdrop-blur-sm transition-all duration-300
+              ${
                 hasInvested ? "border-green-400/60 bg-linear-to-r from-green-900/40 to-green-700/30" 
                             : "border-red-400/60 bg-linear-to-r from-red-900/40 to-red-700/30"
-              } shadow-lg backdrop-blur-sm transition-all duration-300`}
+              }
+              ${show ? "flex" : "hidden"}
+              `}
             >
               <p className="text-white text-center font-medium">
                 {hasInvested
