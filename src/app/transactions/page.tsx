@@ -1,5 +1,5 @@
 import { TransactionTable } from "@/app/transactions/TransactionTable"
-import { Navbar } from "@/components/Navbar"
+import { Navbar } from "@/components/ui/navbar/Navbar"
 
 /**
  * Render the transactions page including the top navigation and transactions table.

@@ -162,6 +162,7 @@
 body {
   background: var(--primary);
   font-family: var(--font-inter);
+  color: var(--secondary);
 }
 
 @theme inline {
