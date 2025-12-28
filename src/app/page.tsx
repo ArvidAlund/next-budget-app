@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
 import { supabaseUserID } from "@/app/lib/supabaseClient"
 
-import { LoginModal } from "@/components/LoginForm"
 import type { Session } from '@supabase/supabase-js'
 import calcInvestment from "./lib/calcInvestment"
 import FirstSetup from "@/components/firstSetup/firstSetup"
@@ -18,6 +17,7 @@ import Expenses from "@/components/home/expenses"
 import Tips from "@/components/home/tips"
 import { useWindowWidth } from "@/components/useWindowWidth"
 import Investment from "@/components/home/investment"
+import HomePage from "./pages/home"
 
 /**
  * Root React component that controls authentication, initial-setup gating, lock screen, transient alerts, and renders the main dashboard layout.
@@ -48,6 +48,10 @@ function App() {
     })
 
     const checkLock = async () => {
+      if (!session) {
+        setLoading(false);
+        return;
+      }
       const lockSetting = await getUserOption('app_lock');
       if (typeof lockSetting === 'boolean' && lockSetting) {
         setLocked(true);
@@ -58,6 +62,10 @@ function App() {
     checkLock();
 
     const checkSetup = async () => {
+      if (!session) {
+        setLoading(false);
+        return;
+      }
       const userId = await supabaseUserID();
 
       const { count, error } = await supabase
@@ -95,7 +103,7 @@ function App() {
   }, [alertType])
 
   if (loading) return null
-  if (!session) return <LoginModal />
+  if (!session) return <HomePage />
   if (locked) return <LockScreen onUnlock={() => { setLocked(false) }} />
 
   return (
