@@ -3,7 +3,7 @@ import { NavbarHeight } from "../ui/navbar/Navbar";
 import Phone from "../ui/phone/phone";
 import { CreditCard, DollarSign, HandCoins, Wallet } from "lucide-react";
 import OverViewScreen from "../ui/phone/screens/overview";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 
@@ -12,6 +12,7 @@ const CTA = () => {
     const handCoinsRef = useRef<HTMLDivElement>(null);
     const creditCardRef = useRef<HTMLDivElement>(null);
     const dollarSignRef = useRef<HTMLDivElement>(null);
+    const [phoneClicked, setPhoneClicked] =  useState<boolean>(false);
 
     useEffect(() => {
         // Fade in animation using GSAP then start to bounce
@@ -81,20 +82,24 @@ const CTA = () => {
                     <p className="text-start w-full">Testa appen</p>
                 </div>
                 <div className="w-1/2 animate-fade-in-left">
-                    <Phone rotateX={-25} rotateY={15} rotateZ={10} screenContent={<OverViewScreen />}/>
+                    <Phone rotateX={-25} rotateY={15} rotateZ={10} screenContent={<OverViewScreen onClick={() => setPhoneClicked(true)} />} flat={phoneClicked}/>
                 </div>
-                <div ref={walletRef} className="absolute top-1/6 left-1/6 text-blue-500 -rotate-12">
-                    <Wallet  size={96}/>
-                </div>
-                <div ref={handCoinsRef} className="absolute -z-1 top-1/4 right-1/8 text-green-500">
-                    <HandCoins size={96}/>
-                </div>
-                <div ref={creditCardRef} className="absolute bottom-1/4 right-1/8 text-purple-500 rotate-32">
-                    <CreditCard size={128}/>
-                </div>
-                <div ref={dollarSignRef} className="absolute bottom-1/8 left-1/6 text-yellow-500">
-                    <DollarSign size={54}/>
-                </div>
+                {!phoneClicked && (
+                    <>
+                        <div ref={walletRef} className="absolute top-1/6 left-1/6 text-blue-500 -rotate-12">
+                            <Wallet  size={96}/>
+                        </div>
+                        <div ref={handCoinsRef} className="absolute -z-1 top-1/4 right-1/8 text-green-500">
+                            <HandCoins size={96}/>
+                        </div>
+                        <div ref={creditCardRef} className="absolute bottom-1/4 right-1/8 text-purple-500 rotate-32">
+                            <CreditCard size={128}/>
+                        </div>
+                        <div ref={dollarSignRef} className="absolute bottom-1/8 left-1/6 text-yellow-500">
+                            <DollarSign size={54}/>
+                        </div>
+                    </>
+                )}
             </div>
 
 

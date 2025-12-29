@@ -2,34 +2,63 @@ import { Bell, Plus, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import ProgressBar from "../../progressBar";
 import { formatCurrency } from "@/app/lib/formatcurrency";
 import BalanceAnimation from "../../balanceAnimation";
+import { useState, useRef, useEffect } from "react";
+import AddTransaction from "@/components/transactions/addTransaction";
+import gsap from "gsap";
 
 const transactions = [
     {
         id: 1,
         category: "Transport",
-        date: "27 Sep 2024",
+        date: "2024-09-27",
         amount: 300,
         type: "expense",
+        title: "Tunnelbanekort",
     },
     {
         id: 2,
         category: "Matinköp",
-        date: "26 Sep 2024",
+        date: "2024-09-26",
         amount: 1200,
         type: "expense",
+        title: "Matinköp",
     },
     {
         id: 3,
         category: "Lön",    
-        date: "25 Sep 2024",
+        date: "2025-09-25",
         amount: 25000,
         type: "income",
+        title: "Månadslön",
     },
 ];
 
 
-const OverViewScreen = () => {
-  return <section className="w-full h-full bg-[#8280FE] *:px-4 relative">
+const OverViewScreen = ({onClick} : {onClick: () => void}) => {
+    const [addTransactionOpen, setAddTransactionOpen] = useState<boolean>(false);
+    const [closeTransactionOpen, setCloseTransactionOpen] = useState<boolean>(false);
+    const transactionComponentRef = useRef<HTMLDivElement>(null);
+    const [transactionsList, setTransactionsList] = useState(transactions);
+
+    useEffect(() => {
+        if (addTransactionOpen && transactionComponentRef.current) {
+            gsap.fromTo(transactionComponentRef.current,
+                { left: "100%" },
+                { left: "0%", duration: 0.5 }
+            );
+        }
+    }, [addTransactionOpen]);
+
+    useEffect(() => {
+        if (closeTransactionOpen && transactionComponentRef.current) {
+            gsap.fromTo(transactionComponentRef.current,
+                { left: "0%" },
+                { left: "100%", duration: 0.5 }
+            );
+        }
+    }, [closeTransactionOpen]);
+
+  return <section className="w-full h-full bg-[#8280FE] *:px-4 relative overflow-hidden" onClick={onClick}>
         <div className="flex justify-between text-black py-4">
             <div className="relative">
                 <div className="absolute p-4 bg-blue-500 rounded-full flex justify-center items-center">
@@ -92,17 +121,17 @@ const OverViewScreen = () => {
         <div className="w-full h-full rounded-3xl bg-white mt-6">
             <div className="flex justify-between items-center p-2">
                 <h3 className="text-[#0B0748] font-semibold">Senaste transaktioner</h3>
-                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white">
+                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white" onClick={() => setAddTransactionOpen(true)}>
                     <Plus size={16} className="inline mr-2"/>
                     <span>Lägg till</span>
                 </button>
             </div>
             <div className="px-4 pb-4">
-                {transactions.map((transaction) => (
+                {transactionsList.map((transaction) => (
                     <div key={transaction.id} className="flex justify-between items-center py-2 border-b border-gray-300 w-full">
                         <div className="flex flex-col">
-                            <p className="font-semibold text-[#0B0748]">{transaction.category}</p>
-                            <p className="text-xs text-gray-600">{transaction.date}</p>
+                            <p className="font-semibold text-[#0B0748]">{transaction.title}</p>
+                            <p className="text-xs text-gray-600">{new Date(transaction.date).toLocaleDateString("sv-SE", { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                         </div>
                         <p className={`font-semibold ${transaction.type === "income" ? "text-green-500" : "text-red-500"}`}>
                             {transaction.type === "income" ? "+ " : "- "}{formatCurrency(transaction.amount)} kr
@@ -111,6 +140,36 @@ const OverViewScreen = () => {
                 ))}
             </div>
         </div>
+
+        {addTransactionOpen && (
+            <div ref={transactionComponentRef} className="absolute top-0 w-full h-full bg-primary z-50">
+                <AddTransaction onClose={(transaction) => {
+                    if (!transaction) {
+                        setCloseTransactionOpen(true);
+                        setTimeout(() => {
+                            setAddTransactionOpen(false);
+                            setCloseTransactionOpen(false);
+                        }, 500);
+                        return;
+                    }
+                    const newTransaction = {
+                        id: transactionsList.length + 1,
+                        category: transaction.category,
+                        date: transaction.date,
+                        amount: Number(transaction.amount),
+                        type: transaction.type,
+                        title: transaction.title,
+                        description: transaction.description,
+                    };
+                    setTransactionsList([newTransaction, ...transactionsList]);
+                    setCloseTransactionOpen(true);
+                    setTimeout(() => {
+                        setAddTransactionOpen(false);
+                        setCloseTransactionOpen(false);
+                    }, 500);
+                }}/>
+            </div>
+        )}
   </section>;
 }
 export default OverViewScreen;

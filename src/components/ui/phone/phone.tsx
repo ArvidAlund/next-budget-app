@@ -6,13 +6,20 @@ const Phone3D = ({
   rotateY = 0,
   rotateZ = 0,
   screenContent,
+  flat = false
 }: {
   children?: React.ReactNode;
   rotateX?: number;
   rotateY?: number;
     rotateZ?: number;
     screenContent?: React.ReactNode;
+    flat?: boolean;
 }) => {
+  if (flat) {
+    rotateX = 0;
+    rotateY = 0;
+    rotateZ = 0;
+  }
   const { borderRight, borderBottom, borderLeft, borderTop } = use3DBorder(rotateX, rotateY);
 
 
@@ -31,6 +38,7 @@ const Phone3D = ({
             `,
             transformStyle: "preserve-3d",
             perspective: "1000px",
+            transition: "transform 0.5s ease",
         }}
         className="h-full aspect-9/16 bg-[#0A0A0A] rounded-3xl border-[#404044] shadow-lg flex items-center justify-center pointer-events-none"
     >
