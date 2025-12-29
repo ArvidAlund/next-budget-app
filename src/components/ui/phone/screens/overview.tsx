@@ -22,7 +22,7 @@ const transactions = [
         date: "2024-09-26",
         amount: 1200,
         type: "expense",
-        title: "Matinköp",
+        title: "Veckohandling",
     },
     {
         id: 3,
