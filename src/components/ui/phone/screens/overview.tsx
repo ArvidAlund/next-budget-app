@@ -1,6 +1,7 @@
 import { Bell, Plus, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import ProgressBar from "../../progressBar";
 import { formatCurrency } from "@/app/lib/formatcurrency";
+import BalanceAnimation from "../../balanceAnimation";
 
 const transactions = [
     {
@@ -50,7 +51,7 @@ const OverViewScreen = () => {
 
         <div className="w-full flex flex-col justify-center items-start mt-8 text-white">
             <p className="text-xs">Total balans</p>
-            <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]">12,345 kr</h1>
+            <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]"><BalanceAnimation end={12345} /> kr</h1>
         </div>
         <div className="grid grid-cols-2 gap-4 w-full mt-8">
             <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]">
