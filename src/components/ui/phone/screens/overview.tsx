@@ -1,4 +1,5 @@
-import { Bell, Plus, TrendingDown, TrendingUp } from "lucide-react";
+import { Bell, Plus, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
+import ProgressBar from "../../progressBar";
 
 const OverViewScreen = () => {
   return <section className="w-full h-full bg-[#8280FE] p-4">
@@ -42,7 +43,22 @@ const OverViewScreen = () => {
             </div>
         </div>
 
-        <div></div>
+        <div className="mt-6">
+            <div className="flex justify-between items-center">
+                <p>Din budget</p>
+                <button className="bg-[#0B0748] p-2 rounded-full flex justify-center items-center">
+                    <Sparkles size={16} className="inline mr-2"/>
+                    <span>Förbättra</span>
+                </button>
+            </div>
+            <div className="mt-4">
+                <ProgressBar start={0} end={10000} current={6655} />
+            </div>
+            <div className="flex justify-between items-center">
+                <p>6,655 kr</p>
+                <p>10,000 kr</p>
+            </div>
+        </div>
 
   </section>;
 }
