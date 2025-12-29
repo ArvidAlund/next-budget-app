@@ -33,10 +33,11 @@ const Phone3D = ({
         }}
         className="h-full aspect-9/16 bg-black rounded-3xl border-3 border-gray-800 shadow-lg flex items-center justify-center"
     >
-      <div className="w-[97%] h-[98%] bg-white rounded-2xl overflow-hidden shadow-inner">
+      <div className="w-[97%] h-[98%] bg-[#f2f2f2] rounded-2xl overflow-hidden shadow-inner">
         {screenContent ? screenContent : 
-        <div className="w-full h-full flex justify-center items-center">
+        <div className="w-full h-full flex flex-col justify-center items-center">
             <File fill="bg-black" height={40} width={40}/>
+            <p className="text-black">No content</p>
         </div>}
       </div>
     </div>
