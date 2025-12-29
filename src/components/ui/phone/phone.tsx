@@ -32,9 +32,9 @@ const Phone3D = ({
             transformStyle: "preserve-3d",
             perspective: "1000px",
         }}
-        className="h-full aspect-9/16 bg-[#0A0A0A] rounded-3xl border-[#404044] shadow-lg flex items-center justify-center"
+        className="h-full aspect-9/16 bg-[#0A0A0A] rounded-3xl border-[#404044] shadow-lg flex items-center justify-center pointer-events-none"
     >
-      <div className="w-[97%] h-[98%] bg-[#f2f2f2] rounded-3xl overflow-hidden shadow-inner relative">
+      <div className="w-[97%] h-[98%] bg-[#f2f2f2] rounded-3xl overflow-hidden shadow-inner relative pointer-events-auto">
         {screenContent ? screenContent : 
         <div className="w-full h-full flex flex-col justify-center items-center">
             <File fill="bg-black" height={40} width={40}/>
