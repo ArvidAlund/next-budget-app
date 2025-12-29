@@ -3,7 +3,7 @@ function use3DBorder(rotateX: number, rotateY: number) {
   const radY = (rotateY * Math.PI) / 180;
 
   const base = 1; // px
-  const depth = 8; // förstärkning av 3D-effekten
+  const depth = 10; // förstärkning av 3D-effekten
   const threshold = 0.2; // när kanten ska döljas helt
 
   // Höger/vänster påverkas av rotateY

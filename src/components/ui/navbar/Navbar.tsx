@@ -8,7 +8,6 @@ import LoggedOutNavbar from "./loggedout";
 
 
 const NavbarHeight = 64; // Höjd i pixlar för navbaren
-export { NavbarHeight };
 
 
 
@@ -36,4 +35,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export { Navbar, NavbarHeight };

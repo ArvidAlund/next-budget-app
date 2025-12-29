@@ -9,7 +9,7 @@ import calcInvestment from "./lib/calcInvestment"
 import FirstSetup from "@/components/firstSetup/firstSetup"
 import LockScreen from "@/components/lockScreen";
 import getUserOption from "./lib/db/getUserOption"
-import Navbar , { NavbarHeight } from "@/components/ui/navbar/Navbar"
+import { Navbar, NavbarHeight } from "@/components/ui/navbar/Navbar"
 import styles from "@/app/style/home.module.css"
 import Summary from "@/components/home/summary"
 import Transactions from "@/components/home/transactions"

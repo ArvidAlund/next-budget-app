@@ -1,5 +1,5 @@
 import CTA from "@/components/mainpage/cta";
-import Navbar, { NavbarHeight } from "@/components/ui/navbar/Navbar";
+import { Navbar, NavbarHeight } from "@/components/ui/navbar/Navbar";
 
 
 export default function HomePage() {
