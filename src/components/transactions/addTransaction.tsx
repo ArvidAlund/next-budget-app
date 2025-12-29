@@ -10,7 +10,7 @@ interface CategoryInterface {
   transaction_type: 'income' | 'expense';
 }
 
-const AddTransaction = ({ onClose } : { onClose: (transactionData?: { type: "income" | "expense"; category: string; amount: string; date: string; title: string; description?: string }) => void }) => {
+const AddTransaction = ({ onClose } : { onClose: (transactionData?: { type: "income" | "expense"; category: string; amount: string; date: string; title: string; description?: string | null }) => void }) => {
     const [incomeOptions, setIncomeOptions] = useState<CategoryInterface[]>([])
       const [expenseOptions, setExpenseOptions] = useState<CategoryInterface[]>([])
       const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([])
@@ -53,17 +53,20 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: { type: "inc
       }, [incomeOptions, expenseOptions, type]);
 
 
-      const handleSubmit = (e: React.FormEvent) => {
+      const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const transactionData = {
-          type,
-            category: (e.target as HTMLFormElement).category.value,
-            amount: (e.target as HTMLFormElement).amount.value,
-            date: (e.target as HTMLFormElement).date.value,
-            title: (e.target as HTMLFormElement).title.value,
-            description: (e.target as HTMLFormElement).description?.value,
-        };
+
+        const formData = new FormData(e.currentTarget);
+
+        const transactionData = { 
+            type, 
+            category: formData.get("category") as string, 
+            amount: formData.get("amount") as string, 
+            date: formData.get("date") as string, 
+            title: formData.get("title") as string, 
+            description: formData.get("description") as string | null, };
         console.log("Submitting transaction:", transactionData);
+
         onClose(transactionData);
       }
     return (
