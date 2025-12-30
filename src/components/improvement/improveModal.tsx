@@ -30,7 +30,7 @@ const ImproveModal = ({onClose, balance = 12345}: {onClose: () => void, balance:
             </div>
             <div className="w-full flex flex-col justify-center items-start mt-8 text-white">
                 <p className="text-xs">Total balans</p>
-                <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]"><BalanceAnimation end={balance} /> kr</h1>
+                <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748] text-[clamp(0.8rem,4vw,6rem)]"><BalanceAnimation end={balance} /> kr</h1>
             </div>
             <div className="mt-8 px-4">
                 <h2 className="text-2xl font-bold mb-4">Förbättringstips</h2>
