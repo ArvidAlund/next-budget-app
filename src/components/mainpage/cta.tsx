@@ -86,7 +86,7 @@ const CTA = () => {
             </div>
             <div className="hidden lg:flex justify-center items-center relative">
                 <div className="absolute flex flex-col justify-center items-end top-1/2 left-15 w-[150px]">
-                    <Image src="/img/svg/arrow.svg" alt="Arrow" width={100} height={100} className="-rotate-12"/>
+                    <Image src="/img/svg/arrow.svg" alt="Arrow" loading="eager" width={100} height={100} className="-rotate-12"/>
                     <p className="text-start w-full">Testa appen</p>
                 </div>
                 <div className="w-1/2 animate-fade-in-left">

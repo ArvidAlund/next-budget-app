@@ -38,20 +38,10 @@ function App() {
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession()
-      setSession(data.session)
+      return data.session
     }
 
-    getSession()
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-
     const checkLock = async () => {
-      if (!session) {
-        setLoading(false);
-        return;
-      }
       const lockSetting = await getUserOption('app_lock');
       if (typeof lockSetting === 'boolean' && lockSetting) {
         setLocked(true);
@@ -59,13 +49,7 @@ function App() {
       }
     }
 
-    checkLock();
-
     const checkSetup = async () => {
-      if (!session) {
-        setLoading(false);
-        return;
-      }
       const userId = await supabaseUserID();
 
       const { count, error } = await supabase
@@ -83,13 +67,20 @@ function App() {
       setLoading(false)
     }
 
-    checkSetup();
+    const res = getSession()
+    res.then((session) => {
+      setSession(session)
+    })
+    
 
-    calcInvestment();
-
-    return () => {
-      listener.subscription.unsubscribe()
+    if (session !== null) {
+      checkLock();
+      checkSetup();
+      calcInvestment();
     }
+
+    setLoading(false);
+
   }, [])
 
   useEffect(() => {
