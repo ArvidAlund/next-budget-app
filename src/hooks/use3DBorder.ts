@@ -1,3 +1,10 @@
+/**
+ * Compute CSS border widths that simulate a 3D edge effect from rotation angles.
+ *
+ * @param rotateX - Rotation around the X axis in degrees; affects top and bottom edge thickness
+ * @param rotateY - Rotation around the Y axis in degrees; affects left and right edge thickness
+ * @returns An object with `borderRight`, `borderLeft`, `borderBottom`, and `borderTop` values as pixel strings (e.g., `"2.5px"`). Edges that tilt away enough are returned as `"0px"`.
+ */
 function use3DBorder(rotateX: number, rotateY: number) {
   const radX = (rotateX * Math.PI) / 180;
   const radY = (rotateY * Math.PI) / 180;
