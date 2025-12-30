@@ -450,9 +450,10 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             <div className="absolute top-0 left-0 w-full h-full bg-black z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
                 <PhoneOptionsModal onClose={() => {
                     setOptionsClose(true);
+                    setOptionsOpen(false);
                     setTimeout(() => {
-                        setOptionsOpen(false);
                         setAnimationComplete(false);
+                        setOptionsClose(false);
                     }, 500);
                 }} />
             </div>

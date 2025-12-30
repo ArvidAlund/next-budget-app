@@ -27,31 +27,6 @@ const optionsList = [
     { id: "categories", name: "Kategorier" },
 ];
 
-function renderContent(selectedOption: string | null) {
-    switch (selectedOption) {
-        case "general":
-            return <GeneralOptions />;
-        case "appearance":
-            return <AppearanceOptions />;
-        case "calendar":
-            return <CalendarOptions />;
-        case "notifications":
-            return <NotificationsOptions />;
-        case "privacy":
-            return <PrivacyOptions />;
-        case "security":
-            return <SecurityOptions />;
-        case "account":
-            return <AccountOptions />;
-        case "budget":
-            return <BudgetOptions />;
-        case "categories":
-            return <CategoriesOptions />;
-        default:
-            return <QuickOptions />;
-    }
-}
-
 const PhoneOptionsModal = ({ onClose }: { onClose: () => void }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -82,7 +57,6 @@ const PhoneOptionsModal = ({ onClose }: { onClose: () => void }) => {
                         <div
                             key={option.id}
                             className="py-4 border-b  text-secondary flex items-center justify-between cursor-pointer transition-all duration-300"
-                            onClick={() => setSelectedOption(option.id)}
                         >
                             <div>
                                 <h2 className="text-lg font-semibold">{option.name}</h2>
@@ -95,23 +69,7 @@ const PhoneOptionsModal = ({ onClose }: { onClose: () => void }) => {
                     ))}
                 </div>
             )}
-
-            {/* --- SLIDE-IN CONTENT PANEL --- */}
-            {selectedOption && (
-                <div
-                    ref={contentRef}
-                    className="absolute top-0 left-0 w-full h-full bg-primary-100 p-4"
-                >
-                    <button
-                        className="p-2 rounded-full mb-4"
-                        onClick={() => setSelectedOption(null)}
-                    >
-                        <ArrowLeft size={24} />
-                    </button>
-
-                    {renderContent(selectedOption)}
-                </div>
-            )}
+            
         </section>
     );
 };
