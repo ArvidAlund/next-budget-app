@@ -8,6 +8,7 @@ import gsap from "gsap";
 import ImproveModal from "@/components/improvement/improveModal";
 import NotificationModal from "@/components/notifications/notificationModal";
 import PhoneTransactionCon from "@/components/home/transactions/phoneTransactionCon";
+import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
 
 const transactions = [
     {
@@ -99,6 +100,11 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     const [budget, setBudget] = useState<number>(25000);
     const [anyModalOpen, setAnyModalOpen] = useState<boolean>(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
+    const [optionsClose, setOptionsClose] = useState<boolean>(false);
+    const iconRef = useRef<HTMLDivElement>(null);
+    const [animationComplete, setAnimationComplete] = useState<boolean>(false);
+    const transactionsConRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (transactionsList.length === 0) {
@@ -142,28 +148,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     useEffect(() => {
         // Animate total income and expense cards to go to sides then improve modal to come from bottom and fill screen
         if (openImproveModal && ImproveModalRef.current && totalIncomeRef.current && totalExpenseRef.current && progressBarRef.current && balanceRef.current) {
-            gsap.to(totalIncomeRef.current, {
-                x: "-150%",
-                duration: 0.5,
-                ease: "power1.inOut",
-            });
-            gsap.to(totalExpenseRef.current, {
-                x: "150%",
-                duration: 0.5,
-                ease: "power1.inOut",
-            });
-            gsap.to(progressBarRef.current, {
-                y: "100%",
-                opacity: 0,
-                duration: 0.5,
-                ease: "power1.inOut",
-            });
-            gsap.to(balanceRef.current, {
-                y: "-50%",
-                opacity: 0,
-                duration: 0.5,
-                ease: "power1.inOut",
-            });
+            animateAwayItems();
 
             gsap.fromTo(ImproveModalRef.current,
                 { y: "100%" },
@@ -179,32 +164,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 duration: 0.5,
                 ease: "power1.inOut",
             });
-            gsap.to(totalIncomeRef.current, {
-                x: "0%",
-                duration: 0.5,
-                delay: 0.1,
-                ease: "power1.inOut",
-            });
-            gsap.to(totalExpenseRef.current, {
-                x: "0%",
-                duration: 0.5,
-                delay: 0.1,
-                ease: "power1.inOut",
-            });
-            gsap.to(progressBarRef.current, {
-                y: "0%",
-                opacity: 1,
-                duration: 0.5,
-                delay: 0.1,
-                ease: "power1.inOut",
-            });
-            gsap.to(balanceRef.current, {
-                y: "0%",
-                opacity: 1,
-                duration: 0.5,
-                delay: 0.1,
-                ease: "power1.inOut",
-            });
+            animateBackItems();
         }
     }, [closeImproveModal]);
 
@@ -237,11 +197,130 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
         }
     }, [anyModalOpen]);
 
+    useEffect(() => {
+        console.log("Options open state changed:", optionsOpen);
+        // Animate iconref to change color and scale up from start position to full screen then open options page
+        // All other elements should go away sideways during the animation
+        if (optionsOpen && iconRef.current && containerRef.current) {
+            console.log("Starting options open animation");
+            const iconRect = iconRef.current.getBoundingClientRect();
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const scaleX = containerRect.width / iconRect.width;
+            const scaleY = containerRect.height / iconRect.height;
+            const scale = Math.max(scaleX, scaleY);
+            const x = containerRect.left + containerRect.width / 2 - (iconRect.left + iconRect.width / 2);
+            const y = containerRect.top + containerRect.height / 2 - (iconRect.top + iconRect.height / 2);
+            gsap.to(iconRef.current, {
+                x: x,
+                y: y,
+                scale: scale,
+                borderRadius: 0,
+                duration: 0.5,
+                backgroundColor: "#000",
+                ease: "power1.inOut",
+            });
+            animateAwayItems();
+            setTimeout(() => {
+                setAnimationComplete(true);
+                console.log("Options open animation complete");
+            }, 500);
+        }
+    }, [optionsOpen]);
+
+    useEffect(() => {
+        console.log("Options close state changed:", optionsClose);
+        if (optionsClose && iconRef.current) {
+            console.log("Starting options close animation");
+            gsap.to(iconRef.current, {
+                x: 0,
+                y: 0,
+                scale: 1,
+                borderRadius: "50%",
+                duration: 0.5,
+                backgroundColor: "",
+                ease: "power1.inOut",
+            });
+            animateBackItems();
+        }
+    }, [optionsClose]);
+
+    const animateAwayItems = () => {
+        if (totalIncomeRef.current && totalExpenseRef.current && progressBarRef.current && balanceRef.current && transactionsConRef.current) {
+            const animationDuration = 0.2;
+            gsap.to(totalIncomeRef.current, {
+                x: "-150%",
+                duration: animationDuration,
+                ease: "power1.inOut",
+            });
+            gsap.to(totalExpenseRef.current, {
+                x: "150%",
+                duration: animationDuration,
+                ease: "power1.inOut",
+            });
+            gsap.to(progressBarRef.current, {
+                y: "100%",
+                opacity: 0,
+                duration: animationDuration,
+                ease: "power1.inOut",
+            });
+            gsap.to(balanceRef.current, {
+                y: "-50%",
+                opacity: 0,
+                duration: animationDuration,
+                ease: "power1.inOut",
+                delay: 0.1,
+            });
+            gsap.to(transactionsConRef.current, {
+                y: "150%",
+                opacity: 0,
+                duration: animationDuration,
+                ease: "power1.inOut",
+                delay: 0.1,
+            });
+        }
+    }
+
+    const animateBackItems = () => {
+        if (totalIncomeRef.current && totalExpenseRef.current && progressBarRef.current && balanceRef.current && transactionsConRef.current) {
+            const animationDuration = 0.5;
+            gsap.to(totalIncomeRef.current, {
+                x: "0%",
+                duration: animationDuration,
+                ease: "power1.inOut",
+            });
+            gsap.to(totalExpenseRef.current, {
+                x: "0%",
+                duration: animationDuration,
+                ease: "power1.inOut",
+            });
+            gsap.to(progressBarRef.current, {
+                y: "0%",
+                opacity: 1,
+                duration: animationDuration,
+                ease: "power1.inOut",
+            });
+            gsap.to(balanceRef.current, {
+                y: "0%",
+                opacity: 1,
+                duration: animationDuration,
+                ease: "power1.inOut",
+                delay: 0.1,
+            });
+            gsap.to(transactionsConRef.current, {
+                y: "0%",
+                opacity: 1,
+                duration: animationDuration,
+                ease: "power1.inOut",
+                delay: 0.1,
+            });
+        }
+    }
+
   return <section ref={containerRef} className={`w-full h-full bg-[#8280FE] *:px-4 relative ${anyModalOpen ? "overflow-hidden" : "overflow-y-scroll overflow-x-hidden no-scrollbar"}`} onClick={onClick}>
         <div className="flex justify-between text-black py-4 select-none *:cursor-pointer">
             <div className="relative">
-                <div className="absolute p-[clamp(2px,1.2vw,1rem)] bg-blue-500 rounded-full flex justify-center items-center">
-                    <p className="font-bold w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)] text-center text-[clamp(0.5rem,1vw,1rem)]">B</p>
+                <div ref={iconRef} className="absolute p-[clamp(2px,1.2vw,1rem)] bg-blue-500 rounded-full flex justify-center items-center" onClick={() => setOptionsOpen(true)}>
+                    <p className="font-bold w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)] text-center">B</p>
                 </div>
                 <div className="absolute p-[clamp(2px,1.2vw,1rem)] bg-white rounded-full flex justify-center items-center left-10">
                     <Plus className="w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)]" />
@@ -297,7 +376,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             </div>
         </div>
 
-        <div className="w-full h-fit max-h-screen rounded-3xl bg-white mt-6">
+        <div ref={transactionsConRef} className="w-full h-fit max-h-screen rounded-3xl bg-white mt-6">
             <div className="flex justify-between items-center p-2">
                 <h3 className="text-[#0B0748] font-semibold w-fit text-[clamp(0.5rem,1.3vw,1.5rem)]">Senaste transaktioner</h3>
                 <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,0.8vw,1.5rem)]" onClick={() => setAddTransactionOpen(true)}>
@@ -343,7 +422,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
         )}
 
         {openImproveModal && (
-            <div ref={ImproveModalRef} className="absolute top-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50">
+            <div ref={ImproveModalRef} className="absolute top-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
                 <ImproveModal balance={totalBalance} onClose={() => {
                     setCloseImproveModal(true);
                     setTimeout(() => {
@@ -355,7 +434,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
         )}
 
         {openNotification && (
-            <div ref={notificationRef} className="absolute left-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 rounded-3xl">
+            <div ref={notificationRef} className="absolute left-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 rounded-3xl overflow-x-hidden overflow-y-scroll no-scrollbar">
                 <NotificationModal onClose={(unreadCount) => {
                     setNotificationCount(unreadCount);
                     setCloseNotification(true);
@@ -367,6 +446,18 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             </div>
         )}
             
+        {optionsOpen && animationComplete && (
+            <div className="absolute top-0 left-0 w-full h-full bg-black z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
+                <PhoneOptionsModal onClose={() => {
+                    setOptionsClose(true);
+                    setTimeout(() => {
+                        setOptionsOpen(false);
+                        setAnimationComplete(false);
+                    }, 500);
+                }} />
+            </div>
+        )}
+        
   </section>;
 }
 export default OverViewScreen;
