@@ -7,6 +7,7 @@ import AddTransaction from "@/components/transactions/addTransaction";
 import gsap from "gsap";
 import ImproveModal from "@/components/improvement/improveModal";
 import NotificationModal from "@/components/notifications/notificationModal";
+import PhoneTransactionCon from "@/components/home/transactions/phoneTransactionCon";
 
 const transactions = [
     {
@@ -96,6 +97,8 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     const [totalIncome, setTotalIncome] = useState<number>(0);
     const [totalBalance, setTotalBalance] = useState<number>(0);
     const [budget, setBudget] = useState<number>(25000);
+    const [anyModalOpen, setAnyModalOpen] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (transactionsList.length === 0) {
@@ -224,20 +227,30 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
         }
     }, [closeNotification]);
 
-  return <section className="w-full h-full bg-[#8280FE] *:px-4 relative overflow-hidden" onClick={onClick}>
-        <div className="flex justify-between text-black py-4">
+    useEffect(() => {
+        setAnyModalOpen(addTransactionOpen || openImproveModal || openNotification);
+    }, [addTransactionOpen, openImproveModal, openNotification]);
+
+    useEffect(() => {
+        if (containerRef.current && anyModalOpen) {
+            containerRef.current.scrollTo({ top: 0, behavior: "instant" });
+        }
+    }, [anyModalOpen]);
+
+  return <section ref={containerRef} className={`w-full h-full bg-[#8280FE] *:px-4 relative ${anyModalOpen ? "overflow-hidden" : "overflow-y-scroll overflow-x-hidden no-scrollbar"}`} onClick={onClick}>
+        <div className="flex justify-between text-black py-4 select-none *:cursor-pointer">
             <div className="relative">
-                <div className="absolute p-4 bg-blue-500 rounded-full flex justify-center items-center">
-                    <p className="font-bold w-6 text-center">B</p>
+                <div className="absolute p-[clamp(2px,1.2vw,1rem)] bg-blue-500 rounded-full flex justify-center items-center">
+                    <p className="font-bold w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)] text-center text-[clamp(0.5rem,1vw,1rem)]">B</p>
                 </div>
-                <div className="absolute p-4 bg-white rounded-full flex justify-center items-center left-10">
-                    <Plus size={24} />
+                <div className="absolute p-[clamp(2px,1.2vw,1rem)] bg-white rounded-full flex justify-center items-center left-10">
+                    <Plus className="w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)]" />
                 </div>
             </div>
 
 
-            <button className="bg-[#6c6afa] rounded-full p-4 relative hover:bg-[#5a58e0] transition duration-300" onClick={() => setOpenNotification(true)}>
-                <Bell size={24} />
+            <button className="bg-[#6c6afa] rounded-full p-[clamp(2px,1.2vw,1rem)] relative hover:bg-[#5a58e0] transition duration-300" onClick={() => setOpenNotification(true)}>
+                <Bell className="w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)]" />
                 {notificationCount > 0 && <div className="absolute aspect-square rounded-full top-2 bg-white text-xs w-4 flex justify-center items-center right-2 border border-gray-300">
                     <span className="select-none">{notificationCount}</span>
                 </div>}
@@ -246,12 +259,12 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
 
         <div className="w-full flex flex-col justify-center items-start mt-8 text-white" ref={balanceRef}>
             <p className="text-xs">Total balans</p>
-            <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]"><BalanceAnimation end={totalBalance} /> kr</h1>
+            <h1 className="text-center w-full text-[clamp(0.8rem,4vw,6rem)] mt-4 text-[#0B0748]"><BalanceAnimation end={totalBalance} /> kr</h1>
         </div>
         <div className="grid grid-cols-2 gap-4 w-full mt-8">
             <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalIncomeRef}>
                 <p className="text-xs">Inkomster</p>
-                <h2 className="text-2xl mt-2">{formatCurrency(totalIncome)} kr</h2>
+                <h2 className="text-[clamp(0.5rem,1.2vw,2rem)] mt-2">{formatCurrency(totalIncome)} kr</h2>
                 <div className="flex justify-center items-center mt-2">
                     <TrendingUp className="text-green-500" size={24}/>
                     <p className="text-sm ml-1">+5%</p>
@@ -259,7 +272,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             </div>
             <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalExpenseRef}>
                 <p className="text-xs">Utgifter</p>
-                <h2 className="text-2xl mt-2">{formatCurrency(totalExpense)} kr</h2>
+                <h2 className="text-[clamp(0.5rem,1.2vw,2rem)] mt-2">{formatCurrency(totalExpense)} kr</h2>
                 <div className="flex justify-center items-center mt-2">
                     <TrendingDown className="text-red-500" size={24}/>
                     <p className="text-sm ml-1">-3%</p>
@@ -268,7 +281,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
         </div>
 
         <div className="mt-6" ref={progressBarRef}>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center text-[clamp(0.5rem,0.8vw,1.5rem)]">
                 <p>Din budget</p>
                 <button className="bg-[#0B0748] p-2 rounded-full flex justify-center items-center" onClick={() => setOpenImproveModal(true)}>
                     <Sparkles size={16} className="inline mr-2"/>
@@ -278,33 +291,25 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             <div className="mt-4">
                 <ProgressBar start={0} end={budget} current={totalExpense} />
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center text-[clamp(0.5rem,0.8vw,1.5rem)]">
                 <p>{formatCurrency(totalExpense)} kr</p>
                 <p>{formatCurrency(budget)} kr</p>
             </div>
         </div>
 
-        <div className="w-full h-full rounded-3xl bg-white mt-6">
+        <div className="w-full h-fit max-h-screen rounded-3xl bg-white mt-6">
             <div className="flex justify-between items-center p-2">
-                <h3 className="text-[#0B0748] font-semibold">Senaste transaktioner</h3>
-                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white" onClick={() => setAddTransactionOpen(true)}>
+                <h3 className="text-[#0B0748] font-semibold w-fit text-[clamp(0.5rem,1.3vw,1.5rem)]">Senaste transaktioner</h3>
+                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,0.8vw,1.5rem)]" onClick={() => setAddTransactionOpen(true)}>
                     <Plus size={16} className="inline mr-2"/>
-                    <span>Lägg till</span>
+                    <span className="text-nowrap">Lägg till</span>
                 </button>
             </div>
-            <div className="px-4 pb-4">
+            <ul className="px-4 pb-4">
                 {transactionsList.map((transaction) => (
-                    <div key={transaction.id} className="flex justify-between items-center py-2 border-b border-gray-300 w-full">
-                        <div className="flex flex-col">
-                            <p className="font-semibold text-[#0B0748]">{transaction.title}</p>
-                            <p className="text-xs text-gray-600">{new Date(transaction.date).toLocaleDateString("sv-SE", { year: 'numeric', month: 'short', day: 'numeric' })}</p>
-                        </div>
-                        <p className={`font-semibold ${transaction.type === "income" ? "text-green-500" : "text-red-500"}`}>
-                            {transaction.type === "income" ? "+ " : "- "}{formatCurrency(transaction.amount)} kr
-                        </p>
-                    </div>
+                    <PhoneTransactionCon key={transaction.id} transaction={transaction} />
                 ))}
-            </div>
+            </ul>
         </div>
 
         {addTransactionOpen && (
