@@ -83,12 +83,13 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
             <ul className="mt-8 px-4 space-y-4">
                 {notificationsList?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((notification) => (
                     <NotificationContainer key={notification.id} notification={notification} onClick={() => {
-                        if (!notification.read) {
-                            notification.read = true;
-                            setNotificationsList(notificationsList ? [...notificationsList] : null);
-                            setUnreadCount(prev => prev - 1);
-                        }
-                    }} />
++                        if (!notification.read) {
++                            setNotificationsList(prev => prev ? prev.map(n => 
++                                n.id === notification.id ? { ...n, read: true } : n
++                            ) : null);
++                            setUnreadCount(prev => prev - 1);
++                        }
++                    }} />
                 ))}
             </ul>
         </section>
