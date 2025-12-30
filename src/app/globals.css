@@ -162,6 +162,7 @@
 body {
   background: var(--primary);
   font-family: var(--font-inter);
+  color: var(--secondary);
 }
 
 @theme inline {
@@ -270,5 +271,13 @@ button {
 @layer utilities {
   .bg-mascot {
     @apply bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

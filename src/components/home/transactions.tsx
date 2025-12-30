@@ -2,7 +2,7 @@ import { Container } from "../ui/container";
 import { useState, useEffect, useRef } from "react";
 import getTransactions from "@/app/lib/db/getTransactions";
 import TransactionContainer from "./transactions/transactionContainer";
-import { NavbarHeight } from "@/components/Navbar";
+import { NavbarHeight } from "@/components/ui/navbar/Navbar";
 import Link from "next/link";
 
 interface SpendingProps {

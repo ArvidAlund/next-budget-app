@@ -4,13 +4,12 @@ import { useEffect, useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
 import { supabaseUserID } from "@/app/lib/supabaseClient"
 
-import { LoginModal } from "@/components/LoginForm"
 import type { Session } from '@supabase/supabase-js'
 import calcInvestment from "./lib/calcInvestment"
 import FirstSetup from "@/components/firstSetup/firstSetup"
 import LockScreen from "@/components/lockScreen";
 import getUserOption from "./lib/db/getUserOption"
-import { Navbar, NavbarHeight } from "@/components/Navbar"
+import { Navbar, NavbarHeight } from "@/components/ui/navbar/Navbar"
 import styles from "@/app/style/home.module.css"
 import Summary from "@/components/home/summary"
 import Transactions from "@/components/home/transactions"
@@ -18,6 +17,7 @@ import Expenses from "@/components/home/expenses"
 import Tips from "@/components/home/tips"
 import { useWindowWidth } from "@/components/useWindowWidth"
 import Investment from "@/components/home/investment"
+import HomePage from "./pages/home"
 
 /**
  * Root React component that controls authentication, initial-setup gating, lock screen, transient alerts, and renders the main dashboard layout.
@@ -37,15 +37,13 @@ function App() {
   // Hämta användarsession
   useEffect(() => {
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      setSession(data.session)
+      const { data, error } = await supabase.auth.getSession()
+      if (error) {
+        console.error("Error fetching session:", error.message)
+        return null
+      }
+      return data.session
     }
-
-    getSession()
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
 
     const checkLock = async () => {
       const lockSetting = await getUserOption('app_lock');
@@ -54,8 +52,6 @@ function App() {
         setLoading(false);   
       }
     }
-
-    checkLock();
 
     const checkSetup = async () => {
       const userId = await supabaseUserID();
@@ -75,13 +71,20 @@ function App() {
       setLoading(false)
     }
 
-    checkSetup();
+    const initializeSession = async () => {
+      const session = await getSession();
+      setSession(session);
+      
+      if (session !== null) {
+        await checkLock();
+        await checkSetup();
+        await calcInvestment();
+      }
+      setLoading(false);
+    };
+    
+    initializeSession();
 
-    calcInvestment();
-
-    return () => {
-      listener.subscription.unsubscribe()
-    }
   }, [])
 
   useEffect(() => {
@@ -95,7 +98,7 @@ function App() {
   }, [alertType])
 
   if (loading) return null
-  if (!session) return <LoginModal />
+  if (!session) return <HomePage />
   if (locked) return <LockScreen onUnlock={() => { setLocked(false) }} />
 
   return (

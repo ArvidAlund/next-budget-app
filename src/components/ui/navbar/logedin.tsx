@@ -1,18 +1,12 @@
-"use client"
-
 import { House, ArrowLeftRight, Settings, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import HoverIcon from "./ui/hoverIcon"
+import HoverIcon from "../hoverIcon"
 import { useState, useEffect, useRef } from "react"
-import { AddTransactionModal } from "./transactions/AddTransactionModal"
-import { AlertboxContainer } from "./AlertboxContainer"
-import { useWindowWidth } from "./useWindowWidth"
+import { AddTransactionModal } from "../../transactions/AddTransactionModal"
+import { AlertboxContainer } from "../../AlertboxContainer"
+import { useWindowWidth } from "../../useWindowWidth"
 import { emitEvent } from "@/app/lib/eventbus"
-import { addTransaction } from "@/app/lib/transactions"
-
-const NavbarHeight = 64; // Höjd i pixlar för navbaren
-export { NavbarHeight };
 
 const navbarOptions = {
   home: {
@@ -32,17 +26,8 @@ const navbarOptions = {
   },
 }
 
-/**
- * Render the responsive site navbar that hides when scrolling down and reappears when scrolling up.
- *
- * The navbar shows branding on medium+ viewports, renders navigation icons, an Add button that opens
- * the AddTransactionModal, and a transient Alertbox that clears after three seconds. Closing the modal
- * emits a `"modalChange"` event with `{ opened: false }`.
- *
- * @returns The navbar React element.
- */
-export function Navbar() {
-  const [ addTransaction, setAddTransaction] = useState(false);
+const LoggedInNavbar = ({ NavbarHeight }: { NavbarHeight: number }) => {
+    const [ addTransaction, setAddTransaction] = useState(false);
   const [ alertType, setAlertType] = useState<"good" | "bad" | "">("");
   const windowWidth = useWindowWidth();
   const headerRef = useRef<HTMLElement>(null);
@@ -112,3 +97,5 @@ export function Navbar() {
     </header>
   )
 }
+
+export default LoggedInNavbar;
