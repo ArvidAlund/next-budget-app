@@ -7,10 +7,11 @@ const BalanceAnimation = ({start = 0, end, duration = 1000} : {start?: number, e
     useEffect(() => {
         let startTimestamp: number | null = null;
         let animationId: number;
+        const startBalance = balance;
         const step = (timestamp: number) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            setBalance(Math.floor(progress * (end - start) + start));
+            setBalance(Math.floor(progress * (end - startBalance) + startBalance));
             if (progress < 1) {
                 animationId = window.requestAnimationFrame(step);
             }
@@ -20,7 +21,7 @@ const BalanceAnimation = ({start = 0, end, duration = 1000} : {start?: number, e
         return () => {
             window.cancelAnimationFrame(animationId);
         };
-    }, [start, end, duration]);
+    }, [end, duration]);
 
     return (
         <span>{formatCurrency(balance)}</span>

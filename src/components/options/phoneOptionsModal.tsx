@@ -29,17 +29,6 @@ const optionsList = [
 
 const PhoneOptionsModal = ({ onClose }: { onClose: () => void }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!selectedOption) return;
-
-        gsap.fromTo(
-            contentRef.current,
-            { x: "100%" },
-            { x: 0, duration: 0.4, ease: "power2.out" }
-        );
-    }, [selectedOption]);
 
     return (
         <section className="relative w-full h-full">

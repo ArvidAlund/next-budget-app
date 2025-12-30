@@ -37,32 +37,17 @@ const orgNotifications = [
 ];
 
 const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => void }) => {
-    const dotRef = useRef<HTMLDivElement>(null);
     const [notificationsList, setNotificationsList] = useState<typeof orgNotifications | null>(orgNotifications);
     const [unreadCount, setUnreadCount] = useState<number>(orgNotifications.filter(n => !n.read).length);
 
     useEffect(() => {
         if (unreadCount === 0){
-            notificationsList?.forEach(n => n.read = true);
-            setNotificationsList(notificationsList ? [...notificationsList] : null);
+            setNotificationsList(prev => prev ? prev.map(n => ({ ...n, read: true })) : null);
         }
-        if (dotRef.current) {
-            gsap.fromTo(dotRef.current,
-                { scale: 1 },
-                {
-                    scale: 1.5,
-                    duration: 0.8,
-                    ease: "power1.inOut",
-                    yoyo: true,
-                    repeat: -1,
-                }
-            );
-        }
-    }, []);
+    }, [unreadCount]);
 
     const handleReadAll = () => {
-        notificationsList?.forEach(n => n.read = true);
-        setNotificationsList(notificationsList ? [...notificationsList] : null);
+        setNotificationsList(prev => prev ? prev.map(n => ({ ...n, read: true })) : null);
         setUnreadCount(0);
     }
 
@@ -83,13 +68,13 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
             <ul className="mt-8 px-4 space-y-4">
                 {notificationsList?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((notification) => (
                     <NotificationContainer key={notification.id} notification={notification} onClick={() => {
-+                        if (!notification.read) {
-+                            setNotificationsList(prev => prev ? prev.map(n => 
-+                                n.id === notification.id ? { ...n, read: true } : n
-+                            ) : null);
-+                            setUnreadCount(prev => prev - 1);
-+                        }
-+                    }} />
+                        if (!notification.read) {
+                            setNotificationsList(prev => prev ? prev.map(n => 
+                                n.id === notification.id ? { ...n, read: true } : n
+                            ) : null);
+                            setUnreadCount(prev => prev - 1);
+                        }
+                    }} />
                 ))}
             </ul>
         </section>

@@ -14,7 +14,7 @@ const transactions = [
     {
         id: 1,
         category: "Transport",
-        date: "2024-09-27",
+        date: "2025-09-27",
         amount: 300,
         type: "expense",
         title: "Tunnelbanekort",
@@ -22,7 +22,7 @@ const transactions = [
     {
         id: 2,
         category: "Matinköp",
-        date: "2024-09-26",
+        date: "2025-09-26",
         amount: 1200,
         type: "expense",
         title: "Veckohandling",
@@ -38,7 +38,7 @@ const transactions = [
     {
         id: 4,
         category: "Nöjen",
-        date: "2024-09-24",
+        date: "2025-09-24",
         amount: 450,
         type: "expense",
         title: "Bio med vänner",
@@ -46,7 +46,7 @@ const transactions = [
     {
         id: 5,
         category: "Hälsa",
-        date: "2024-09-23",
+        date: "2025-09-23",
         amount: 800,
         type: "expense",
         title: "Gymmedlemskap",
@@ -54,7 +54,7 @@ const transactions = [
     {
         id: 6,
         category: "Övrigt",
-        date: "2024-09-22",
+        date: "2025-09-22",
         amount: 150,
         type: "expense",
         title: "Present till kollega",
@@ -62,7 +62,7 @@ const transactions = [
     {
         id: 7,
         category: "Hushåll",
-        date: "2024-09-01",
+        date: "2025-09-01",
         amount: 12000,
         type: "expense",
         title: "Hyra",
@@ -70,7 +70,7 @@ const transactions = [
     {
         id: 8,
         category: "Hushåll",
-        date: "2024-09-01",
+        date: "2025-09-01",
         amount: 600,
         type: "expense",
         title: "Elräkning",
@@ -218,9 +218,10 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 ease: "power1.inOut",
             });
             animateAwayItems();
-            setTimeout(() => {
+            const timer = setTimeout(() => {
                 setAnimationComplete(true);
             }, 500);
+            return () => clearTimeout(timer);
         }
     }, [optionsOpen]);
 

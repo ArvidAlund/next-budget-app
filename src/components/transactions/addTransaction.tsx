@@ -65,7 +65,6 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: { type: "inc
             date: formData.get("date") as string, 
             title: formData.get("title") as string, 
             description: formData.get("description") as string | null, };
-        console.log("Submitting transaction:", transactionData);
 
         onClose(transactionData);
       }

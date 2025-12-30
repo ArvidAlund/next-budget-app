@@ -12,21 +12,23 @@ const NotificationContainer = ({ notification, onClick }: { notification: Notifi
     const dotRef = useRef<HTMLDivElement>(null);
     
     useEffect(() => {
-        // Animate the dot whith a ping effect if the notification is unread
         if (dotRef.current && !notification.read) {
-            gsap.fromTo(dotRef.current,
+            const animation = gsap.fromTo(dotRef.current,
                 { scale: 1 },
-                {
-                    scale: 1.5,
-                    duration: 0.8,
-                    ease: "power1.inOut",
-                    yoyo: true,
-                    repeat: -1,
-                }
+                    {
+                        scale: 1.5,
+                        duration: 0.8,
+                        ease: "power1.inOut",
+                        yoyo: true,
+                        repeat: -1,
+                    }
             );
+            return () => {
+                animation.kill();
+            };
         }
     }, [notification.read]);
-
+    
     return (
         <li>
             <div className={`p-4 rounded-lg shadow-md ${notification.read ? 'bg-gray-100' : 'bg-white border-2 border-blue-500'} relative cursor-pointer`} onClick={onClick}>
