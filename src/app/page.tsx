@@ -37,7 +37,11 @@ function App() {
   // Hämta användarsession
   useEffect(() => {
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession()
+      const { data, error } = await supabase.auth.getSession()
+      if (error) {
+        console.error("Error fetching session:", error.message)
+        return null
+      }
       return data.session
     }
 
@@ -67,19 +71,19 @@ function App() {
       setLoading(false)
     }
 
-    const res = getSession()
-    res.then((session) => {
-      setSession(session)
-    })
+    const initializeSession = async () => {
+      const session = await getSession();
+      setSession(session);
+      
+      if (session !== null) {
+        await checkLock();
+        await checkSetup();
+        await calcInvestment();
+      }
+      setLoading(false);
+    };
     
-
-    if (session !== null) {
-      checkLock();
-      checkSetup();
-      calcInvestment();
-    }
-
-    setLoading(false);
+    initializeSession();
 
   }, [])
 

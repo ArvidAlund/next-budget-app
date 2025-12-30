@@ -398,7 +398,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                         return;
                     }
                     const newTransaction = {
-                        id: transactionsList.length + 1,
+                        id: Date.now(),
                         category: transaction.category,
                         date: transaction.date,
                         amount: Number(transaction.amount),

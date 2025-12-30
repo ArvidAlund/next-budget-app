@@ -28,7 +28,14 @@ const LoggedOutNavbar = ({ NavbarHeight }: { NavbarHeight: number }) => {
         <div className="flex md:hidden justify-center items-center">
             <Image src="/mascot/img/mascot.png" alt="Logo" width={NavbarHeight/2} height={NavbarHeight/2} className="mr-1"/>
             <h3>BudgetBuddy</h3>
-            <Menu className="absolute right-4" onClick={() => setIsMenuOpen(!isMenuOpen)}/>
+            <button 
+                className="absolute right-4" 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMenuOpen}
+            >
+                <Menu />
+            </button>
             {isMenuOpen && (
                 <div className="absolute top-full right-0 bg-primary/90 backdrop-blur-md rounded shadow-lg mt-2 w-full">
                     <nav>

@@ -6,15 +6,16 @@ const ImprovementConstainer = ({data}: {data: {id: number, title: string, amount
     const [buttonWidth, setButtonWidth] = useState<number>(0);
 
     useEffect(() => {
-        if (buttonRef.current) {
-            const handleResize = () => {
-                setButtonWidth(buttonRef.current!.offsetWidth);
-            };
-            window.addEventListener("resize", handleResize);
-            return () => {
-                window.removeEventListener("resize", handleResize);
-            };
-        }
+        const handleResize = () => {
+            if (buttonRef.current) {
+                setButtonWidth(buttonRef.current.offsetWidth);
+            }
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
     }, []);
     return (
         <div className="w-full p-4 bg-white rounded-lg shadow-md grid grid-cols-3 items-center">

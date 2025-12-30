@@ -18,6 +18,7 @@ const CTA = () => {
     useEffect(() => {
         // Fade in animation using GSAP then start to bounce
         const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
+        const bounceAnimations: gsap.core.Tween[] = [];
 
         tl.fromTo(walletRef.current,
             { opacity: 0, y: -20 },
@@ -36,41 +37,46 @@ const CTA = () => {
             "-=0.5"
         );
         // Bounce animations
-        gsap.to(walletRef.current, {
+        bounceAnimations.push(gsap.to(walletRef.current, {
             y: -20,
             repeat: -1,
             yoyo: true,
             ease: "power1.inOut",
             duration: 2,
-        });
-        gsap.to(handCoinsRef.current, {
+        }));
+        bounceAnimations.push(gsap.to(handCoinsRef.current, {
             y: -15,
             repeat: -1,
             yoyo: true,
             ease: "power1.inOut",
             duration: 1.5,
-        });
-        gsap.to(creditCardRef.current, {
+        }));
+        bounceAnimations.push(gsap.to(creditCardRef.current, {
             y: -25,
             repeat: -1,
             yoyo: true,
             ease: "power1.inOut",
             duration: 2.5,
-        });
-        gsap.to(dollarSignRef.current, {
+        }));
+        bounceAnimations.push(gsap.to(dollarSignRef.current, {
             y: -10,
             repeat: -1,
             yoyo: true,
             ease: "power1.inOut",
             duration: 1.8,
-        });
-        gsap.to(arrowRef.current, {
+        }));
+        bounceAnimations.push(gsap.to(arrowRef.current, {
             y: -10,
             repeat: -1,
             yoyo: true,
             ease: "power1.inOut",
             duration: 1.5,
-        });
+        }));
+
+        return () => {
+            tl.kill();
+            bounceAnimations.forEach(anim => anim.kill());
+        };
     }, []);
 
 
