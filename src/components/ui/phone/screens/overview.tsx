@@ -198,11 +198,9 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     }, [anyModalOpen]);
 
     useEffect(() => {
-        console.log("Options open state changed:", optionsOpen);
         // Animate iconref to change color and scale up from start position to full screen then open options page
         // All other elements should go away sideways during the animation
         if (optionsOpen && iconRef.current && containerRef.current) {
-            console.log("Starting options open animation");
             const iconRect = iconRef.current.getBoundingClientRect();
             const containerRect = containerRef.current.getBoundingClientRect();
             const scaleX = containerRect.width / iconRect.width;
@@ -222,15 +220,12 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             animateAwayItems();
             setTimeout(() => {
                 setAnimationComplete(true);
-                console.log("Options open animation complete");
             }, 500);
         }
     }, [optionsOpen]);
 
     useEffect(() => {
-        console.log("Options close state changed:", optionsClose);
         if (optionsClose && iconRef.current) {
-            console.log("Starting options close animation");
             gsap.to(iconRef.current, {
                 x: 0,
                 y: 0,
