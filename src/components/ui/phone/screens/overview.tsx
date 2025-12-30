@@ -2,10 +2,11 @@ import { Bell, Plus, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import ProgressBar from "../../progressBar";
 import { formatCurrency } from "@/app/lib/formatcurrency";
 import BalanceAnimation from "../../balanceAnimation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import AddTransaction from "@/components/transactions/addTransaction";
 import gsap from "gsap";
 import ImproveModal from "@/components/improvement/improveModal";
+import NotificationModal from "@/components/notifications/notificationModal";
 
 const transactions = [
     {
@@ -47,6 +48,10 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     const totalExpenseRef = useRef<HTMLDivElement>(null);
     const progressBarRef = useRef<HTMLDivElement>(null);
     const balanceRef = useRef<HTMLDivElement>(null);
+    const [openNotification, setOpenNotification] = useState<boolean>(false);
+    const [closeNotification, setCloseNotification] = useState<boolean>(false);
+    const notificationRef = useRef<HTMLDivElement>(null);
+    const [notificationCount, setNotificationCount] = useState<number>(4);
 
     useEffect(() => {
         if (addTransactionOpen && transactionComponentRef.current) {
@@ -135,6 +140,25 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
         }
     }, [closeImproveModal]);
 
+
+    useEffect(() => {
+        if (openNotification && notificationRef.current) {
+            gsap.fromTo(notificationRef.current,
+                { bottom: "100%" },
+                { bottom: "0%", duration: 0.5 }
+            );
+        }
+    }, [openNotification]);
+
+    useEffect(() => {
+        if (closeNotification && notificationRef.current) {
+            gsap.fromTo(notificationRef.current,
+                { bottom: "0%" },
+                { bottom: "100%", duration: 0.5 }
+            );
+        }
+    }, [closeNotification]);
+
   return <section className="w-full h-full bg-[#8280FE] *:px-4 relative overflow-hidden" onClick={onClick}>
         <div className="flex justify-between text-black py-4">
             <div className="relative">
@@ -147,11 +171,11 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             </div>
 
 
-            <button className="bg-[#6c6afa] rounded-full p-4 relative hover:bg-[#5a58e0] transition duration-300">
+            <button className="bg-[#6c6afa] rounded-full p-4 relative hover:bg-[#5a58e0] transition duration-300" onClick={() => setOpenNotification(true)}>
                 <Bell size={24} />
-                <div className="absolute aspect-square rounded-full top-2 bg-white text-xs w-4 flex justify-center items-center right-2 border border-gray-300">
-                    <span className="select-none">4</span>
-                </div>
+                {notificationCount > 0 && <div className="absolute aspect-square rounded-full top-2 bg-white text-xs w-4 flex justify-center items-center right-2 border border-gray-300">
+                    <span className="select-none">{notificationCount}</span>
+                </div>}
             </button>
         </div>
 
@@ -255,6 +279,19 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                     setTimeout(() => {
                         setOpenImproveModal(false);
                         setCloseImproveModal(false);
+                    }, 500);
+                }} />
+            </div>
+        )}
+
+        {openNotification && (
+            <div ref={notificationRef} className="absolute left-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 rounded-3xl">
+                <NotificationModal onClose={(unreadCount) => {
+                    setNotificationCount(unreadCount);
+                    setCloseNotification(true);
+                    setTimeout(() => {
+                        setOpenNotification(false);
+                        setCloseNotification(false);
                     }, 500);
                 }} />
             </div>
