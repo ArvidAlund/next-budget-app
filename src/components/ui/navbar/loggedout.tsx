@@ -22,7 +22,7 @@ const LoggedOutNavbar = ({ NavbarHeight }: { NavbarHeight: number }) => {
             </nav>
         </div>
         <div className="hidden md:flex col-span-2 justify-end items-center mr-2">
-            <Link href="/login" className="border p-2 rounded font-semibold border-green-500/20 bg-green-700 hover:bg-green-900 transition duration-300">Starta budgetera</Link>
+            <Link href="/login" className="border p-2 rounded font-semibold border-green-500/20 bg-green-700 hover:bg-green-900 transition duration-300">Gör din första budget</Link>
         </div>
 
         <div className="flex md:hidden justify-center items-center">
@@ -37,7 +37,7 @@ const LoggedOutNavbar = ({ NavbarHeight }: { NavbarHeight: number }) => {
                             <li className="border-b border-gray-700"><Link href="/features" className="block px-4 py-2 hover:bg-gray-800">Funktioner</Link></li>
                             <li className="border-b border-gray-700"><Link href="/pricing" className="block px-4 py-2 hover:bg-gray-800">Prissättning</Link></li>
                             <li className="border-b border-gray-700"><Link href="/about" className="block px-4 py-2 hover:bg-gray-800">Om oss</Link></li>
-                            <li><Link href="/login" className="block px-4 py-2 mt-2 border rounded mx-2 text-center border-green-500/20 bg-green-700 hover:bg-green-900 transition duration-300">Starta budgetera</Link></li>
+                            <li><Link href="/login" className="block px-4 py-2 mt-2 border rounded mx-2 text-center border-green-500/20 bg-green-700 hover:bg-green-900 transition duration-300">Gör din första budget</Link></li>
                         </ul>
                     </nav>
                 </div>
