@@ -18,7 +18,6 @@ function Navbar() {
     // Kontrollera om användaren är inloggad
     const checkUserSession = async () => {
       const res = await UserSession();
-      console.log("User logged in:", res);
       setLoggedIn(res);
     };
     checkUserSession();

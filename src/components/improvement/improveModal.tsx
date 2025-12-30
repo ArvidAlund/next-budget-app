@@ -20,7 +20,7 @@ const tips = [
     },
 ];
 
-const ImproveModal = ({onClose}: {onClose: () => void}) => {
+const ImproveModal = ({onClose, balance = 12345}: {onClose: () => void, balance: number}) => {
     return (
         <section className="">
             <div className="flex justify-between items-center w-full mt-4 h-12">
@@ -30,7 +30,7 @@ const ImproveModal = ({onClose}: {onClose: () => void}) => {
             </div>
             <div className="w-full flex flex-col justify-center items-start mt-8 text-white">
                 <p className="text-xs">Total balans</p>
-                <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]"><BalanceAnimation end={12345} /> kr</h1>
+                <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]"><BalanceAnimation end={balance} /> kr</h1>
             </div>
             <div className="mt-8 px-4">
                 <h2 className="text-2xl font-bold mb-4">Förbättringstips</h2>

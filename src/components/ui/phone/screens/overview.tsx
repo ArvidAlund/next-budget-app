@@ -2,7 +2,7 @@ import { Bell, Plus, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import ProgressBar from "../../progressBar";
 import { formatCurrency } from "@/app/lib/formatcurrency";
 import BalanceAnimation from "../../balanceAnimation";
-import { useState, useRef, useEffect, use } from "react";
+import { useState, useRef, useEffect } from "react";
 import AddTransaction from "@/components/transactions/addTransaction";
 import gsap from "gsap";
 import ImproveModal from "@/components/improvement/improveModal";
@@ -33,6 +33,46 @@ const transactions = [
         type: "income",
         title: "Månadslön",
     },
+    {
+        id: 4,
+        category: "Nöjen",
+        date: "2024-09-24",
+        amount: 450,
+        type: "expense",
+        title: "Bio med vänner",
+    },
+    {
+        id: 5,
+        category: "Hälsa",
+        date: "2024-09-23",
+        amount: 800,
+        type: "expense",
+        title: "Gymmedlemskap",
+    },
+    {
+        id: 6,
+        category: "Övrigt",
+        date: "2024-09-22",
+        amount: 150,
+        type: "expense",
+        title: "Present till kollega",
+    },
+    {
+        id: 7,
+        category: "Hushåll",
+        date: "2024-09-01",
+        amount: 12000,
+        type: "expense",
+        title: "Hyra",
+    },
+    {
+        id: 8,
+        category: "Hushåll",
+        date: "2024-09-01",
+        amount: 600,
+        type: "expense",
+        title: "Elräkning",
+    }
 ];
 
 
@@ -52,6 +92,31 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     const [closeNotification, setCloseNotification] = useState<boolean>(false);
     const notificationRef = useRef<HTMLDivElement>(null);
     const [notificationCount, setNotificationCount] = useState<number>(4);
+    const [totalExpense, setTotalExpense] = useState<number>(0);
+    const [totalIncome, setTotalIncome] = useState<number>(0);
+    const [totalBalance, setTotalBalance] = useState<number>(0);
+    const [budget, setBudget] = useState<number>(25000);
+
+    useEffect(() => {
+        if (transactionsList.length === 0) {
+            setTotalExpense(0);
+            setTotalIncome(0);
+            setTotalBalance(0);
+            return;
+        }
+        let expense = 0;
+        let income = 0;
+        transactionsList.forEach(t => {
+            if (t.type === "expense") {
+                expense += t.amount;
+            } else if (t.type === "income") {
+                income += t.amount;
+            }
+        });
+        setTotalExpense(expense);
+        setTotalIncome(income);
+        setTotalBalance(income - expense);
+    }, [transactionsList]);
 
     useEffect(() => {
         if (addTransactionOpen && transactionComponentRef.current) {
@@ -181,12 +246,12 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
 
         <div className="w-full flex flex-col justify-center items-start mt-8 text-white" ref={balanceRef}>
             <p className="text-xs">Total balans</p>
-            <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]"><BalanceAnimation end={12345} /> kr</h1>
+            <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748]"><BalanceAnimation end={totalBalance} /> kr</h1>
         </div>
         <div className="grid grid-cols-2 gap-4 w-full mt-8">
             <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalIncomeRef}>
                 <p className="text-xs">Inkomster</p>
-                <h2 className="text-2xl mt-2">25,000 kr</h2>
+                <h2 className="text-2xl mt-2">{formatCurrency(totalIncome)} kr</h2>
                 <div className="flex justify-center items-center mt-2">
                     <TrendingUp className="text-green-500" size={24}/>
                     <p className="text-sm ml-1">+5%</p>
@@ -194,7 +259,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
             </div>
             <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalExpenseRef}>
                 <p className="text-xs">Utgifter</p>
-                <h2 className="text-2xl mt-2">12,655 kr</h2>
+                <h2 className="text-2xl mt-2">{formatCurrency(totalExpense)} kr</h2>
                 <div className="flex justify-center items-center mt-2">
                     <TrendingDown className="text-red-500" size={24}/>
                     <p className="text-sm ml-1">-3%</p>
@@ -211,11 +276,11 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 </button>
             </div>
             <div className="mt-4">
-                <ProgressBar start={0} end={20000} current={6655} />
+                <ProgressBar start={0} end={budget} current={totalExpense} />
             </div>
             <div className="flex justify-between items-center">
-                <p>6,655 kr</p>
-                <p>20,000 kr</p>
+                <p>{formatCurrency(totalExpense)} kr</p>
+                <p>{formatCurrency(budget)} kr</p>
             </div>
         </div>
 
@@ -274,7 +339,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
 
         {openImproveModal && (
             <div ref={ImproveModalRef} className="absolute top-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50">
-                <ImproveModal onClose={() => {
+                <ImproveModal balance={totalBalance} onClose={() => {
                     setCloseImproveModal(true);
                     setTimeout(() => {
                         setOpenImproveModal(false);
