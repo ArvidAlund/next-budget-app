@@ -1,7 +1,7 @@
 "use client";
 
 import { Navbar, NavbarHeight } from "@/components/ui/navbar/Navbar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LoginForm from "@/components/loginLogout/login";
 import RegisterForm from "@/components/loginLogout/register";
 
