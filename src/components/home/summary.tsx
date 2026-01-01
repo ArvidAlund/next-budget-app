@@ -8,6 +8,7 @@ import Statistic from "./summary/statistics";
 import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
 import { getCategories } from "@/app/lib/db/getCategories";
 import incomeDiffMonth from "@/app/lib/incomeDiffMonth";
+import { BalanceEndMonth } from "@/app/lib/BalanceEndMonth";
 
 interface SummaryProps {
   className?: string;
@@ -57,6 +58,7 @@ export default function Summary({ className }: SummaryProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        await BalanceEndMonth();
         const userId = await supabaseUserID();
         if (!userId) {
           console.error("User not authenticated");
