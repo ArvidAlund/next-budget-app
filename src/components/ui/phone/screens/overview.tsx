@@ -9,6 +9,7 @@ import ImproveModal from "@/components/improvement/improveModal";
 import NotificationModal from "@/components/notifications/notificationModal";
 import PhoneTransactionCon from "@/components/home/transactions/phoneTransactionCon";
 import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
+import { animateBackItems, animateAwayItems } from "@/app/animations/appComponents";
 
 const transactions = [
     {
@@ -97,7 +98,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     const [totalExpense, setTotalExpense] = useState<number>(0);
     const [totalIncome, setTotalIncome] = useState<number>(0);
     const [totalBalance, setTotalBalance] = useState<number>(0);
-    const [budget, setBudget] = useState<number>(25000);
+    const budget = 25000;
     const [anyModalOpen, setAnyModalOpen] = useState<boolean>(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
@@ -148,7 +149,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
     useEffect(() => {
         // Animate total income and expense cards to go to sides then improve modal to come from bottom and fill screen
         if (openImproveModal && ImproveModalRef.current && totalIncomeRef.current && totalExpenseRef.current && progressBarRef.current && balanceRef.current) {
-            animateAwayItems();
+            animateAwayItems({totalIncome: totalIncomeRef.current, totalExpense: totalExpenseRef.current, progressBar: progressBarRef.current, balance: balanceRef.current, transactionsCon: transactionsConRef.current});
 
             gsap.fromTo(ImproveModalRef.current,
                 { y: "100%" },
@@ -164,7 +165,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 duration: 0.5,
                 ease: "power1.inOut",
             });
-            animateBackItems();
+            animateBackItems({totalIncome: totalIncomeRef.current, totalExpense: totalExpenseRef.current, progressBar: progressBarRef.current, balance: balanceRef.current, transactionsCon: transactionsConRef.current});
         }
     }, [closeImproveModal]);
 
@@ -217,7 +218,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 backgroundColor: "#000",
                 ease: "power1.inOut",
             });
-            animateAwayItems();
+            animateAwayItems({totalIncome: totalIncomeRef.current, totalExpense: totalExpenseRef.current, progressBar: progressBarRef.current, balance: balanceRef.current, transactionsCon: transactionsConRef.current});
             const timer = setTimeout(() => {
                 setAnimationComplete(true);
             }, 500);
@@ -236,81 +237,10 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 backgroundColor: "",
                 ease: "power1.inOut",
             });
-            animateBackItems();
+            animateBackItems({totalIncome: totalIncomeRef.current, totalExpense: totalExpenseRef.current, progressBar: progressBarRef.current, balance: balanceRef.current, transactionsCon: transactionsConRef.current});
         }
     }, [optionsClose]);
 
-    const animateAwayItems = () => {
-        if (totalIncomeRef.current && totalExpenseRef.current && progressBarRef.current && balanceRef.current && transactionsConRef.current) {
-            const animationDuration = 0.2;
-            gsap.to(totalIncomeRef.current, {
-                x: "-150%",
-                duration: animationDuration,
-                ease: "power1.inOut",
-            });
-            gsap.to(totalExpenseRef.current, {
-                x: "150%",
-                duration: animationDuration,
-                ease: "power1.inOut",
-            });
-            gsap.to(progressBarRef.current, {
-                y: "100%",
-                opacity: 0,
-                duration: animationDuration,
-                ease: "power1.inOut",
-            });
-            gsap.to(balanceRef.current, {
-                y: "-50%",
-                opacity: 0,
-                duration: animationDuration,
-                ease: "power1.inOut",
-                delay: 0.1,
-            });
-            gsap.to(transactionsConRef.current, {
-                y: "150%",
-                opacity: 0,
-                duration: animationDuration,
-                ease: "power1.inOut",
-                delay: 0.1,
-            });
-        }
-    }
-
-    const animateBackItems = () => {
-        if (totalIncomeRef.current && totalExpenseRef.current && progressBarRef.current && balanceRef.current && transactionsConRef.current) {
-            const animationDuration = 0.5;
-            gsap.to(totalIncomeRef.current, {
-                x: "0%",
-                duration: animationDuration,
-                ease: "power1.inOut",
-            });
-            gsap.to(totalExpenseRef.current, {
-                x: "0%",
-                duration: animationDuration,
-                ease: "power1.inOut",
-            });
-            gsap.to(progressBarRef.current, {
-                y: "0%",
-                opacity: 1,
-                duration: animationDuration,
-                ease: "power1.inOut",
-            });
-            gsap.to(balanceRef.current, {
-                y: "0%",
-                opacity: 1,
-                duration: animationDuration,
-                ease: "power1.inOut",
-                delay: 0.1,
-            });
-            gsap.to(transactionsConRef.current, {
-                y: "0%",
-                opacity: 1,
-                duration: animationDuration,
-                ease: "power1.inOut",
-                delay: 0.1,
-            });
-        }
-    }
 
   return <section ref={containerRef} className={`w-full h-full bg-[#8280FE] *:px-4 relative ${anyModalOpen ? "overflow-hidden" : "overflow-y-scroll overflow-x-hidden no-scrollbar"}`} onClick={onClick}>
         <div className="flex justify-between text-black py-4 select-none *:cursor-pointer">
