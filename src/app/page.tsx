@@ -18,6 +18,7 @@ import Tips from "@/components/home/tips"
 import { useWindowWidth } from "@/components/useWindowWidth"
 import Investment from "@/components/home/investment"
 import HomePage from "./pages/home"
+import LoadingScreen from "@/components/ui/loadingScreen"
 
 /**
  * Root React component that controls authentication, initial-setup gating, lock screen, transient alerts, and renders the main dashboard layout.
@@ -97,15 +98,12 @@ function App() {
     }
   }, [alertType])
 
-  if (loading) return null
+  if (loading) return <LoadingScreen />
   if (!session) return <HomePage />
   if (locked) return <LockScreen onUnlock={() => { setLocked(false) }} />
+  if (setup) return <FirstSetup />
 
   return (
-    <>
-      {setup ? (
-        <FirstSetup />
-      ) : (
         <>
           <Navbar />
           <main
@@ -133,8 +131,6 @@ function App() {
             )}
           </main>
         </>
-      )}
-    </>
   )
 }
 
