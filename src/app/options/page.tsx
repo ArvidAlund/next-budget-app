@@ -16,6 +16,7 @@ import NotificationsOptions from "@/components/options/menus/notifications";
 import QuickOptions from "@/components/options/menus/quick";
 import getUserOption from "../lib/db/getUserOption";
 import LockScreen from "@/components/lockScreen";
+import supabase from "../lib/supabaseClient";
 
 const optionsList = [
   { id: 'general', name: 'Allmänt' },
@@ -73,6 +74,7 @@ export default function OptionsPage() {
     const contentRef = useRef<HTMLDivElement>(null);
     const [locked, setLocked] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const [hasSession, setHasSession] = useState<boolean>(false);
 
     useEffect(() => {
         gsap.fromTo(contentRef.current,
@@ -87,10 +89,23 @@ export default function OptionsPage() {
           if (typeof lockSetting === 'boolean' && lockSetting) {
             setLocked(true);
           }
-          setLoading(false);
         }
 
-        checkLock();
+        const getSession = async () => {
+          const { data, error } = await supabase.auth.getSession()
+          if (error) {
+            console.error("Error fetching session:", error.message)
+            return null
+          }
+          const session = data.session;
+          setHasSession(session !== null);
+
+          if (session !== null) {
+            await checkLock();
+          }
+          setLoading(false);
+        }
+        getSession();
     }, []);
     const handleUnlock = () => {
         setLocked(false);
@@ -98,6 +113,10 @@ export default function OptionsPage() {
 
     if (loading) return null;
     if (locked) return <LockScreen onUnlock={handleUnlock} />;
+    if (!hasSession) {
+        window.location.href = '/404';
+        return null;
+    }
 
   return (
     <>
