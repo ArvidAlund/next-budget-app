@@ -20,6 +20,7 @@ export default function LogOutOption() {
             console.error('Logout failed:', error);
         } finally {
             setLoading(false);
+            window.location.href = '/';
         }
     };
 
