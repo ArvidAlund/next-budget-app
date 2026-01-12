@@ -1,5 +1,6 @@
 import HowWeWork from "@/components/about/howWeWork";
 import Personal from "@/components/about/personal";
+import UsersSection from "@/components/about/userCards";
 import Vision from "@/components/about/vision";
 import { Navbar, NavbarHeight } from "@/components/ui/navbar/Navbar";
 
@@ -11,6 +12,7 @@ const aboutPage = () => {
         <Vision />
         <Personal />
         <HowWeWork />
+        <UsersSection />
     </>
   )
 }
