@@ -1,7 +1,7 @@
 const Personal = () => {
   return (
-    <section className="w-full border-b  border-neutral-700 pb-8 mb-8">
-        <h2>Vårt team</h2>
+    <section className="w-full border-b  border-neutral-700 pb-8 mb-8 p-6">
+        <h2 className="text-4xl text-center">Vårt team</h2>
         <hr className="mb-4 border-neutral-700" />
         <ul className="p-4">
             <li className="mb-8 grid grid-cols-2 gap-4 items-center h-full">
