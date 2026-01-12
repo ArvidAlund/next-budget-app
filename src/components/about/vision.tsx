@@ -1,4 +1,5 @@
 import { Brain, ChartBar, View } from "lucide-react";
+import InfoContainer from "./infoContainer";
 
 const pitchData = [
     {
@@ -20,7 +21,7 @@ const pitchData = [
 
 const Vision = () => {
     return (
-        <section className="text-neutral-100 p-6 md:p-10">
+        <section className="p-6 md:p-10">
             <h2 className="text-4xl font-semibold tracking-tight mb-2 text-white text-center">
                 Vår vision
             </h2>
@@ -32,15 +33,7 @@ const Vision = () => {
             </div>
             <div className="grid gap-4 md:grid-cols-3 text-sm text-neutral-300">
                 {pitchData.map((item, index) => (
-                    <div key={index} className="border border-neutral-700 rounded-lg p-4">
-                        <div className="flex justify-center items-center mb-3">
-                            {item.icon}
-                            <h3 className="ml-2">
-                                {item.title}
-                            </h3>
-                        </div>
-                        <p>{item.description}</p>
-                    </div>
+                    <InfoContainer key={index} data={item} />
                 ))}
             </div>
         </section>
