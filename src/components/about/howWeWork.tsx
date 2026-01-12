@@ -1,4 +1,4 @@
-import { SearchCheck, Users } from "lucide-react";
+import { SearchCheck, Sparkles, Users } from "lucide-react";
 import InfoContainer from "./infoContainer";
 
 const workCards = [
@@ -15,7 +15,7 @@ const workCards = [
     {
         title: "Fokus på tydlighet",
         description: "Allt vi bygger ska vara begripligt på några sekunder. Om något känns rörigt, bygger vi om det.",
-        icon: <Users className="inline text-yellow-600" size={20} />,
+        icon: <Sparkles className="inline text-green-600" size={20} />,
     },
 ];
 
