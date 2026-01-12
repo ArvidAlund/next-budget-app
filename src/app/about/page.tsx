@@ -13,6 +13,7 @@ const aboutPage = () => {
         <Personal />
         <HowWeWork />
         <UsersSection />
+        <div className="h-20"/>
     </>
   )
 }

@@ -21,7 +21,7 @@ const pitchData = [
 
 const Vision = () => {
     return (
-        <section className="p-6 md:p-10">
+        <section className="p-6 md:p-10 mt-10">
             <h2 className="text-4xl font-semibold tracking-tight mb-2 text-white text-center">
                 Vår vision
             </h2>

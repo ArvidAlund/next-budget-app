@@ -21,7 +21,7 @@ const workCards = [
 
 const HowWeWork = () => {
     return (
-        <section className="p-6 md:p-10">
+        <section className="px-6 md:px-10 mt-40">
             <h2 className="text-4xl text-center">
                 Hur vi jobbar
             </h2>
