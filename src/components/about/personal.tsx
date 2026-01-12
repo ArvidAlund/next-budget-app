@@ -4,7 +4,7 @@ const Personal = () => {
         <h2 className="text-4xl text-center">Vårt team</h2>
         <hr className="mb-4 border-neutral-700" />
         <ul className="p-4">
-            <li className="mb-8 grid grid-cols-2 gap-4 items-center h-full">
+            <li className="mb-8 grid md:grid-cols-2 gap-4 items-center h-full">
                 <img
                 src="https://avatars.githubusercontent.com/u/64034931?v=4"
                 alt="Arvid Ålund"
