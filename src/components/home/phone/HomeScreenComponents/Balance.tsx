@@ -8,9 +8,11 @@ import incomeDiffMonth from "@/app/lib/incomeDiffMonth";
 import expenseDiffMonth from "@/app/lib/expenseDiffMonth";
 
 const PhoneBalance = () => {
-    const [totalIncome, setTotalIncome] = useState<number>(0);
-    const [totalExpense, setTotalExpense] = useState<number>(0);
-    const [totalBalance, setTotalBalance] = useState<number>(0);
+    const [moneyData, setMoneyData] = useState<{ income: number; expense: number; total: number }>({
+        income: 0,
+        expense: 0,
+        total: 0,
+    });
     const [incomeDiff, setIncomeDiff] = useState<{ percentage: number; positive: boolean } | null>(null);
     const [expenseDiff, setExpenseDiff] = useState<{ percentage: number; positive: boolean } | null>(null);
     const totalIncomeRef = useRef<HTMLDivElement>(null);
@@ -21,9 +23,11 @@ const PhoneBalance = () => {
         const fetchBalanceData = async () => {
             const userId = await supabaseUserID();
             const res = await getIncomeExpenseTotal(userId as string, new Date());
-            setTotalIncome(res.income);
-            setTotalExpense(res.expense);
-            setTotalBalance(res.income - res.expense);
+            setMoneyData({
+                income: res.income,
+                expense: res.expense,
+                total: res.income - res.expense,
+            });
             try {
                 const incomeDiffRes = await incomeDiffMonth();
                 setIncomeDiff(incomeDiffRes);
@@ -43,12 +47,12 @@ const PhoneBalance = () => {
         <section>
             <div className="w-full flex flex-col justify-center items-start mt-8 text-white" ref={balanceRef}>
                 <p>Total balans</p>
-                <h1 className="text-center w-full text-[clamp(0.8rem,20vw,10rem)] mt-4 text-[#0B0748] text-nowrap"><BalanceAnimation end={totalBalance} /> kr</h1>
+                <h1 className="text-center w-full text-[clamp(0.8rem,20vw,10rem)] mt-4 text-[#0B0748] text-nowrap"><BalanceAnimation end={moneyData.total} /> kr</h1>
             </div>
             <div className="grid grid-cols-2 gap-4 w-full mt-8">
                 <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalIncomeRef}>
                     <p className="text-xs">Inkomster</p>
-                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(totalIncome)} kr</h2>
+                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(moneyData.income)} kr</h2>
                     <div className="flex justify-center items-center mt-2">
                         {incomeDiff && incomeDiff.positive ? (
                             <TrendingUp className="text-green-500" size={24}/>
@@ -62,7 +66,7 @@ const PhoneBalance = () => {
                 </div>
                 <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalExpenseRef}>
                     <p className="text-xs">Utgifter</p>
-                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(totalExpense)} kr</h2>
+                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(moneyData.expense)} kr</h2>
                     <div className="flex justify-center items-center mt-2">
                         {expenseDiff && expenseDiff.positive ? (
                             <TrendingUp className="text-red-500" size={24}/>
