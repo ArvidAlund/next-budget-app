@@ -1,0 +1,53 @@
+import { formatCurrency } from "@/app/lib/formatcurrency";
+import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
+import { supabaseUserID } from "@/app/lib/supabaseClient";
+import BalanceAnimation from "@/components/ui/balanceAnimation";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+
+const PhoneBalance = () => {
+    const [totalIncome, setTotalIncome] = useState<number>(0);
+    const [totalExpense, setTotalExpense] = useState<number>(0);
+    const [totalBalance, setTotalBalance] = useState<number>(0);
+    const totalIncomeRef = useRef<HTMLDivElement>(null);
+    const totalExpenseRef = useRef<HTMLDivElement>(null);
+    const balanceRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const fetchBalanceData = async () => {
+            const userId = await supabaseUserID();
+            const res = await getIncomeExpenseTotal(userId as string, new Date());
+            setTotalIncome(res.income);
+            setTotalExpense(res.expense);
+            setTotalBalance(res.income - res.expense);
+        }
+        fetchBalanceData();
+    }, []);
+    return (
+        <section>
+            <div className="w-full flex flex-col justify-center items-start mt-8 text-white" ref={balanceRef}>
+                <p>Total balans</p>
+                <h1 className="text-center w-full text-[clamp(0.8rem,20vw,10rem)] mt-4 text-[#0B0748] text-nowrap"><BalanceAnimation end={totalBalance} /> kr</h1>
+            </div>
+            <div className="grid grid-cols-2 gap-4 w-full mt-8">
+                <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalIncomeRef}>
+                    <p className="text-xs">Inkomster</p>
+                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(totalIncome)} kr</h2>
+                    <div className="flex justify-center items-center mt-2">
+                        <TrendingUp className="text-green-500" size={24}/>
+                        <p className="text-sm ml-1">+5%</p>
+                    </div>
+                </div>
+                <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalExpenseRef}>
+                    <p className="text-xs">Utgifter</p>
+                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(totalExpense)} kr</h2>
+                    <div className="flex justify-center items-center mt-2">
+                        <TrendingDown className="text-red-500" size={24}/>
+                        <p className="text-sm ml-1">-3%</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+export default PhoneBalance;
