@@ -4,11 +4,15 @@ import { supabaseUserID } from "@/app/lib/supabaseClient";
 import BalanceAnimation from "@/components/ui/balanceAnimation";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import incomeDiffMonth from "@/app/lib/incomeDiffMonth";
+import expenseDiffMonth from "@/app/lib/expenseDiffMonth";
 
 const PhoneBalance = () => {
     const [totalIncome, setTotalIncome] = useState<number>(0);
     const [totalExpense, setTotalExpense] = useState<number>(0);
     const [totalBalance, setTotalBalance] = useState<number>(0);
+    const [incomeDiff, setIncomeDiff] = useState<{ percentage: number; positive: boolean } | null>(null);
+    const [expenseDiff, setExpenseDiff] = useState<{ percentage: number; positive: boolean } | null>(null);
     const totalIncomeRef = useRef<HTMLDivElement>(null);
     const totalExpenseRef = useRef<HTMLDivElement>(null);
     const balanceRef = useRef<HTMLDivElement>(null);
@@ -20,6 +24,18 @@ const PhoneBalance = () => {
             setTotalIncome(res.income);
             setTotalExpense(res.expense);
             setTotalBalance(res.income - res.expense);
+            try {
+                const incomeDiffRes = await incomeDiffMonth();
+                setIncomeDiff(incomeDiffRes);
+            } catch (error) {
+                console.error("Error fetching income difference:", error);
+            }
+            try {
+                const expenseDiffRes = await expenseDiffMonth();
+                setExpenseDiff(expenseDiffRes);
+            } catch (error) {
+                console.error("Error fetching expense difference:", error);
+            }
         }
         fetchBalanceData();
     }, []);
@@ -34,16 +50,28 @@ const PhoneBalance = () => {
                     <p className="text-xs">Inkomster</p>
                     <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(totalIncome)} kr</h2>
                     <div className="flex justify-center items-center mt-2">
-                        <TrendingUp className="text-green-500" size={24}/>
-                        <p className="text-sm ml-1">+5%</p>
+                        {incomeDiff && incomeDiff.positive ? (
+                            <TrendingUp className="text-green-500" size={24}/>
+                        ) : (
+                            <TrendingDown className="text-red-500" size={24}/>
+                        )}
+                        <p className="text-sm ml-1">
+                            {incomeDiff ? `${incomeDiff.positive ? '+' : '-'}${incomeDiff.percentage}%` : ''}
+                        </p>
                     </div>
                 </div>
                 <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalExpenseRef}>
                     <p className="text-xs">Utgifter</p>
                     <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(totalExpense)} kr</h2>
                     <div className="flex justify-center items-center mt-2">
-                        <TrendingDown className="text-red-500" size={24}/>
-                        <p className="text-sm ml-1">-3%</p>
+                        {expenseDiff && expenseDiff.positive ? (
+                            <TrendingUp className="text-red-500" size={24}/>
+                        ) : (
+                            <TrendingDown className="text-green-500" size={24}/>
+                        )}
+                        <p className="text-sm ml-1">
+                            {expenseDiff ? `${expenseDiff.positive ? '+' : '-'}${expenseDiff.percentage}%` : ''}
+                        </p>
                     </div>
                 </div>
             </div>
