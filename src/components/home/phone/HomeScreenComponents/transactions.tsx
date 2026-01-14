@@ -79,7 +79,7 @@ const PhoneTransactions = ({openNewTransaction, openAllTransactions, createdTran
     }, [createdTransactions]);
 
     return (
-        <section ref={transactionsConRef} className="w-full h-fit max-h-screen rounded-t-3xl bg-white mt-6 flex-1">
+        <section ref={transactionsConRef} className="w-full h-fit rounded-t-3xl bg-white mt-6 flex-1">
             <div className="flex justify-between items-center p-2">
                 <h3 className="text-[#0B0748] font-semibold w-fit text-[clamp(0.5rem,5vw,1.5rem)]">Senaste transaktioner</h3>
                 <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1.5rem)]" onClick={() => {openNewTransaction();}}>

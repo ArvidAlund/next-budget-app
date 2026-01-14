@@ -10,6 +10,9 @@ import NotificationModal from "@/components/notifications/notificationModal";
 import ImproveModal from "@/components/improvement/improveModal";
 import AddTransaction from "@/components/transactions/addTransaction";
 import { Transaction } from "@/app/lib/types";
+import { TransactionTable } from "@/app/transactions/TransactionTable";
+import { ArrowLeft } from "lucide-react";
+import AllTransactions from "./HomeScreenComponents/allTransactions";
 
 
 type ModalsOpenState = {
@@ -118,6 +121,13 @@ const PhoneHome = () => {
                         }
                         setModalsOpen(prev => ({...prev, addTransactionOpen:false}));
                 }} />
+            )}
+
+            {modalsOpen.allTransactionsOpen && (
+              <AllTransactions onClose={() => {
+                setModalsOpen(prev => ({...prev, allTransactionsOpen:false}));
+              }}
+              />
             )}
         </main>
     </>
