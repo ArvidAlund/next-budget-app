@@ -9,8 +9,9 @@ import BouncingDots from "@/components/ui/bouncingDots";
 import gsap from "gsap";
 import { onEvent } from "@/app/lib/eventbus";
 import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
+import { Transaction } from "@/app/lib/types";
 
-const PhoneBalance = () => {
+const PhoneBalance = ({createdTransactions} : {createdTransactions: Transaction[] | null}) => {
     const [moneyData, setMoneyData] = useState<{ income: number; expense: number; total: number }>({
         income: 0,
         expense: 0,
@@ -97,6 +98,25 @@ const PhoneBalance = () => {
             unsubscribeBack();
         };
     }, []);
+
+    useEffect(() => {
+        if (createdTransactions && createdTransactions.length > 0) {
+            let incomeSum = 0;
+            let expenseSum = 0;
+            createdTransactions.forEach((transaction) => {
+                if (transaction.type === "income") {
+                    incomeSum += transaction.amount;
+                } else if (transaction.type === "expense") {
+                    expenseSum += transaction.amount;
+                }
+            });
+            setMoneyData((prev) => ({
+                income: prev.income + incomeSum,
+                expense: prev.expense + expenseSum,
+                total: prev.total + incomeSum - expenseSum,
+            }));
+        }
+    }, [createdTransactions]);
 
     return (
         <section>

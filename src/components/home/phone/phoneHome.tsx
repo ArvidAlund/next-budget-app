@@ -8,6 +8,9 @@ import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
 import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
 import NotificationModal from "@/components/notifications/notificationModal";
 import ImproveModal from "@/components/improvement/improveModal";
+import AddTransaction from "@/components/transactions/addTransaction";
+import { Transaction } from "@/app/lib/types";
+
 
 type ModalsOpenState = {
     addTransactionOpen: boolean;
@@ -27,6 +30,7 @@ const PhoneHome = () => {
   });
   const containerRef = useRef<HTMLElement | null>(null);
   const [canShowSettings, setCanShowSettings] = useState<boolean>(false);
+  const [createdTransactions, setCreatedTransactions] = useState<Transaction[] | null>(null);
 
   useEffect(() => {
     const isAnyModalOpen = Object.values(modalsOpen).some((isOpen) => isOpen);
@@ -57,13 +61,15 @@ const PhoneHome = () => {
             notificationsOpen={() => setModalsOpen(prev => ({...prev, notificationsOpen:true}))} 
             settingsOpen={modalsOpen.settingsOpen} />
 
-            <PhoneBalance />
+            <PhoneBalance createdTransactions={createdTransactions} />
             
             <PhoneBudget openImproveModal={() => setModalsOpen(prev => ({...prev, improvementsOpen:true}))}/>
 
             <PhoneTransactions 
             openNewTransaction={() => setModalsOpen(prev => ({...prev, addTransactionOpen: true}))} 
-            openAllTransactions={() => setModalsOpen(prev => ({...prev, allTransactionsOpen: true}))} />
+            openAllTransactions={() => setModalsOpen(prev => ({...prev, allTransactionsOpen: true}))} 
+            createdTransactions={createdTransactions}
+            />
 
             {modalsOpen.settingsOpen && canShowSettings && (
               <div className="absolute top-0 left-0 w-full h-full bg-black z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
@@ -85,6 +91,33 @@ const PhoneHome = () => {
                       setModalsOpen(prev => ({...prev, improvementsOpen:false}));
                   }, animateAwayItemsDuration * 1000);
               }} />
+            )}
+
+            {modalsOpen.addTransactionOpen && (
+              <AddTransaction onClose={(transactionData) => {
+                        if (transactionData){
+                            setCreatedTransactions(prev => {
+                              const newTransaction: Transaction = {
+                                  id: String(prev ? prev.length + 1 : 1),
+                                  type: transactionData.type,
+                                  category: transactionData.category,
+                                  amount: transactionData.amount,
+                                  date: transactionData.date,
+                                  description: transactionData.description,
+                                  user_id: "",
+                                  recurring: transactionData.recurring ?? false,
+                              };
+
+                              if (prev) {
+                                  return [...prev, newTransaction];
+                              } else {
+                                  return [newTransaction];
+                              }
+                          });
+
+                        }
+                        setModalsOpen(prev => ({...prev, addTransactionOpen:false}));
+                }} />
             )}
         </main>
     </>

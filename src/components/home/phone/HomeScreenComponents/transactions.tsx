@@ -5,23 +5,12 @@ import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
 import gsap from "gsap";
 import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 import { onEvent } from "@/app/lib/eventbus";
+import { Transaction } from "@/app/lib/types";
 
-type Transaction = {
-    id: string;
-    type: "income" | "expense";
-    category: string;
-    amount: number;
-    date: string;
-    description?: string;
-    user_id: string;
-    recurring: boolean;
-};
-
-const PhoneTransactions = ({openNewTransaction, openAllTransactions} : {openNewTransaction: () => void, openAllTransactions: () => void}) => {
+const PhoneTransactions = ({openNewTransaction, openAllTransactions, createdTransactions} : {openNewTransaction: () => void, openAllTransactions: () => void, createdTransactions: Transaction[] | null}) => {
     const startAmountToShow = 10;
     const transactionsConRef = useRef<HTMLElement>(null);
     const [transactionsList, setTransactionsList] = useState<Transaction[]>([]);
-    const [addTransactionOpen, setAddTransactionOpen] = useState<boolean>(false);
     const [transactionsToShow, setTransactionsToShow] = useState<number>(startAmountToShow);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [timesClickedLoadMore, setTimesClickedLoadMore] = useState<number>(0);
@@ -75,6 +64,19 @@ const PhoneTransactions = ({openNewTransaction, openAllTransactions} : {openNewT
             unsubscribeBack();
         };
     }, []);
+
+    useEffect(() => {
+        if (createdTransactions && createdTransactions.length > 0) {
+            setTransactionsList(prev => {
+                if (!prev) return createdTransactions;
+                const combined = [...createdTransactions, ...prev];
+                const uniqueTransactions = combined.filter((transaction, index, self) =>
+                    index === self.findIndex((t) => t.id === transaction.id)
+                );
+                return uniqueTransactions;
+            });
+        }
+    }, [createdTransactions]);
 
     return (
         <section ref={transactionsConRef} className="w-full h-fit max-h-screen rounded-t-3xl bg-white mt-6 flex-1">
