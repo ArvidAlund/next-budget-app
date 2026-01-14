@@ -147,7 +147,7 @@ const PhoneBalance = ({createdTransactions} : {createdTransactions: Transaction[
                         <span className="w-1/3 h-3.5 bg-neutral-500 animate-pulse rounded-md mt-2"/>
                     </> :
                         <>
-                            <h2 className="text-[clamp(0.5rem,8vw,2rem)] mt-2 animate-fade-in">{<BalanceAnimation end={moneyData.income} duration={500} />} kr</h2>
+                            <h2 className="text-[clamp(0.5rem,6vw,2rem)] mt-2 animate-fade-in">{<BalanceAnimation end={moneyData.income} duration={500} />} kr</h2>
                             <div className="flex justify-center items-center mt-2 animate-fade-in">
                                 {incomeDiff && incomeDiff.positive ? (
                                     <TrendingUp className="text-green-500" size={24}/>
@@ -169,7 +169,7 @@ const PhoneBalance = ({createdTransactions} : {createdTransactions: Transaction[
                         <span className="w-1/3 h-3.5 bg-neutral-500 animate-pulse rounded-md mt-2"/>
                     </> : 
                     <>
-                        <h2 className="text-[clamp(0.5rem,8vw,2rem)] mt-2 animate-fade-in">{<BalanceAnimation end={moneyData.expense} duration={500} />} kr</h2>
+                        <h2 className="text-[clamp(0.5rem,6vw,2rem)] mt-2 animate-fade-in">{<BalanceAnimation end={moneyData.expense} duration={500} />} kr</h2>
                         <div className="flex justify-center items-center mt-2 animate-fade-in">
                             {expenseDiff && expenseDiff.positive ? (
                                 <TrendingUp className="text-red-500" size={24}/>
