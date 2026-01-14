@@ -19,6 +19,8 @@ const PhoneTransactions = () => {
     const transactionsConRef = useRef<HTMLElement>(null);
     const [transactionsList, setTransactionsList] = useState<Transaction[]>([]);
     const [addTransactionOpen, setAddTransactionOpen] = useState<boolean>(false);
+    const [transactionsToShow, setTransactionsToShow] = useState<number>(8);
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -28,6 +30,7 @@ const PhoneTransactions = () => {
                 return;
             }
             setTransactionsList(res.data || []);
+            setLoaded(true);
         }
         fetchTransactions();
 
@@ -50,10 +53,21 @@ const PhoneTransactions = () => {
                 </button>
             </div>
             <ul className="px-4 pb-4">
-                {transactionsList.map((transaction, index) => (
+                {transactionsList.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .slice(0, transactionsToShow)
+                .map((transaction, index) => (
                     <PhoneTransactionCon key={transaction.id} transaction={transaction} index={index} />
                 ))}
             </ul>
+            {loaded && (
+                <>
+                    {transactionsToShow < transactionsList.length ? (
+                        <button onClick={() => setTransactionsToShow(transactionsToShow + 8)} className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1.5rem)] my-2 m-auto px-10">Ladda fler</button>
+                    ) : (
+                        <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1.5rem)] my-2 m-auto px-10">Visa alla</button>
+                    )}
+                </>
+            )}
         </section>
     )
 };
