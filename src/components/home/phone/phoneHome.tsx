@@ -4,6 +4,8 @@ import PhoneNavbar from "./HomeScreenComponents/navbar";
 import PhoneTransactions from "./HomeScreenComponents/transactions";
 import { useState, useEffect, useRef } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
+import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
+import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
 
 type ModalsOpenState = {
     addTransactionOpen: boolean;
@@ -22,12 +24,19 @@ const PhoneHome = () => {
     improvementsOpen: false,
   });
   const containerRef = useRef<HTMLElement | null>(null);
+  const [canShowSettings, setCanShowSettings] = useState<boolean>(false);
+
   useEffect(() => {
     const isAnyModalOpen = Object.values(modalsOpen).some((isOpen) => isOpen);
     setAnyModalOpen(isAnyModalOpen);
     if (containerRef.current && isAnyModalOpen) {
         containerRef.current.scrollTo({ top: 0, behavior: "instant" });
         emitEvent("animateAwayItems");
+    }
+    if (modalsOpen.settingsOpen){
+      setTimeout(() => {
+        setCanShowSettings(true);
+      }, animateAwayItemsDuration * 1000);
     }
   }, [modalsOpen]);
 
@@ -38,6 +47,12 @@ const PhoneHome = () => {
             <PhoneBalance />
             <PhoneBudget openImproveModal={() => setModalsOpen(prev => ({...prev, improvementsOpen:true}))}/>
             <PhoneTransactions openNewTransaction={() => setModalsOpen(prev => ({...prev, addTransactionOpen: true}))} openAllTransactions={() => setModalsOpen(prev => ({...prev, allTransactionsOpen: true}))} />
+
+            {modalsOpen.settingsOpen && canShowSettings && (
+              <div className="absolute top-0 left-0 w-full h-full bg-black z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
+                <PhoneOptionsModal onClose={() => setModalsOpen(prev => ({...prev, settingsOpen:false}))} />
+              </div>
+            )}
         </main>
     </>
   );
