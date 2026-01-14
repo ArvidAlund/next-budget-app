@@ -1,16 +1,18 @@
-import PhoneBalance from "./HomeScreenComponents/Balance";
-import PhoneBudget from "./HomeScreenComponents/Budget";
-import PhoneNavbar from "./HomeScreenComponents/Navbar";
+import PhoneBalance from "./HomeScreenComponents/balance";
+import PhoneBudget from "./HomeScreenComponents/budget";
+import PhoneNavbar from "./HomeScreenComponents/navbar";
+import PhoneTransactions from "./HomeScreenComponents/transactions";
 
 const PhoneHome = () => {
 
 
   return (
     <>
-        <main className="w-full h-screen bg-[#8280FE] *:px-4 relative">
+        <main className="w-full h-screen bg-[#8280FE] *:px-4 relative flex flex-col">
             <PhoneNavbar />
             <PhoneBalance />
             <PhoneBudget />
+            <PhoneTransactions />
         </main>
     </>
   );
