@@ -17,6 +17,7 @@ import QuickOptions from "@/components/options/menus/quick";
 import getUserOption from "../lib/db/getUserOption";
 import LockScreen from "@/components/lockScreen";
 import supabase from "../lib/supabaseClient";
+import { ArrowLeft } from "lucide-react";
 
 const optionsList = [
   { id: 'general', name: 'Allmänt' },
@@ -69,7 +70,7 @@ function renderContent(selectedOption:string | null) {
  *
  * @returns The React element representing the options page layout.
  */
-export default function OptionsPage() {
+export default function OptionsPage({ onClose }: { onClose?: () => void }) {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const [locked, setLocked] = useState<boolean>(false);
@@ -111,6 +112,7 @@ export default function OptionsPage() {
         setLocked(false);
     }
 
+
     if (loading) return null;
     if (locked) return <LockScreen onUnlock={handleUnlock} />;
     if (!hasSession) {
@@ -120,10 +122,16 @@ export default function OptionsPage() {
 
   return (
     <>
-        <main className="grid sm:grid-cols-2 h-screen w-full relative sm:fixed sm:z-200">
-            <div>
+        <main className="flex flex-col lg:grid lg:grid-cols-2 min-h-screen w-full relative sm:fixed sm:z-200 bg-black">
+            <div className="flex lg:hidden justify-between items-center w-full mt-4 h-12 px-2">
+                <button className="p-2 rounded-full" onClick={onClose}>
+                    <ArrowLeft size={24} />
+                </button>
+                <h4>Inställningar</h4>
+            </div>
+            <div className="flex-1 flex flex-col justify-between">
                 {optionsList.map(option => (
-                    <div key={option.id} className="p-4 border-b bg-primary-400 text-secondary flex items-center justify-between hover:bg-primary-300 cursor-pointer transition-all duration-300" onClick={() => setSelectedOption(() => option.id === selectedOption ? "" : option.id)}>
+                    <div key={option.id} className="p-4 border-b text-secondary flex items-center justify-between hover:bg-primary-300 cursor-pointer transition-all duration-300 h-full" onClick={() => setSelectedOption(() => option.id === selectedOption ? "" : option.id)}>
                         <div>
                             <h2 className="text-lg font-semibold">{option.name}</h2>
                             <p className="text-sm text-gray-600">Inställningar för {option.name.toLowerCase()}.</p>

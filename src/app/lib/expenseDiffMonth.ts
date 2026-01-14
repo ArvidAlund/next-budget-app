@@ -1,25 +1,19 @@
 import supabase, { supabaseUserID } from "./supabaseClient";
 
-/**
- * Calculate the percentage difference in income between the current month and the previous month.
- * @returns An object containing the percentage difference and a boolean indicating if the difference is positive.
- */
-export default async function incomeDiffMonth() {
+
+export default async function expenseDiffMonth() {
     const userId = await supabaseUserID();
     if (!userId) throw new Error("User not authenticated");
-
-    const { data: incomesMonths, error } = await supabase
+    const { data: expensesMonths, error } = await supabase
         .from("transactions")
         .select("amount, date")
         .eq("user_id", userId)
-        .eq("type", "income");
-
+        .eq("type", "expense");
     if (error) throw error;
 
     const now = new Date();
     const currentDay = now.getDate();
-
-    const currentMonthIncome = incomesMonths
+    const currentMonthExpense = expensesMonths
         ?.filter(tx => {
             const d = new Date(tx.date);
             return (
@@ -29,10 +23,8 @@ export default async function incomeDiffMonth() {
             );
         })
         .reduce((sum, tx) => sum + tx.amount, 0) || 0;
-
     const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-    const previousMonthIncome = incomesMonths
+    const previousMonthExpense = expensesMonths
         ?.filter(tx => {
             const d = new Date(tx.date);
             return (
@@ -42,17 +34,14 @@ export default async function incomeDiffMonth() {
             );
         })
         .reduce((sum, tx) => sum + tx.amount, 0) || 0;
-
     const rawDiff =
-        previousMonthIncome === 0
-            ? currentMonthIncome === 0
+        previousMonthExpense === 0
+            ? currentMonthExpense === 0
                 ? 0
                 : 100
-            : ((currentMonthIncome - previousMonthIncome) / previousMonthIncome) * 100;
-
+            : ((currentMonthExpense - previousMonthExpense) / previousMonthExpense) * 100;
     return {
         percentage: Math.round(Math.abs(rawDiff)),
         positive: rawDiff >= 0,
     };
 }
-

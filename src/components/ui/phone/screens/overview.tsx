@@ -10,73 +10,91 @@ import NotificationModal from "@/components/notifications/notificationModal";
 import PhoneTransactionCon from "@/components/home/transactions/phoneTransactionCon";
 import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
 import { animateBackItems, animateAwayItems } from "@/app/animations/appComponents";
+import { Transaction } from "@/app/lib/types";
 
-const transactions = [
+const transactions: Transaction[] = [
     {
-        id: 1,
+        id: "1",
         category: "Transport",
         date: "2025-09-27",
         amount: 300,
         type: "expense",
-        title: "Tunnelbanekort",
+        description: "Tunnelbanekort",
+        user_id: "demo-user",
+        recurring: false,
     },
     {
-        id: 2,
+        id: "2",
         category: "Matinköp",
         date: "2025-09-26",
         amount: 1200,
         type: "expense",
-        title: "Veckohandling",
+        description: "Veckohandling",
+        user_id: "demo-user",
+        recurring: false,
     },
     {
-        id: 3,
-        category: "Lön",    
+        id: "3",
+        category: "Lön",
         date: "2025-09-25",
         amount: 25000,
         type: "income",
-        title: "Månadslön",
+        description: "Månadslön",
+        user_id: "demo-user",
+        recurring: false,
     },
     {
-        id: 4,
+        id: "4",
         category: "Nöjen",
         date: "2025-09-24",
         amount: 450,
         type: "expense",
-        title: "Bio med vänner",
+        description: "Bio med vänner",
+        user_id: "demo-user",
+        recurring: false,
     },
     {
-        id: 5,
+        id: "5",
         category: "Hälsa",
         date: "2025-09-23",
         amount: 800,
         type: "expense",
-        title: "Gymmedlemskap",
+        description: "Gymmedlemskap",
+        user_id: "demo-user",
+        recurring: false,
     },
     {
-        id: 6,
+        id: "6",
         category: "Övrigt",
         date: "2025-09-22",
         amount: 150,
         type: "expense",
-        title: "Present till kollega",
+        description: "Present till kollega",
+        user_id: "demo-user",
+        recurring: false,
     },
     {
-        id: 7,
+        id: "7",
         category: "Hushåll",
         date: "2025-09-01",
         amount: 12000,
         type: "expense",
-        title: "Hyra",
+        description: "Hyra",
+        user_id: "demo-user",
+        recurring: false,
     },
     {
-        id: 8,
+        id: "8",
         category: "Hushåll",
         date: "2025-09-01",
         amount: 600,
         type: "expense",
-        title: "Elräkning",
+        description: "Elräkning",
+        user_id: "demo-user",
+        recurring: false,
     }
 ];
+
 
 
 const OverViewScreen = ({onClick} : {onClick: () => void}) => {
@@ -311,8 +329,8 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 </button>
             </div>
             <ul className="px-4 pb-4">
-                {transactionsList.map((transaction) => (
-                    <PhoneTransactionCon key={transaction.id} transaction={transaction} />
+                {transactionsList.map((transaction, index) => (
+                    <PhoneTransactionCon key={transaction.id} transaction={transaction} index={index} />
                 ))}
             </ul>
         </div>
@@ -328,14 +346,15 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                         }, 500);
                         return;
                     }
-                    const newTransaction = {
-                        id: Date.now(),
+                    const newTransaction : Transaction = {
+                        id: Math.random().toString(36).substring(2, 9),
                         category: transaction.category,
                         date: transaction.date,
                         amount: Number(transaction.amount),
                         type: transaction.type,
-                        title: transaction.title,
-                        description: transaction.description,
+                        description: String(transaction.description),
+                        recurring: transaction.recurring,
+                        user_id: "demo-user",
                     };
                     setTransactionsList([newTransaction, ...transactionsList]);
                     setCloseTransactionOpen(true);
@@ -349,7 +368,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
 
         {openImproveModal && (
             <div ref={ImproveModalRef} className="absolute top-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
-                <ImproveModal balance={totalBalance} onClose={() => {
+                <ImproveModal onClose={() => {
                     setCloseImproveModal(true);
                     setTimeout(() => {
                         setOpenImproveModal(false);

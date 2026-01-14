@@ -110,7 +110,7 @@ export function TransactionTable(){
                       onClick={() => {
                         setActiveOptions(prev => prev.filter(opt => opt !== option))
                       }}>
-                        <p>{activeOptionsTable.find(item => item.value === option)?.label || option}</p>
+                        <p className="text-[clamp(0.5rem,3vw,1rem)]">{activeOptionsTable.find(item => item.value === option)?.label || option}</p>
                         <X className="h-1/2"/>
                       </button>
                     ))}

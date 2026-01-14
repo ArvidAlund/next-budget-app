@@ -1,4 +1,4 @@
-import supabase from "@/app/lib/supabaseClient"
+import supabase, { supabaseUserID } from "@/app/lib/supabaseClient"
 
 export async function addTransaction(transaction: {
   type: "income" | "expense"
@@ -8,13 +8,10 @@ export async function addTransaction(transaction: {
   description?: string
   recurring:boolean
 }) {
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
+  const userId = await supabaseUserID();
 
-  if (authError || !user) {
-    throw new Error("Ingen användare inloggad")
+  if (!userId) {
+    throw new Error("User not logged in");
   }
 
   if (transaction.recurring === true) {
@@ -23,7 +20,7 @@ export async function addTransaction(transaction: {
       .select("*")
       .eq("recurring", true)
       .eq("description", transaction.description)
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (error) {
       console.error("Fel vid fetch:", error);
@@ -33,7 +30,7 @@ export async function addTransaction(transaction: {
       const { error: insertError } = await supabase.from("transactions").insert([
       {
         ...transaction,
-        user_id: user.id,
+        user_id: userId,
       },
     ])
 
@@ -43,7 +40,7 @@ export async function addTransaction(transaction: {
     const { error } = await supabase.from("transactions").insert([
       {
         ...transaction,
-        user_id: user.id,
+        user_id: userId,
       },
     ])
 
