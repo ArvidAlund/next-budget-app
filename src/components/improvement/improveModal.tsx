@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
-import BalanceAnimation from "../ui/balanceAnimation";
 import ImprovementConstainer from "./improvementContainer";
+import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
 
 const tips = [
     {
@@ -20,25 +21,43 @@ const tips = [
     },
 ];
 
-const ImproveModal = ({onClose, balance = 12345}: {onClose: () => void, balance: number}) => {
+const ImproveModal = ({onClose}: {onClose: () => void}) => {
+    const modalRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        if (modalRef.current) {
+            gsap.fromTo(
+                modalRef.current,
+                { opacity: 0, y: '100%' },
+                { opacity: 1, y: '0%', duration: 0.5, ease: "power2.out" }
+            );
+        }
+    }, []);
+
+    const handleClose = () => {
+        if (modalRef.current) {
+            gsap.to(
+                modalRef.current,
+                { opacity: 0, y: '100%', duration: 0.5, ease: "power2.in", onComplete: () => onClose() }
+            );
+        }
+        onClose();
+    };
+
     return (
-        <section className="">
+        <section ref={modalRef} className="absolute top-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
             <div className="flex justify-between items-center w-full mt-4 h-12">
-                <button className="p-2 rounded-full" onClick={() => onClose()}>
+                <button className="p-2 rounded-full" onClick={handleClose}>
                     <ArrowLeft size={24} />
                 </button>
             </div>
-            <div className="w-full flex flex-col justify-center items-start mt-8 text-white">
-                <p className="text-xs">Total balans</p>
-                <h1 className="text-center w-full text-7xl mt-4 text-[#0B0748] text-[clamp(0.8rem,4vw,6rem)]"><BalanceAnimation end={balance} /> kr</h1>
-            </div>
             <div className="mt-8 px-4">
                 <h2 className="text-2xl font-bold mb-4">Förbättringstips</h2>
-                <div className="space-y-4">
+                <ul className="space-y-4">
                     {tips.map(tip => (
                         <ImprovementConstainer key={tip.id} data={tip} />
                     ))}
-                </div>
+                </ul>
             </div>
         </section>
     );

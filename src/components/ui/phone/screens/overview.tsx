@@ -357,7 +357,7 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
 
         {openImproveModal && (
             <div ref={ImproveModalRef} className="absolute top-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
-                <ImproveModal balance={totalBalance} onClose={() => {
+                <ImproveModal onClose={() => {
                     setCloseImproveModal(true);
                     setTimeout(() => {
                         setOpenImproveModal(false);

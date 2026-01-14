@@ -7,6 +7,7 @@ import { emitEvent } from "@/app/lib/eventbus";
 import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
 import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
 import NotificationModal from "@/components/notifications/notificationModal";
+import ImproveModal from "@/components/improvement/improveModal";
 
 type ModalsOpenState = {
     addTransactionOpen: boolean;
@@ -76,6 +77,14 @@ const PhoneHome = () => {
                         setModalsOpen(prev => ({...prev, notificationsOpen:false}));
                     }, animateAwayItemsDuration * 1000);
                 }} />
+            )}
+
+            {modalsOpen.improvementsOpen && (
+              <ImproveModal onClose={() => {
+                  setTimeout(() => {
+                      setModalsOpen(prev => ({...prev, improvementsOpen:false}));
+                  }, animateAwayItemsDuration * 1000);
+              }} />
             )}
         </main>
     </>
