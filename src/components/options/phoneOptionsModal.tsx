@@ -1,19 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { ArrowLeft, ChevronLeft } from "lucide-react";
-import gsap from "gsap";
 
-import GeneralOptions from "@/components/options/menus/general";
-import AppearanceOptions from "@/components/options/menus/appearance";
-import CalendarOptions from "@/components/options/menus/calendar";
-import PrivacyOptions from "@/components/options/menus/privacy";
-import SecurityOptions from "@/components/options/menus/security";
-import AccountOptions from "@/components/options/menus/account";
-import BudgetOptions from "@/components/options/menus/budget";
-import CategoriesOptions from "@/components/options/menus/categories";
-import NotificationsOptions from "@/components/options/menus/notifications";
-import QuickOptions from "@/components/options/menus/quick";
 
 const optionsList = [
     { id: "general", name: "Allmänt" },

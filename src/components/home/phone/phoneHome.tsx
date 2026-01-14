@@ -4,15 +4,13 @@ import PhoneNavbar from "./HomeScreenComponents/navbar";
 import PhoneTransactions from "./HomeScreenComponents/transactions";
 import { useState, useEffect, useRef } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
-import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
 import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
 import NotificationModal from "@/components/notifications/notificationModal";
 import ImproveModal from "@/components/improvement/improveModal";
 import AddTransaction from "@/components/transactions/addTransaction";
 import { Transaction } from "@/app/lib/types";
-import { TransactionTable } from "@/app/transactions/TransactionTable";
-import { ArrowLeft } from "lucide-react";
 import AllTransactions from "./HomeScreenComponents/allTransactions";
+import OptionsPage from "@/app/options/page";
 
 
 type ModalsOpenState = {
@@ -75,8 +73,11 @@ const PhoneHome = () => {
             />
 
             {modalsOpen.settingsOpen && canShowSettings && (
-              <div className="absolute top-0 left-0 w-full h-full bg-black z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
-                <PhoneOptionsModal onClose={() => setModalsOpen(prev => ({...prev, settingsOpen:false}))} />
+              <div className="absolute top-0 left-0 w-full h-full z-50 overflow-x-hidden overflow-y-scroll no-scrollbar p-0!">
+                <OptionsPage onClose={() => {
+                  console.log("Closing options");
+                  setModalsOpen(prev => ({...prev, settingsOpen:false}));
+                }}/>
               </div>
             )}
 
