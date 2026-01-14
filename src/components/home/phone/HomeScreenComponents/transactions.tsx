@@ -3,6 +3,8 @@ import { useRef, useState, useEffect } from "react";
 import PhoneTransactionCon from "../../transactions/phoneTransactionCon";
 import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
 import gsap from "gsap";
+import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
+import { onEvent } from "@/app/lib/eventbus";
 
 type Transaction = {
     id: string;
@@ -16,11 +18,13 @@ type Transaction = {
 };
 
 const PhoneTransactions = ({openNewTransaction, openAllTransactions} : {openNewTransaction: () => void, openAllTransactions: () => void}) => {
+    const startAmountToShow = 10;
     const transactionsConRef = useRef<HTMLElement>(null);
     const [transactionsList, setTransactionsList] = useState<Transaction[]>([]);
     const [addTransactionOpen, setAddTransactionOpen] = useState<boolean>(false);
-    const [transactionsToShow, setTransactionsToShow] = useState<number>(8);
+    const [transactionsToShow, setTransactionsToShow] = useState<number>(startAmountToShow);
     const [loaded, setLoaded] = useState<boolean>(false);
+    const [timesClickedLoadMore, setTimesClickedLoadMore] = useState<number>(0);
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -41,6 +45,22 @@ const PhoneTransactions = ({openNewTransaction, openAllTransactions} : {openNewT
                 { opacity: 1, y: '0%', duration: 0.5, ease: "power2.out" }
             );
         }
+
+        const unsubscribe = onEvent("animateAwayItems", () => {
+            if (transactionsConRef.current) {
+                gsap.to(transactionsConRef.current, {
+                    y: "150%",
+                    opacity: 0,
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                    delay: 0.1,
+                });
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        };
     }, []);
 
     return (
@@ -56,13 +76,13 @@ const PhoneTransactions = ({openNewTransaction, openAllTransactions} : {openNewT
                 {transactionsList.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                 .slice(0, transactionsToShow)
                 .map((transaction, index) => (
-                    <PhoneTransactionCon key={transaction.id} transaction={transaction} index={index} />
+                    <PhoneTransactionCon key={transaction.id} transaction={transaction} index={startAmountToShow === transactionsToShow ? index : index - (startAmountToShow * timesClickedLoadMore)} />
                 ))}
             </ul>
             {loaded && (
                 <>
                     {transactionsToShow < transactionsList.length ? (
-                        <button onClick={() => setTransactionsToShow(transactionsToShow + 8)} className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1.5rem)] my-2 m-auto px-10">Ladda fler</button>
+                        <button onClick={() => {setTransactionsToShow(transactionsToShow + 8); setTimesClickedLoadMore(timesClickedLoadMore + 1);}} className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1.5rem)] my-2 m-auto px-10">Ladda fler</button>
                     ) : (
                         <button onClick={() => openAllTransactions()} className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1.5rem)] my-2 m-auto px-10">Visa alla</button>
                     )}

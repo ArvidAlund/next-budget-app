@@ -4,6 +4,9 @@ import ProgressBar from "@/components/ui/progressBar";
 import { Sparkles } from "lucide-react";
 import supabase, { supabaseUserID } from "@/app/lib/supabaseClient";
 import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
+import { onEvent } from "@/app/lib/eventbus";
+import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
+import gsap from "gsap";
 
 const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) => {
     const [budget, setBudget] = useState<number>(0);
@@ -51,7 +54,22 @@ const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) =>
             setLoaded(true);
         };
 
+        const unsubscribe = onEvent("animateAwayItems", () => {
+            if (progressBarRef.current) {
+                gsap.to(progressBarRef.current, {
+                y: "100%",
+                opacity: 0,
+                duration: animateAwayItemsDuration,
+                ease: "power1.inOut",
+            });
+            }
+        });
+
         loadData();
+
+        return () => {
+            unsubscribe();
+        };
     }, []);
 
     return (

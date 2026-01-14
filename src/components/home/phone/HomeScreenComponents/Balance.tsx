@@ -6,6 +6,9 @@ import { useRef, useState, useEffect } from "react";
 import incomeDiffMonth from "@/app/lib/incomeDiffMonth";
 import expenseDiffMonth from "@/app/lib/expenseDiffMonth";
 import BouncingDots from "@/components/ui/bouncingDots";
+import gsap from "gsap";
+import { onEvent } from "@/app/lib/eventbus";
+import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
 
 const PhoneBalance = () => {
     const [moneyData, setMoneyData] = useState<{ income: number; expense: number; total: number }>({
@@ -43,8 +46,35 @@ const PhoneBalance = () => {
             }
             setLoading(false);
         }
+
+        const unsubscribe = onEvent("animateAwayItems", () => {
+            if (balanceRef.current && totalIncomeRef.current && totalExpenseRef.current) {
+                gsap.to(balanceRef.current, {
+                    y: "-50%",
+                    opacity: 0,
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                    delay: 0.1,
+                });
+                gsap.to(totalIncomeRef.current, {
+                    x: "-150%",
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                });
+                gsap.to(totalExpenseRef.current, {
+                    x: "150%",
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                });
+            }
+        });
+
         fetchBalanceData();
+        return () => {
+            unsubscribe();
+        };
     }, []);
+
     return (
         <section>
             <div className="w-full flex flex-col justify-start items-start mt-8 text-white min-h-20" ref={balanceRef}>

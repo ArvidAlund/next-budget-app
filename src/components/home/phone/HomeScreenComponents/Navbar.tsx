@@ -3,14 +3,20 @@ import { useState, useEffect, useRef } from "react";
 import supabase from "@/app/lib/supabaseClient";
 import gsap from "gsap";
 
+type Props = { 
+    containerRef: React.RefObject<HTMLElement> | null; 
+    optionsOpen: () => void; 
+    notificationsOpen: () => void; 
+    settingsOpen: boolean;
+};
 
 
-
-const PhoneNavbar = ({optionsOpen, notificationsOpen} : {optionsOpen: () => void, notificationsOpen: () => void}) => {
+const PhoneNavbar = ({optionsOpen, notificationsOpen, containerRef, settingsOpen} : Props) => {
     const notificationCount = 3; // Example notification count
     const [usersFirstInitial, setUsersFirstInitial] = useState<string | null>(null);
     const notificationRef = useRef<HTMLSpanElement>(null);
     const navRef = useRef<HTMLElement>(null);
+    const iconRef = useRef<HTMLLIElement>(null);
 
     useEffect(() => {
         const fetchUserInitial = async () => {
@@ -39,10 +45,34 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen} : {optionsOpen: () => void
         }
     }, []);
 
+    useEffect(() => {
+        // Animate iconref to change color and scale up from start position to full screen then open options page
+        // All other elements should go away sideways during the animation
+        if (iconRef.current && containerRef?.current && settingsOpen) {
+            const iconRect = iconRef.current.getBoundingClientRect();
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const scaleX = containerRect.width / iconRect.width;
+            const scaleY = containerRect.height / iconRect.height;
+            const scale = Math.max(scaleX, scaleY);
+            const x = containerRect.left + containerRect.width / 2 - (iconRect.left + iconRect.width / 2);
+            const y = containerRect.top + containerRect.height / 2 - (iconRect.top + iconRect.height / 2);
+            gsap.to(iconRef.current, {
+                z: 100,
+                x: x,
+                y: y,
+                scale: scale,
+                borderRadius: 0,
+                duration: 0.5,
+                backgroundColor: "#000",
+                ease: "power1.inOut",
+            });
+        }
+    }, [settingsOpen]);
+
     return (
         <nav ref={navRef} className="w-full flex items-center justify-between py-4">
             <ul className="flex items-center relative *:flex *:justify-center *:items-center *:rounded-full *:p-3 [&>li>*]:w-7">
-                <li className="bg-blue-500" onClick={() => {optionsOpen()}}>
+                <li ref={iconRef} className={`bg-blue-500 ${settingsOpen ? "absolute inset-0 z-50" : ""}`} onClick={() => {optionsOpen()}}>
                     <p className="font-bold text-white aspect-square text-center text-lg">{usersFirstInitial}</p>
                 </li>
                 <li className="bg-white cursor-pointer absolute left-3/4">
