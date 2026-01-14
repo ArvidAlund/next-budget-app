@@ -10,6 +10,7 @@ const PhoneBudget = () => {
     const [totalExpense, setTotalExpense] = useState<number>(0);
     const progressBarRef = useRef<HTMLElement>(null);
     const [openImproveModal, setOpenImproveModal] = useState<boolean>(false);
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchBudgetData = async () => {
@@ -45,8 +46,13 @@ const PhoneBudget = () => {
             }
         };
 
-        fetchBudgetData();
-        fetchTotalExpense();
+        const loadData = async () => {
+            await fetchBudgetData();
+            await fetchTotalExpense();
+            setLoaded(true);
+        };
+
+        loadData();
     }, []);
 
     return (
@@ -61,11 +67,13 @@ const PhoneBudget = () => {
             <div className="mt-4">
                 <ProgressBar start={0} end={budget} current={totalExpense} />
             </div>
-            <div className="flex justify-between items-center text-[clamp(0.5rem,3vw,1.5rem)]">
+            {loaded && (
+            <div className="flex justify-between items-center text-[clamp(0.5rem,3vw,1.5rem)] animate-fade-in">
                 <p>{formatCurrency(totalExpense)} kr</p>
                 <p>{Math.round((totalExpense/budget) * 100)} %</p>
                 <p>{formatCurrency(budget)} kr</p>
             </div>
+            )}
         </section>
     );
 }

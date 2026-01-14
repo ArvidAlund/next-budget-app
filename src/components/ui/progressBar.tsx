@@ -1,4 +1,11 @@
 const ProgressBar = ({start = 0, end, current} : {start: number, end: number, current: number}) => {
+    if (end === 0) {
+        return (
+            <div className="w-full bg-white/30 rounded-full h-4 dark:bg-gray-700">
+                <div className="bg-[#0B0748] h-4 rounded-full transition-all duration-500" style={{width: '0%'}}></div>
+            </div>
+        );
+    }
     
     if (end === start) {
         return (
