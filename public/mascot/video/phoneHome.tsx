@@ -50,10 +50,19 @@ const PhoneHome = () => {
   return (
     <>
         <main ref={containerRef} className={`w-full h-screen bg-[#8280FE] *:px-4 relative flex flex-col ${anyModalOpen ? "overflow-hidden" : "overflow-y-scroll overflow-x-hidden no-scrollbar"}`}>
-            <PhoneNavbar optionsOpen={() => setModalsOpen(prev => ({...prev, settingsOpen:true}))} notificationsOpen={() => setModalsOpen(prev => ({...prev, notificationsOpen:true}))} containerRef={containerRef} settingsOpen={modalsOpen.settingsOpen} />
+            <PhoneNavbar 
+            optionsOpen={() => setModalsOpen(prev => ({...prev, settingsOpen:true}))} 
+            notificationsOpen={() => setModalsOpen(prev => ({...prev, notificationsOpen:true}))} 
+            containerRef={containerRef} 
+            settingsOpen={modalsOpen.settingsOpen} />
+
             <PhoneBalance />
+            
             <PhoneBudget openImproveModal={() => setModalsOpen(prev => ({...prev, improvementsOpen:true}))}/>
-            <PhoneTransactions openNewTransaction={() => setModalsOpen(prev => ({...prev, addTransactionOpen: true}))} openAllTransactions={() => setModalsOpen(prev => ({...prev, allTransactionsOpen: true}))} />
+
+            <PhoneTransactions 
+            openNewTransaction={() => setModalsOpen(prev => ({...prev, addTransactionOpen: true}))} 
+            openAllTransactions={() => setModalsOpen(prev => ({...prev, allTransactionsOpen: true}))} />
 
             {modalsOpen.settingsOpen && canShowSettings && (
               <div className="absolute top-0 left-0 w-full h-full bg-black z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
