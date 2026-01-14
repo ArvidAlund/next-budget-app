@@ -63,6 +63,7 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
             if (!user) return;
             try {
                 const res = await getAllNotifications();
+                if (!res) return;
                 setNotificationsList(res);
                 const unread = res.filter(n => !n.read).length;
                 setUnreadCount(unread);

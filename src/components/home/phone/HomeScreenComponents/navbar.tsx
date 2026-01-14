@@ -70,12 +70,12 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
             }
         });
 
-        const initalize = async () => {
+        const initialize = async () => {
             await fetchUserInitial();
             await fetchNotificationCount();
         }
 
-        initalize();
+        initialize();
 
         return () => {
             unsubscribe();
@@ -84,13 +84,19 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
     }, []);
 
     useEffect(() => {
+        let tween: gsap.core.Tween | null = null;
         if (notificationCount > 0 && notificationRef.current) {
-            gsap.fromTo(
+            tween =gsap.fromTo(
                 notificationRef.current,
                 { y: 5},
                 { y: 0, duration: 0.7, yoyo:true, repeat: -1 }
             );
         }
+        return () => {
+            if (tween) {
+                tween.kill();
+            }
+        };
     }, [notificationCount]);
 
     useEffect(() => {
