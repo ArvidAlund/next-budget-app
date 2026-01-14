@@ -19,8 +19,8 @@ const PhoneTransactionCon = ({transaction, index} : TransactionConProps & {index
         if (transactionRef.current) {
             gsap.fromTo(
                 transactionRef.current,
-                { opacity: 0, x: 20 },
-                { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", delay: index * 0.05, }
+                { opacity: 0, x: '100%' },
+                { opacity: 1, x: '0%', duration: 0.5, ease: "power2.out", delay: index * 0.1, }
             );
         }
     }, []);

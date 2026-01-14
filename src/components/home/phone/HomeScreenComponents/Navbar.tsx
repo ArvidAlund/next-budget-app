@@ -3,11 +3,15 @@ import { useState, useEffect, useRef } from "react";
 import supabase from "@/app/lib/supabaseClient";
 import gsap from "gsap";
 
+
+
+
 const PhoneNavbar = () => {
     const [openNotification, setOpenNotification] = useState(false);
     const notificationCount = 3; // Example notification count
     const [usersFirstInitial, setUsersFirstInitial] = useState<string | null>(null);
     const notificationRef = useRef<HTMLSpanElement>(null);
+    const navRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
         const fetchUserInitial = async () => {
@@ -27,10 +31,17 @@ const PhoneNavbar = () => {
                 { y: 0, duration: 0.7, yoyo: true, repeat: -1 }
             );
         }
+        if (navRef.current) {
+            gsap.fromTo(
+                navRef.current,
+                { opacity: 0, y: '-100%' },
+                { opacity: 1, y: '0%', duration: 0.5, ease: "power2.out", delay: 0.2 }
+            );
+        }
     }, []);
 
     return (
-        <nav className="w-full flex items-center justify-between py-4">
+        <nav ref={navRef} className="w-full flex items-center justify-between py-4">
             <ul className="flex items-center relative *:flex *:justify-center *:items-center *:rounded-full *:p-3 [&>li>*]:w-7">
                 <li className="bg-blue-500">
                     <p className="font-bold text-white aspect-square text-center text-lg">{usersFirstInitial}</p>

@@ -1,4 +1,3 @@
-import { formatCurrency } from "@/app/lib/formatcurrency";
 import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 import { supabaseUserID } from "@/app/lib/supabaseClient";
 import BalanceAnimation from "@/components/ui/balanceAnimation";
@@ -6,6 +5,7 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import incomeDiffMonth from "@/app/lib/incomeDiffMonth";
 import expenseDiffMonth from "@/app/lib/expenseDiffMonth";
+import BouncingDots from "@/components/ui/bouncingDots";
 
 const PhoneBalance = () => {
     const [moneyData, setMoneyData] = useState<{ income: number; expense: number; total: number }>({
@@ -18,6 +18,7 @@ const PhoneBalance = () => {
     const totalIncomeRef = useRef<HTMLDivElement>(null);
     const totalExpenseRef = useRef<HTMLDivElement>(null);
     const balanceRef = useRef<HTMLDivElement>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBalanceData = async () => {
@@ -40,43 +41,65 @@ const PhoneBalance = () => {
             } catch (error) {
                 console.error("Error fetching expense difference:", error);
             }
+            setLoading(false);
         }
         fetchBalanceData();
     }, []);
     return (
         <section>
-            <div className="w-full flex flex-col justify-center items-start mt-8 text-white" ref={balanceRef}>
+            <div className="w-full flex flex-col justify-start items-start mt-8 text-white min-h-20" ref={balanceRef}>
                 <p>Total balans</p>
-                <h1 className="text-center w-full text-[clamp(0.8rem,20vw,10rem)] mt-4 text-[#0B0748] text-nowrap"><BalanceAnimation end={moneyData.total} /> kr</h1>
+                    {loading ? 
+                    <BouncingDots color="#0B0748" gap="10px"/> :
+                    <h1 className="text-center w-full text-[clamp(0.8rem,20vw,10rem)] mt-4 text-[#0B0748] text-nowrap animate-fade-in">
+                        {<BalanceAnimation end={moneyData.total} />} kr
+                    </h1>
+                    }
             </div>
             <div className="grid grid-cols-2 gap-4 w-full mt-8">
                 <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalIncomeRef}>
                     <p className="text-xs">Inkomster</p>
-                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(moneyData.income)} kr</h2>
-                    <div className="flex justify-center items-center mt-2">
-                        {incomeDiff && incomeDiff.positive ? (
-                            <TrendingUp className="text-green-500" size={24}/>
-                        ) : (
-                            <TrendingDown className="text-red-500" size={24}/>
-                        )}
-                        <p className="text-sm ml-1">
-                            {incomeDiff ? `${incomeDiff.positive ? '+' : '-'}${incomeDiff.percentage}%` : ''}
-                        </p>
-                    </div>
+                    {loading ? 
+                    <>
+                        <span className="w-full h-[clamp(0.5rem,10vw,2rem)] bg-neutral-500 animate-pulse rounded-md mt-2"/>
+                        <span className="w-1/3 h-3.5 bg-neutral-500 animate-pulse rounded-md mt-2"/>
+                    </> :
+                        <>
+                            <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2 animate-fade-in">{<BalanceAnimation end={moneyData.income} duration={500} />} kr</h2>
+                            <div className="flex justify-center items-center mt-2 animate-fade-in">
+                                {incomeDiff && incomeDiff.positive ? (
+                                    <TrendingUp className="text-green-500" size={24}/>
+                                ) : (
+                                    <TrendingDown className="text-red-500" size={24}/>
+                                )}
+                                <p className="text-sm ml-1">
+                                    {incomeDiff ? `${incomeDiff.positive ? '+' : '-'}${incomeDiff.percentage}%` : ''}
+                                </p>
+                            </div>
+                        </>
+                    }   
                 </div>
                 <div className="bg-white/30 backdrop-blur-md p-4 rounded flex flex-col items-start text-[#0B0748]" ref={totalExpenseRef}>
                     <p className="text-xs">Utgifter</p>
-                    <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2">{formatCurrency(moneyData.expense)} kr</h2>
-                    <div className="flex justify-center items-center mt-2">
-                        {expenseDiff && expenseDiff.positive ? (
-                            <TrendingUp className="text-red-500" size={24}/>
-                        ) : (
-                            <TrendingDown className="text-green-500" size={24}/>
-                        )}
-                        <p className="text-sm ml-1">
-                            {expenseDiff ? `${expenseDiff.positive ? '+' : '-'}${expenseDiff.percentage}%` : ''}
-                        </p>
-                    </div>
+                    {loading ? 
+                    <>
+                        <span className="w-full h-[clamp(0.5rem,10vw,2rem)] bg-neutral-500 animate-pulse rounded-md mt-2"/>
+                        <span className="w-1/3 h-3.5 bg-neutral-500 animate-pulse rounded-md mt-2"/>
+                    </> : 
+                    <>
+                        <h2 className="text-[clamp(0.5rem,10vw,2rem)] mt-2 animate-fade-in">{<BalanceAnimation end={moneyData.expense} duration={500} />} kr</h2>
+                        <div className="flex justify-center items-center mt-2 animate-fade-in">
+                            {expenseDiff && expenseDiff.positive ? (
+                                <TrendingUp className="text-red-500" size={24}/>
+                            ) : (
+                                <TrendingDown className="text-green-500" size={24}/>
+                            )}
+                            <p className="text-sm ml-1">
+                                {expenseDiff ? `${expenseDiff.positive ? '+' : '-'}${expenseDiff.percentage}%` : ''}
+                            </p>
+                        </div>
+                    </>
+                    }
                 </div>
             </div>
         </section>
