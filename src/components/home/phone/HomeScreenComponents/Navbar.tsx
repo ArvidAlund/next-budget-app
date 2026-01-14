@@ -6,8 +6,7 @@ import gsap from "gsap";
 
 
 
-const PhoneNavbar = () => {
-    const [openNotification, setOpenNotification] = useState(false);
+const PhoneNavbar = ({optionsOpen, notificationsOpen} : {optionsOpen: () => void, notificationsOpen: () => void}) => {
     const notificationCount = 3; // Example notification count
     const [usersFirstInitial, setUsersFirstInitial] = useState<string | null>(null);
     const notificationRef = useRef<HTMLSpanElement>(null);
@@ -43,7 +42,7 @@ const PhoneNavbar = () => {
     return (
         <nav ref={navRef} className="w-full flex items-center justify-between py-4">
             <ul className="flex items-center relative *:flex *:justify-center *:items-center *:rounded-full *:p-3 [&>li>*]:w-7">
-                <li className="bg-blue-500">
+                <li className="bg-blue-500" onClick={() => {optionsOpen()}}>
                     <p className="font-bold text-white aspect-square text-center text-lg">{usersFirstInitial}</p>
                 </li>
                 <li className="bg-white cursor-pointer absolute left-3/4">
@@ -53,7 +52,7 @@ const PhoneNavbar = () => {
                 </li>
             </ul>
 
-            <div className="p-3 bg-white rounded-full flex justify-center items-center cursor-pointer relative" onClick={() => setOpenNotification(!openNotification)}>
+            <div className="p-3 bg-white rounded-full flex justify-center items-center cursor-pointer relative" onClick={() => notificationsOpen()}>
                 <span className="w-7 aspect-square">
                     <Bell className="text-black w-full h-full" />
                 </span>

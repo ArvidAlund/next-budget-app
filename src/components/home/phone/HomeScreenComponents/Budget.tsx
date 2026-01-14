@@ -5,11 +5,10 @@ import { Sparkles } from "lucide-react";
 import supabase, { supabaseUserID } from "@/app/lib/supabaseClient";
 import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 
-const PhoneBudget = () => {
+const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) => {
     const [budget, setBudget] = useState<number>(0);
     const [totalExpense, setTotalExpense] = useState<number>(0);
     const progressBarRef = useRef<HTMLElement>(null);
-    const [openImproveModal, setOpenImproveModal] = useState<boolean>(false);
     const [loaded, setLoaded] = useState<boolean>(false);
 
     useEffect(() => {
@@ -59,7 +58,7 @@ const PhoneBudget = () => {
         <section className="mt-6" ref={progressBarRef}>
             <div className="flex justify-between items-center text-[clamp(0.5rem,3vw,1.5rem)]">
                 <p>Din budget</p>
-                <button className="bg-[#0B0748] p-2 rounded-full flex justify-center items-center" onClick={() => setOpenImproveModal(true)}>
+                <button className="bg-[#0B0748] p-2 rounded-full flex justify-center items-center" onClick={() => {openImproveModal();}}>
                     <Sparkles size={16} className="inline mr-2"/>
                     <span>Förbättra</span>
                 </button>
