@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { emitEvent } from "@/app/lib/eventbus";
 import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
 import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
+import NotificationModal from "@/components/notifications/notificationModal";
 
 type ModalsOpenState = {
     addTransactionOpen: boolean;
@@ -67,6 +68,14 @@ const PhoneHome = () => {
               <div className="absolute top-0 left-0 w-full h-full bg-black z-50 overflow-x-hidden overflow-y-scroll no-scrollbar">
                 <PhoneOptionsModal onClose={() => setModalsOpen(prev => ({...prev, settingsOpen:false}))} />
               </div>
+            )}
+
+            {modalsOpen.notificationsOpen && (
+                <NotificationModal onClose={() => {
+                    setTimeout(() => {
+                        setModalsOpen(prev => ({...prev, notificationsOpen:false}));
+                    }, animateAwayItemsDuration * 1000);
+                }} />
             )}
         </main>
     </>

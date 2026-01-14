@@ -1,7 +1,8 @@
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
 import NotificationContainer from "./notificationContainer";
+import getAllNotifications from "@/app/lib/db/notifications/getAllNotifications";
 
 const orgNotifications = [
     {
@@ -39,6 +40,29 @@ const orgNotifications = [
 const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => void }) => {
     const [notificationsList, setNotificationsList] = useState<typeof orgNotifications | null>(orgNotifications);
     const [unreadCount, setUnreadCount] = useState<number>(orgNotifications.filter(n => !n.read).length);
+    const modalRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        if (modalRef.current) {
+            gsap.fromTo(
+                modalRef.current,
+                { opacity: 0, y: '100%' },
+                { opacity: 1, y: '0%', duration: 0.5, ease: "power2.out" }
+            );
+        }
+
+        const getNotifications = async () => {
+            try {
+                const res = await getAllNotifications();
+                setNotificationsList(res);
+                const unread = res.filter(n => !n.read).length;
+                setUnreadCount(unread);
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
+            }
+        };
+        getNotifications();
+    }, []);
 
     useEffect(() => {
         if (unreadCount === 0){
@@ -51,10 +75,20 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
         setUnreadCount(0);
     }
 
+    const handleClose = () => {
+        if (modalRef.current) {
+            gsap.to(
+                modalRef.current,
+                { opacity: 0, y: '100%', duration: 0.5, ease: "power2.in", onComplete: () => onClose(unreadCount) }
+            );
+        }
+        onClose(unreadCount);
+    };
+
     return (
-        <section>
+        <section ref={modalRef} className="absolute left-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 rounded-3xl overflow-x-hidden overflow-y-scroll no-scrollbar">
             <div className="flex justify-between items-center w-full mt-4 h-12">
-                <button className="p-2 rounded-full" onClick={() => onClose(unreadCount)}>
+                <button className="p-2 rounded-full" onClick={handleClose}>
                     <ArrowLeft size={24} />
                 </button>
                 <h4>Notifikationer</h4>

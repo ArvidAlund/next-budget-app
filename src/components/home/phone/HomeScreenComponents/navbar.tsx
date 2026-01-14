@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import supabase from "@/app/lib/supabaseClient";
 import gsap from "gsap";
 import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
+import { onEvent } from "@/app/lib/eventbus";
+import getNotificationCount from "@/app/lib/db/notifications/getNotificationCount";
 
 type Props = {
     optionsOpen: () => void; 
@@ -12,11 +14,11 @@ type Props = {
 
 
 const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => {
-    const notificationCount = 3; // Example notification count
     const [usersFirstInitial, setUsersFirstInitial] = useState<string | null>(null);
     const notificationRef = useRef<HTMLSpanElement>(null);
     const navRef = useRef<HTMLElement>(null);
     const iconRef = useRef<HTMLLIElement>(null);
+    const [notificationCount, setNotificationCount] = useState<number>(0);
 
     useEffect(() => {
         const fetchUserInitial = async () => {
@@ -28,7 +30,15 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
                 setUsersFirstInitial("U"); // Default initial if no name found
             }
         }
-        fetchUserInitial();
+
+        const fetchNotificationCount = async () => {
+            try {
+                const count = await getNotificationCount();
+                setNotificationCount(count);
+            } catch (error) {
+                console.error("Error fetching notification count:", error);
+            }
+        }
 
         if (notificationCount > 0 && notificationRef.current) {
             gsap.fromTo(notificationRef.current,
@@ -43,6 +53,39 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
                 { opacity: 1, y: '0%', duration: 0.5, ease: "power2.out", delay: 0.2 }
             );
         }
+
+        const unsubscribe = onEvent("animateAwayItems", () => {
+            if (navRef.current && !settingsOpen) {
+                gsap.to(navRef.current, {
+                    y: "-150%",
+                    opacity: 0,
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                });
+            }
+        });
+        const unsubscribeBack = onEvent("animateBackItems", () => {
+            if (navRef.current && !settingsOpen) {
+                gsap.to(navRef.current, {
+                    y: "0%",
+                    opacity: 1,
+                    duration: animateBackItemsDuration,
+                    ease: "power1.inOut",
+                });
+            }
+        });
+
+        const initalize = async () => {
+            await fetchUserInitial();
+            await fetchNotificationCount();
+        }
+
+        initalize();
+
+        return () => {
+            unsubscribe();
+            unsubscribeBack();
+        };
     }, []);
 
     useEffect(() => {
