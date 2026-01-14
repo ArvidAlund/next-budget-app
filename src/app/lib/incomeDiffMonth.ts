@@ -1,8 +1,11 @@
 import supabase, { supabaseUserID } from "./supabaseClient";
 
 /**
- * Calculate the percentage difference in income between the current month and the previous month.
- * @returns An object containing the percentage difference and a boolean indicating if the difference is positive.
+ * Compute how much income has changed between the current month (up to today) and the previous month (up to the same day).
+ *
+ * @returns An object with `percentage` — the absolute percentage difference rounded to the nearest integer, and `positive` — `true` if current month income is greater than or equal to previous month income, `false` otherwise.
+ * @throws If there is no authenticated user.
+ * @throws If the transactions query returns an error.
  */
 export default async function incomeDiffMonth() {
     const userId = await supabaseUserID();
@@ -55,4 +58,3 @@ export default async function incomeDiffMonth() {
         positive: rawDiff >= 0,
     };
 }
-
