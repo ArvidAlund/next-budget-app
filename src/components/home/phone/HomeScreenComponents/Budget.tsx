@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react";
 import supabase, { supabaseUserID } from "@/app/lib/supabaseClient";
 import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 import { onEvent } from "@/app/lib/eventbus";
-import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
+import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 import gsap from "gsap";
 
 const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) => {
@@ -65,10 +65,22 @@ const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) =>
             }
         });
 
+        const unsubscribeBack = onEvent("animateBackItems", () => {
+            if (progressBarRef.current) {
+                gsap.to(progressBarRef.current, {
+                y: "0%",
+                opacity: 1,
+                duration: animateBackItemsDuration,
+                ease: "power1.inOut",
+            });
+            }
+        });
+
         loadData();
 
         return () => {
             unsubscribe();
+            unsubscribeBack();
         };
     }, []);
 

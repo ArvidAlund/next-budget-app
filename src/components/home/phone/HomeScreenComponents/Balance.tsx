@@ -69,9 +69,32 @@ const PhoneBalance = () => {
             }
         });
 
+        const unsubscribeBack = onEvent("animateBackItems", () => {
+            if (balanceRef.current && totalIncomeRef.current && totalExpenseRef.current) {
+                gsap.to(balanceRef.current, {
+                    y: "0%",
+                    opacity: 1,
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                    delay: 0.1,
+                });
+                gsap.to(totalIncomeRef.current, {
+                    x: "0%",
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                });
+                gsap.to(totalExpenseRef.current, {
+                    x: "0%",
+                    duration: animateAwayItemsDuration,
+                    ease: "power1.inOut",
+                });
+            }
+        });
+
         fetchBalanceData();
         return () => {
             unsubscribe();
+            unsubscribeBack();
         };
     }, []);
 

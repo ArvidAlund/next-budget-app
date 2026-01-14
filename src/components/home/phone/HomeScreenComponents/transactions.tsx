@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import PhoneTransactionCon from "../../transactions/phoneTransactionCon";
 import { GetTransactionsMonth } from "@/app/lib/getTransactionsMonth";
 import gsap from "gsap";
-import { animateAwayItemsDuration } from "@/app/lib/globalSettings";
+import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 import { onEvent } from "@/app/lib/eventbus";
 
 type Transaction = {
@@ -58,8 +58,21 @@ const PhoneTransactions = ({openNewTransaction, openAllTransactions} : {openNewT
             }
         });
 
+        const unsubscribeBack = onEvent("animateBackItems", () => {
+            if (transactionsConRef.current) {
+                gsap.to(transactionsConRef.current, {
+                    y: "0%",
+                    opacity: 1,
+                    duration: animateBackItemsDuration,
+                    ease: "power1.inOut",
+                    delay: 0.1,
+                });
+            }
+        });
+
         return () => {
             unsubscribe();
+            unsubscribeBack();
         };
     }, []);
 

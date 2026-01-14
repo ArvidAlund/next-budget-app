@@ -33,10 +33,17 @@ const PhoneHome = () => {
         containerRef.current.scrollTo({ top: 0, behavior: "instant" });
         emitEvent("animateAwayItems");
     }
+
+    if (!isAnyModalOpen) {
+        emitEvent("animateBackItems");
+    }
+
     if (modalsOpen.settingsOpen){
       setTimeout(() => {
         setCanShowSettings(true);
       }, animateAwayItemsDuration * 1000);
+    } else {
+      setCanShowSettings(false);
     }
   }, [modalsOpen]);
 

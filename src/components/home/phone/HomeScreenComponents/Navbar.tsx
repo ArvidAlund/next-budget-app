@@ -2,6 +2,7 @@ import { Bell, Plus } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import supabase from "@/app/lib/supabaseClient";
 import gsap from "gsap";
+import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 
 type Props = { 
     containerRef: React.RefObject<HTMLElement> | null; 
@@ -62,8 +63,19 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, containerRef, settingsOpen
                 y: y,
                 scale: scale,
                 borderRadius: 0,
-                duration: 0.5,
+                duration: animateAwayItemsDuration,
                 backgroundColor: "#000",
+                ease: "power1.inOut",
+            });
+        }
+        if (iconRef.current && !settingsOpen) {
+            gsap.to(iconRef.current, {
+                x: 0,
+                y: 0,
+                scale: 1,
+                borderRadius: "50%",
+                duration: animateBackItemsDuration,
+                backgroundColor: "",
                 ease: "power1.inOut",
             });
         }
