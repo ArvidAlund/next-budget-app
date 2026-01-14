@@ -1,5 +1,12 @@
 import supabase, { supabaseUserID } from "@/app/lib/supabaseClient"
 
+/**
+ * Create a new transaction for the current user, with special handling to prevent duplicate recurring entries.
+ *
+ * @param transaction - Transaction data. If `transaction.recurring` is `true`, `transaction.description` is used to detect existing recurring transactions for the user and avoid inserting duplicates.
+ * @returns `false` if a recurring transaction with the same description already exists for the current user, `undefined` otherwise.
+ * @throws When no user is logged in ("User not logged in") or when inserting a non-recurring transaction fails (error message prefixed with "Fel vid insättning: ").
+ */
 export async function addTransaction(transaction: {
   type: "income" | "expense"
   category: string
