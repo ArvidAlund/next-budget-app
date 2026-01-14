@@ -4,15 +4,14 @@ import supabase from "@/app/lib/supabaseClient";
 import gsap from "gsap";
 import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 
-type Props = { 
-    containerRef: React.RefObject<HTMLElement> | null; 
+type Props = {
     optionsOpen: () => void; 
     notificationsOpen: () => void; 
     settingsOpen: boolean;
 };
 
 
-const PhoneNavbar = ({optionsOpen, notificationsOpen, containerRef, settingsOpen} : Props) => {
+const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => {
     const notificationCount = 3; // Example notification count
     const [usersFirstInitial, setUsersFirstInitial] = useState<string | null>(null);
     const notificationRef = useRef<HTMLSpanElement>(null);
@@ -49,9 +48,9 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, containerRef, settingsOpen
     useEffect(() => {
         // Animate iconref to change color and scale up from start position to full screen then open options page
         // All other elements should go away sideways during the animation
-        if (iconRef.current && containerRef?.current && settingsOpen) {
+        if (iconRef.current && settingsOpen) {
             const iconRect = iconRef.current.getBoundingClientRect();
-            const containerRect = containerRef.current.getBoundingClientRect();
+            const containerRect = document.querySelector("main")!.getBoundingClientRect();
             const scaleX = containerRect.width / iconRect.width;
             const scaleY = containerRect.height / iconRect.height;
             const scale = Math.max(scaleX, scaleY);

@@ -53,7 +53,6 @@ const PhoneHome = () => {
             <PhoneNavbar 
             optionsOpen={() => setModalsOpen(prev => ({...prev, settingsOpen:true}))} 
             notificationsOpen={() => setModalsOpen(prev => ({...prev, notificationsOpen:true}))} 
-            containerRef={containerRef} 
             settingsOpen={modalsOpen.settingsOpen} />
 
             <PhoneBalance />

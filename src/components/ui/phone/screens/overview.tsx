@@ -10,8 +10,16 @@ import NotificationModal from "@/components/notifications/notificationModal";
 import PhoneTransactionCon from "@/components/home/transactions/phoneTransactionCon";
 import PhoneOptionsModal from "@/components/options/phoneOptionsModal";
 import { animateBackItems, animateAwayItems } from "@/app/animations/appComponents";
-
-const transactions = [
+type TransactionType = {
+    id: number;
+    category: string;
+    date: string;
+    amount: number;
+    type: "income" | "expense";
+    title: string;
+    description?: string;
+};
+const transactions: TransactionType[] = [
     {
         id: 1,
         category: "Transport",
@@ -311,8 +319,8 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                 </button>
             </div>
             <ul className="px-4 pb-4">
-                {transactionsList.map((transaction) => (
-                    <PhoneTransactionCon key={transaction.id} transaction={transaction} />
+                {transactionsList.map((transaction, index) => (
+                    <PhoneTransactionCon key={transaction.id} transaction={transaction} index={index} />
                 ))}
             </ul>
         </div>
@@ -328,14 +336,14 @@ const OverViewScreen = ({onClick} : {onClick: () => void}) => {
                         }, 500);
                         return;
                     }
-                    const newTransaction = {
+                    const newTransaction : TransactionType = {
                         id: Date.now(),
                         category: transaction.category,
                         date: transaction.date,
                         amount: Number(transaction.amount),
                         type: transaction.type,
                         title: transaction.title,
-                        description: transaction.description,
+                        description: String(transaction.description),
                     };
                     setTransactionsList([newTransaction, ...transactionsList]);
                     setCloseTransactionOpen(true);

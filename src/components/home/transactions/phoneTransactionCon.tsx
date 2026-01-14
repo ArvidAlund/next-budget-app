@@ -12,7 +12,7 @@ type TransactionConProps = {
     };
 };
 
-const PhoneTransactionCon = ({transaction, index} : TransactionConProps & {index: number}) => {
+const PhoneTransactionCon = ({transaction, index = 0} : TransactionConProps & {index?: number}) => {
     const transactionRef = useRef<HTMLLIElement>(null);
 
     useEffect(() => {
