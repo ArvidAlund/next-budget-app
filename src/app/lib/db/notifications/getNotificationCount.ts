@@ -1,6 +1,6 @@
 import supabase, { supabaseUserID } from "../../supabaseClient";
 
-const getnotificationCount = async () => {
+const getNotificationCount = async () => {
     const userId = await supabaseUserID();
     if (!userId) {
         return 0;
@@ -13,4 +13,4 @@ const getnotificationCount = async () => {
     }
     return data ? data.length : 0;
 }
-export default getnotificationCount;
+export default getNotificationCount;

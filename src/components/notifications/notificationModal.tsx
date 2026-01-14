@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
 import NotificationContainer from "./notificationContainer";
 import getAllNotifications from "@/app/lib/db/notifications/getAllNotifications";
+import { supabaseUserID } from "@/app/lib/supabaseClient";
 
 const orgNotifications = [
     {
@@ -52,6 +53,8 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
         }
 
         const getNotifications = async () => {
+            const user = await supabaseUserID();
+            if (!user) return;
             try {
                 const res = await getAllNotifications();
                 setNotificationsList(res);
