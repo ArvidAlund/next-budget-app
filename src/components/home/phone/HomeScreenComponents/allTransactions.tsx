@@ -23,6 +23,8 @@ const AllTransactions = ({ onClose } : { onClose: () => void }) => {
                 containerRef.current,
                 { y: '100%', duration: animateBackItemsDuration, ease: "power2.in", onComplete: () => onClose() }
             );
+        } else {
+            onClose();
         }
     };
     return (

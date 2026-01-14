@@ -40,8 +40,9 @@ const ImproveModal = ({onClose}: {onClose: () => void}) => {
                 modalRef.current,
                 { opacity: 0, y: '100%', duration: 0.5, ease: "power2.in", onComplete: () => onClose() }
             );
+        } else {
+            onClose();
         }
-        onClose();
     };
 
     return (

@@ -4,6 +4,7 @@ import gsap from "gsap";
 import NotificationContainer from "./notificationContainer";
 import getAllNotifications from "@/app/lib/db/notifications/getAllNotifications";
 import { supabaseUserID } from "@/app/lib/supabaseClient";
+import { Notification } from "@/app/lib/types";
 
 const orgNotifications = [
     {
@@ -11,35 +12,40 @@ const orgNotifications = [
         message: "Din månatliga rapport är nu tillgänglig.",
         date: "2024-06-01",
         read: false,
+        created_at: "2024-06-10T10:00:00Z",
     },
     {
         id: 2,
         message: "Nytt sparande tips har lagts till i din förbättringssektion.",
         date: "2024-06-03",
         read: true,
+        created_at: "2024-06-10T10:00:00Z",
     },
     {
         id: 3,
         message: "Din balans har uppdaterats.",
         date: "2024-06-05",
         read: false,
+        created_at: "2024-06-10T10:00:00Z",
     },
     {
         id: 4,
         message: "Påminnelse: Granska dina prenumerationer denna månad.",
         date: "2024-06-07",
         read: false,
+        created_at: "2024-06-10T10:00:00Z",
     },
     {
         id: 5,
         message: "Du har sparat 1500 kr denna månad!",
         date: "2024-06-10",
         read: false,
+        created_at: "2024-06-10T10:00:00Z",
     }
 ];
 
 const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => void }) => {
-    const [notificationsList, setNotificationsList] = useState<typeof orgNotifications | null>(orgNotifications);
+    const [notificationsList, setNotificationsList] = useState<Notification[] | null>(orgNotifications);
     const [unreadCount, setUnreadCount] = useState<number>(orgNotifications.filter(n => !n.read).length);
     const modalRef = useRef<HTMLElement>(null);
 
@@ -84,8 +90,9 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
                 modalRef.current,
                 { opacity: 0, y: '100%', duration: 0.5, ease: "power2.in", onComplete: () => onClose(unreadCount) }
             );
+        } else {
+            onClose(unreadCount);
         }
-        onClose(unreadCount);
     };
 
     return (

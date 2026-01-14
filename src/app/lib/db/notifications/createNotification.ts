@@ -9,7 +9,7 @@ const createNotification = async (message: string) => {
     }
     const { data, error } = await supabase.from('user_notifications').insert([
         { user_id: userId, message, read: false, date: new Date() }
-    ]);
+    ]).select();
     if (error) {
         console.error("Error creating notification:", error);
     }

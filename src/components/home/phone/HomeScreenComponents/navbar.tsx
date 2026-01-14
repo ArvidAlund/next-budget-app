@@ -19,6 +19,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
     const navRef = useRef<HTMLElement>(null);
     const iconRef = useRef<HTMLLIElement>(null);
     const [notificationCount, setNotificationCount] = useState<number>(0);
+    const settingsOpenRef = useRef(settingsOpen);
 
     useEffect(() => {
         const fetchUserInitial = async () => {
@@ -40,12 +41,6 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
             }
         }
 
-        if (notificationCount > 0 && notificationRef.current) {
-            gsap.fromTo(notificationRef.current,
-                { y: 5 },
-                { y: 0, duration: 0.7, yoyo: true, repeat: -1 }
-            );
-        }
         if (navRef.current) {
             gsap.fromTo(
                 navRef.current,
@@ -55,7 +50,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
         }
 
         const unsubscribe = onEvent("animateAwayItems", () => {
-            if (navRef.current && !settingsOpen) {
+            if (navRef.current && !settingsOpenRef.current) {
                 gsap.to(navRef.current, {
                     y: "-150%",
                     opacity: 0,
@@ -65,7 +60,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
             }
         });
         const unsubscribeBack = onEvent("animateBackItems", () => {
-            if (navRef.current && !settingsOpen) {
+            if (navRef.current && !settingsOpenRef.current) {
                 gsap.to(navRef.current, {
                     y: "0%",
                     opacity: 1,
@@ -89,11 +84,27 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
     }, []);
 
     useEffect(() => {
+        if (notificationCount > 0 && notificationRef.current) {
+            gsap.fromTo(
+                notificationRef.current,
+                { y: 5},
+                { y: 0, duration: 0.7, yoyo:true, repeat: -1 }
+            );
+        }
+    }, [notificationCount]);
+
+    useEffect(() => {
+        settingsOpenRef.current = settingsOpen;
+    }, [settingsOpen]);
+
+    useEffect(() => {
         // Animate iconref to change color and scale up from start position to full screen then open options page
         // All other elements should go away sideways during the animation
         if (iconRef.current && settingsOpen) {
             const iconRect = iconRef.current.getBoundingClientRect();
-            const containerRect = document.querySelector("main")!.getBoundingClientRect();
+            const mainElement = document.querySelector("main");
+            if (!mainElement) return;
+            const containerRect = mainElement.getBoundingClientRect();
             const scaleX = containerRect.width / iconRect.width;
             const scaleY = containerRect.height / iconRect.height;
             const scale = Math.max(scaleX, scaleY);

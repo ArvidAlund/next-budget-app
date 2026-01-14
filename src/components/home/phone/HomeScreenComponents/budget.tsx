@@ -99,7 +99,7 @@ const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) =>
             {loaded && (
             <div className="flex justify-between items-center text-[clamp(0.5rem,3vw,1.5rem)] animate-fade-in">
                 <p>{formatCurrency(totalExpense)} kr</p>
-                <p>{Math.round((totalExpense/budget) * 100)} %</p>
+                <p>{budget > 0 ? Math.round((totalExpense/budget) * 100) : 0} %</p>
                 <p>{formatCurrency(budget)} kr</p>
             </div>
             )}

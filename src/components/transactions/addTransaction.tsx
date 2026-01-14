@@ -96,7 +96,7 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: TransactionD
       }, [incomeOptions, expenseOptions, type]);
 
 
-      const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
@@ -111,7 +111,11 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: TransactionD
         };
 
         if (loggedIn){
-            addTransaction(transactionData);
+            try {
+                await addTransaction(transactionData);
+            } catch (error) {
+                console.error("Error adding transaction to database:", error);
+            }
         }
 
         onClose(transactionData);
@@ -123,6 +127,8 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: TransactionD
                 sectionRef.current,
                 { opacity: 0, y: '100%', duration: animateBackItemsDuration, ease: "power2.in", onComplete: () => onClose() }
             );
+        } else {
+            onClose();
         }
     }
 

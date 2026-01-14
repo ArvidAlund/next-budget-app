@@ -9,4 +9,11 @@ type Transaction = {
     recurring: boolean;
 };
 
-export type { Transaction };
+type Notification = {
+    id: number;
+    message: string;
+    read: boolean;
+    date: string;
+    created_at?: string;
+};
+export type { Transaction, Notification };

@@ -27,12 +27,21 @@ const PhoneBalance = ({createdTransactions} : {createdTransactions: Transaction[
     useEffect(() => {
         const fetchBalanceData = async () => {
             const userId = await supabaseUserID();
-            const res = await getIncomeExpenseTotal(userId as string, new Date());
-            setMoneyData({
-                income: res.income,
-                expense: res.expense,
-                total: res.income - res.expense,
-            });
+            if (!userId) {
+                console.error("User not authenticated");
+                setLoading(false);
+                return;
+            }
+            try {
+                const res = await getIncomeExpenseTotal(userId as string, new Date());
+                setMoneyData({
+                    income: res.income,
+                    expense: res.expense,
+                    total: res.income - res.expense,
+                });
+            } catch (error) {
+                console.error("Error fetching balance data:", error);
+            }
             try {
                 const incomeDiffRes = await incomeDiffMonth();
                 setIncomeDiff(incomeDiffRes);

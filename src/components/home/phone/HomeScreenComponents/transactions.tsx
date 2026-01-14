@@ -88,10 +88,10 @@ const PhoneTransactions = ({openNewTransaction, openAllTransactions, createdTran
                 </button>
             </div>
             <ul className="px-4 pb-4">
-                {transactionsList.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                {[...transactionsList].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                 .slice(0, transactionsToShow)
                 .map((transaction, index) => (
-                    <PhoneTransactionCon key={transaction.id} transaction={transaction} index={startAmountToShow === transactionsToShow ? index : index - (startAmountToShow * timesClickedLoadMore)} />
+                    <PhoneTransactionCon key={transaction.id} transaction={transaction} index={index < transactionsToShow - 8 && timesClickedLoadMore > 0 ? 0 : index % 8} />
                 ))}
             </ul>
             {loaded && (
