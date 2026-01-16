@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabaseClient";
 import LoadingMessage from "@/components/ui/loadingMessage";
-import { useRouter } from "next/router";
 
 const ResetPasswordPage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
         const checkSession = async () => {
@@ -23,9 +21,9 @@ const ResetPasswordPage = () => {
 
     useEffect(() => {
         if (!loading && !loggedIn) {
-            router.push("/404");
+            window.location.href = "/404";
         }
-    }, [loading, loggedIn, router]);
+    }, [loading, loggedIn]);
 
     const handleChangePassword = async (e: React.FormEvent) => {
         e.preventDefault();
