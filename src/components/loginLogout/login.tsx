@@ -1,9 +1,30 @@
 import { useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
+import LoginPassword from "./loginOptions/password";
+
+type LoginProps = {
+    selectedOption: string | null;
+    email: string;
+    setEmail: (email: string) => void;
+    password: string;
+    setPassword: (password: string) => void;
+};
+
+function renderLogin({selectedOption, email, setEmail, password, setPassword}: LoginProps) {
+  switch (selectedOption) {
+    case 'password':
+      return <LoginPassword email={email} setEmail={setEmail} password={password} setPassword={setPassword} />;
+    default:
+      return null;
+  }
+}
+
 
 
 const LoginForm = () => {
-    const [email, setEmail] = useState("")       // Användarens e-post
+  const [selectedOption, setSelectedOption] = useState<string | null>('password'); // Standardinloggningsmetod
+  const [email, setEmail] = useState("")       // Användarens e-post
+  const [password, setPassword] = useState("") // Användarens lösenord
   const [message, setMessage] = useState("")   // Feedback till användaren
   const [loading, setLoading] = useState(false) // Om OTP skickas
   const [success, setSuccess] = useState(false); // Om inloggningslänken skickades framgångsrikt
@@ -16,18 +37,19 @@ const LoginForm = () => {
     e.preventDefault()
     setLoading(true)
 
-    // Skicka OTP-länk via Supabase
-    const { error } = await supabase.auth.signInWithOtp({ email })
-
-    setLoading(false)
-
-    if (error) {
-      // Visa felmeddelande
-      setMessage("Fel: " + error.message)
-    } else {
-      // Visa framgångsmeddelande
-        setMessage("Kolla din e-post för en inloggningslänk!")
-        setSuccess(true);
+    if (selectedOption === 'password') {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      if (error) {
+        setMessage(`Fel vid inloggning: ${error.message}`)
+        setLoading(false)
+        return
+      }
+      setMessage("Inloggning lyckades!")
+      setSuccess(true);
+      setLoading(false)
     }
   }
 
@@ -36,23 +58,13 @@ const LoginForm = () => {
         {!success && (
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
                 <h2>Logga in</h2>
-                {/* E-postfält */}
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Din e-post"
-                    className="p-2 border rounded"
-                    required
-                />
-
-                {/* Skicka-knapp */}
+                {renderLogin({selectedOption: selectedOption, email, setEmail, password, setPassword})}
                 <button
                     type="submit"
                     className="bg-green-500 text-white py-2 rounded hover:bg-green-600 cursor-pointer"
                     disabled={loading}
                 >
-                    {loading ? "Skickar..." : "Skicka inloggningslänk"}
+                    {loading ? "Loggar in..." : "Logga in"}
                 </button>
             </form>
         )}
