@@ -12,6 +12,12 @@ type LoginProps = {
     loading: boolean;
 };
 
+/**
+ * Renders the appropriate login subcomponent based on the selected login option.
+ *
+ * @param selectedOption - The chosen login method; `'email'` renders the OTP-by-email form, any other value (including `null`) renders the password form.
+ * @returns The React element for the selected login UI: an email OTP form when `selectedOption` is `'email'`, otherwise a password form.
+ */
 function renderLogin({selectedOption, email, setEmail, password, setPassword, loading }: LoginProps) {
   switch (selectedOption) {
     case 'email':
