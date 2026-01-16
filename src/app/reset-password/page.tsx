@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabaseClient";
 import LoadingMessage from "@/components/ui/loadingMessage";
+import { useRouter } from "next/router";
 
 const ResetPasswordPage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const checkSession = async () => {
@@ -18,6 +20,12 @@ const ResetPasswordPage = () => {
         }
         checkSession();
     }, []);
+
+    useEffect(() => {
+        if (!loading && !loggedIn) {
+            router.push("/404");
+        }
+    }, [loading, loggedIn, router]);
 
     const handleChangePassword = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,7 +53,7 @@ const ResetPasswordPage = () => {
     }
 
     if (loading) return <LoadingMessage message="Kontrollerar session..." />;
-    if (!loggedIn) window.location.href = "/404";
+
     return (
         <div className="flex flex-col justify-center items-center h-screen bg-secondary/10">
             <h1 className="text-2xl font-bold mb-4">Återställ ditt lösenord</h1>

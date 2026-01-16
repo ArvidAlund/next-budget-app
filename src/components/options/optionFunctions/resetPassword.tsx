@@ -6,24 +6,22 @@ export default function ResetPasswordOption() {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const handleResetPassword = async () => {
+        setWarningMessage(null);
+        setSuccessMessage(null);
         try {
-            setWarningMessage(null);
-            setSuccessMessage(null);
-            supabase.auth.getUser().then(({ data: { user } }) => {
-                if (user && user.email) {
-                    supabase.auth.resetPasswordForEmail(user.email, {
-                        redirectTo: `${window.location.origin}/reset-password`,
-                    }).then(({ error }) => {
-                        if (error) {
-                            setWarningMessage(`Fel vid återställning av lösenord: ${error.message}`);
-                        } else {
-                            setSuccessMessage("Återställningslänk för lösenord har skickats till din e-post.");
-                        }
-                    });
-                } else {
-                    setWarningMessage("Ingen inloggad användare hittades.");
-                }
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user?.email) {
+                setWarningMessage("Ingen inloggad användare hittades.");
+                return;
+            }
+            const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+                redirectTo: `${window.location.origin}/reset-password`,
             });
+            if (error) {
+                setWarningMessage(`Fel vid återställning av lösenord: ${error.message}`);
+            } else {
+                setSuccessMessage("Återställningslänk för lösenord har skickats till din e-post.");
+            }
         } catch (error) {
             setWarningMessage(`Ett oväntat fel inträffade: ${error}`);
         }

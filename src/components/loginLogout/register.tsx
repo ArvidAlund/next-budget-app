@@ -16,6 +16,7 @@ const RegisterForm = () => {
     const [loading, setLoading] = useState(false) // Om OTP skickas
     const [success, setSuccess] = useState(false); // Om inloggningslänken skickades framgångsrikt
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [successMessage, setSuccessMessage] = useState<string>("");
 
   /**
    * Hantera formulärsubmit
@@ -47,7 +48,7 @@ const RegisterForm = () => {
     }
     setSuccess(true);
     setLoading(false);
-    window.location.reload();
+    setSuccessMessage("Kontot skapades! Vänligen kontrollera din e-post för att bekräfta ditt konto.");
   }
 
   return (
@@ -91,6 +92,7 @@ const RegisterForm = () => {
             </form>
         )}
         {errorMessage && <p className="text-sm text-center text-red-500 animate-fade-in-down">{errorMessage}</p>}
+        {successMessage && <p className="text-sm text-center text-green-500 animate-fade-in-down">{successMessage}</p>}
       </div>
   )
 }
