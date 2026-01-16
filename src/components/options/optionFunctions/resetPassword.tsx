@@ -1,6 +1,13 @@
 import supabase from "@/app/lib/supabaseClient";
 import { useState } from "react";
 
+/**
+ * Renders a password-reset option that triggers sending a reset link to the current user's email and displays success or error messages.
+ *
+ * When activated, the component attempts to identify the currently authenticated user and request a password reset email redirected to /reset-password. It shows a localized success message if the email was sent or a warning message if no user/email is found or an error occurs.
+ *
+ * @returns A React element containing the reset-password UI and message feedback.
+ */
 export default function ResetPasswordOption() {
     const [warningMessage, setWarningMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
