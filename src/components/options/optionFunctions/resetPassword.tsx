@@ -1,0 +1,41 @@
+import supabase from "@/app/lib/supabaseClient";
+import { useState } from "react";
+
+export default function ResetPasswordOption() {
+    const [warningMessage, setWarningMessage] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    const handleResetPassword = async () => {
+        setWarningMessage(null);
+        setSuccessMessage(null);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user?.email) {
+                setWarningMessage("Ingen inloggad användare hittades.");
+                return;
+            }
+            const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+                redirectTo: `${window.location.origin}/reset-password`,
+            });
+            if (error) {
+                setWarningMessage(`Fel vid återställning av lösenord: ${error.message}`);
+            } else {
+                setSuccessMessage("Återställningslänk för lösenord har skickats till din e-post.");
+            }
+        } catch (error) {
+            setWarningMessage(`Ett oväntat fel inträffade: ${error}`);
+        }
+    };
+
+    return (
+        <div className="p-4 grid gap-2 grid-cols-2 items-center">
+            <div className="sm:w-3/4">
+                <h2 className="text-xl font-semibold mb-2">Återställ lösenord</h2>
+                <p>Återställ ditt lösenord genom att följa instruktionerna som skickas till din e-post.</p>
+            </div>
+            <button className="p-2 border rounded w-full bg-red-600 text-white hover:bg-red-700 transition-all duration-300" onClick={handleResetPassword}>Återställ Lösenord</button>
+            {warningMessage && <p className="text-red-500 mt-2 col-span-2">{warningMessage}</p>}
+            {successMessage && <p className="text-green-500 mt-2 col-span-2">{successMessage}</p>}
+        </div>
+    );
+}

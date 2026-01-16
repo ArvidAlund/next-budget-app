@@ -1,12 +1,30 @@
 "use client";
 
 import { Navbar, NavbarHeight } from "@/components/ui/navbar/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginForm from "@/components/loginLogout/login";
 import RegisterForm from "@/components/loginLogout/register";
+import supabase from "../lib/supabaseClient";
+import { useRouter } from "next/navigation";
+import LoadingMessage from "@/components/ui/loadingMessage";
 
 const LoginPage = () => {
     const [loginMode, setLoginMode] = useState<"login" | "register">("login");
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                router.push("/");
+            }
+            setIsLoading(false);
+        };
+        checkSession();
+    }, [router]);
+
+    if (isLoading) return <LoadingMessage message="Kontrollerar inloggningsstatus..." />;
 
   return (
     <>
