@@ -1,6 +1,7 @@
 import { useState } from "react"
 import supabase from "@/app/lib/supabaseClient"
 import LoginPassword from "./loginOptions/password";
+import LoginEmail from "./loginOptions/email";
 
 type LoginProps = {
     selectedOption: string | null;
@@ -8,21 +9,22 @@ type LoginProps = {
     setEmail: (email: string) => void;
     password: string;
     setPassword: (password: string) => void;
+    loading: boolean;
 };
 
-function renderLogin({selectedOption, email, setEmail, password, setPassword}: LoginProps) {
+function renderLogin({selectedOption, email, setEmail, password, setPassword, loading }: LoginProps) {
   switch (selectedOption) {
-    case 'password':
-      return <LoginPassword email={email} setEmail={setEmail} password={password} setPassword={setPassword} />;
+    case 'email':
+      return <LoginEmail email={email} setEmail={setEmail} loading={loading} />;
     default:
-      return null;
+      return <LoginPassword email={email} setEmail={setEmail} password={password} setPassword={setPassword} loading={loading} />;
   }
 }
 
 
 
 const LoginForm = () => {
-  const [selectedOption, setSelectedOption] = useState<string | null>('password'); // Standardinloggningsmetod
+  const [selectedOption, setSelectedOption] = useState<string | null>(null); // Standardinloggningsmetod
   const [email, setEmail] = useState("")       // Användarens e-post
   const [password, setPassword] = useState("") // Användarens lösenord
   const [message, setMessage] = useState("")   // Feedback till användaren
@@ -37,7 +39,7 @@ const LoginForm = () => {
     e.preventDefault()
     setLoading(true)
 
-    if (selectedOption === 'password') {
+    if (selectedOption === null) {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -47,9 +49,23 @@ const LoginForm = () => {
         setLoading(false)
         return
       }
-      setMessage("Inloggning lyckades!")
       setSuccess(true);
-      setLoading(false)
+      setLoading(false);
+      window.location.href = "/";
+    }
+
+    if (selectedOption === 'email') {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+      })
+      if (error) {
+        setMessage(`Fel vid inloggning: ${error.message}`)
+        setLoading(false)
+        return
+      }
+      setMessage("Inloggningslänk skickad till din e-post!")
+      setSuccess(true);
+      setLoading(false);
     }
   }
 
@@ -58,17 +74,25 @@ const LoginForm = () => {
         {!success && (
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
                 <h2>Logga in</h2>
-                {renderLogin({selectedOption: selectedOption, email, setEmail, password, setPassword})}
-                <button
-                    type="submit"
-                    className="bg-green-500 text-white py-2 rounded hover:bg-green-600 cursor-pointer"
-                    disabled={loading}
-                >
-                    {loading ? "Loggar in..." : "Logga in"}
-                </button>
+                {renderLogin({selectedOption: selectedOption, email, setEmail, password, setPassword, loading})}
             </form>
         )}
         {message && <p className="text-sm text-center animate-fade-in-down">{message}</p>}
+        <div className="border-t mt-6 pt-4"> 
+          <h5 className="text-center mb-3 text-sm text-gray-400 uppercase tracking-wide">Välj inloggningsmetod</h5> 
+          <div className="grid grid-cols-2 gap-3"> 
+            <button onClick={() => setSelectedOption(null)} 
+              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all duration-200 font-medium ${selectedOption === null ? "bg-blue-600 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`} 
+              > 
+              🔒 Lösenord 
+            </button> 
+            <button onClick={() => setSelectedOption('email')} 
+            className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all duration-200 font-medium ${selectedOption === 'email' ? "bg-blue-600 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`} 
+            >
+              📧 Mail 
+            </button> 
+          </div> 
+        </div>
       </div>
   )
 }

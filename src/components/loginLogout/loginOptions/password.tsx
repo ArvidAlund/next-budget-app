@@ -4,9 +4,10 @@ type LoginPasswordProps = {
     setEmail: (email: string) => void;
     password: string;
     setPassword: (password: string) => void;
+    loading: boolean;
 };
 
-const LoginPassword = ({email, setEmail, password, setPassword} : LoginPasswordProps) => {
+const LoginPassword = ({email, setEmail, password, setPassword, loading} : LoginPasswordProps) => {
     return (
         <>
             <div>
@@ -34,6 +35,14 @@ const LoginPassword = ({email, setEmail, password, setPassword} : LoginPasswordP
                         value={password}
                     />
             </div>
+
+            <button
+                    type="submit"
+                    className="bg-green-500 text-white py-2 rounded hover:bg-green-600 cursor-pointer"
+                    disabled={loading}
+                >
+                    {loading ? "Loggar in..." : "Logga in"}
+                </button>
         </>
     );
 }

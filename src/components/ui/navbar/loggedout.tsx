@@ -7,7 +7,7 @@ const LoggedOutNavbar = ({ NavbarHeight }: { NavbarHeight: number }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
     <header style={{ height: NavbarHeight + "px" }} className="fixed grid md:grid-cols-8 top-0 left-0 w-full bg-primary/20 backdrop-blur-md border-0 z-50 lg:h-20 lg:pt-2 lg:pb-2 transition-all duration-300">
-        <div className="hidden md:flex col-span-2 justify-start items-center ml-2">
+        <div className="hidden md:flex col-span-2 justify-start items-center ml-2 cursor-pointer select-none" onClick={() => {window.location.href = "/"}}>
             <Image src="/mascot/img/mascot.png" alt="Logo" width={NavbarHeight/2} height={NavbarHeight/2} className="mr-1"/>
             <h3>BudgetBuddy</h3>
         </div>

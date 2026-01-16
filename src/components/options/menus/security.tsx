@@ -1,6 +1,7 @@
 import AutoLockOption from "../optionFunctions/autoLock";
 import PinOption from "../optionFunctions/pin";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import ResetPasswordOption from "../optionFunctions/resetPassword";
 
 /**
  * Displays the security settings section with a centered Swedish title, option controls, and a conditional "Spara Ändringar" button when there are unsaved changes.
@@ -28,6 +29,7 @@ export default function SecurityOptions() {
             <div className="space-y-4 *:border-b *:pb-4">
                 <PinOption/>
                 <AutoLockOption/>
+                <ResetPasswordOption/>
             </div>
         </section>
     );
