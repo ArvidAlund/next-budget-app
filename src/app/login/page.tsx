@@ -1,12 +1,24 @@
 "use client";
 
 import { Navbar, NavbarHeight } from "@/components/ui/navbar/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginForm from "@/components/loginLogout/login";
 import RegisterForm from "@/components/loginLogout/register";
+import supabase from "../lib/supabaseClient";
 
 const LoginPage = () => {
     const [loginMode, setLoginMode] = useState<"login" | "register">("login");
+    const [loggedIn, setLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            setLoggedIn(!!session);
+        };
+        checkSession();
+    }, []);
+
+    if (loggedIn) window.location.href = "/404";
 
   return (
     <>
