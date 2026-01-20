@@ -167,7 +167,7 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: TransactionD
                     </div>
                     <div className="flex flex-col">
                         <label htmlFor="amount">Belopp</label>
-                        <input type="number" id="amount" name="amount" required className="p-2 rounded border border-gray-300 *:bg-black"/>
+                        <input type="number" id="amount" name="amount" step={0.01} required className="p-2 rounded border border-gray-300 *:bg-black"/>
                     </div>
                     <div className="flex flex-col">
                         <label htmlFor="date">Datum</label>
