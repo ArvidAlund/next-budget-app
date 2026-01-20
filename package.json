@@ -33,6 +33,7 @@
     "i": "^0.3.7",
     "ics": "^3.8.1",
     "lucide-react": "^0.525.0",
+    "mathjs": "^15.1.0",
     "next": "16.0.10",
     "openai": "^5.10.2",
     "path-to-regexp": "^8.3.0",
@@ -44,7 +45,7 @@
     "tar": "^7.5.2",
     "tesseract.js": "^6.0.1",
     "undici": "^7.16.0",
-    "vercel": "^32.0.1"
+    "vercel": "^19.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
