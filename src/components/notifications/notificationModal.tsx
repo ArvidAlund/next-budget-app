@@ -5,6 +5,7 @@ import NotificationContainer from "./notificationContainer";
 import getAllNotifications from "@/app/lib/db/notifications/getAllNotifications";
 import { supabaseUserID } from "@/app/lib/supabaseClient";
 import { Notification } from "@/app/lib/types";
+import markAsRead from "@/app/lib/db/notifications/markAsRead";
 
 const orgNotifications = [
     {
@@ -80,11 +81,6 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
         }
     }, [unreadCount]);
 
-    const handleReadAll = () => {
-        setNotificationsList(prev => prev ? prev.map(n => ({ ...n, read: true })) : null);
-        setUnreadCount(0);
-    }
-
     const handleClose = () => {
         if (modalRef.current) {
             gsap.to(
@@ -95,6 +91,20 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
             onClose(unreadCount);
         }
     };
+
+    const handleReadAllNotifications = async () => {
+        for (const notification of notificationsList || []) {
+            if (!notification.read) {
+                await markAsRead(notification.id);
+            }
+        }
+        setNotificationsList(prev => prev ? prev.map(n => ({ ...n, read: true })) : null);
+        setUnreadCount(0);
+    }
+
+    const handleReadNotification = async (notificationId: number) => {
+        await markAsRead(notificationId);
+    }
 
     return (
         <section ref={modalRef} className="absolute left-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 rounded-3xl overflow-x-hidden overflow-y-scroll no-scrollbar">
@@ -108,7 +118,7 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
                 <div className="px-4 mt-2">
                     <p className="text-gray-600 text-sm">Du har {notificationsList?.filter(n => !n.read).length} olästa notifikationer</p>
                 </div>
-                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white" onClick={handleReadAll}>Markera som lästa</button>
+                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1rem)]" onClick={handleReadAllNotifications}>Markera som lästa</button>
             </div>
             <ul className="mt-8 px-4 space-y-4">
                 {notificationsList?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((notification) => (
@@ -118,6 +128,7 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
                                 n.id === notification.id ? { ...n, read: true } : n
                             ) : null);
                             setUnreadCount(prev => prev - 1);
+                            handleReadNotification(notification.id);
                         }
                     }} />
                 ))}

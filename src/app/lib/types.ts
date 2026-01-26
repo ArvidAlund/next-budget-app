@@ -12,8 +12,11 @@ type Transaction = {
 type Notification = {
     id: number;
     message: string;
-    read: boolean;
     date: string;
-    created_at?: string;
+    read: boolean;
+    title?: string;
+    type?: NotificationType;
 };
-export type { Transaction, Notification };
+
+type NotificationType = "info" | "warning" | "error" | "success";
+export type { Transaction, Notification, NotificationType };

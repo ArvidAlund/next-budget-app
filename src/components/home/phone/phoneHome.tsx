@@ -11,6 +11,8 @@ import AddTransaction from "@/components/transactions/addTransaction";
 import { Transaction } from "@/app/lib/types";
 import AllTransactions from "./HomeScreenComponents/allTransactions";
 import OptionsPage from "@/app/options/page";
+import calcInvestment from "@/app/lib/calcInvestment";
+import hideNotifications from "@/app/lib/db/notifications/hideNotifications";
 
 
 type ModalsOpenState = {
@@ -32,6 +34,26 @@ const PhoneHome = () => {
   const containerRef = useRef<HTMLElement | null>(null);
   const [canShowSettings, setCanShowSettings] = useState<boolean>(false);
   const [createdTransactions, setCreatedTransactions] = useState<Transaction[] | null>(null);
+  const [notificationCount, setNotificationCount] = useState<number | null>(null);
+
+  useEffect(() => {
+     const startup = async () => {
+      await calcInvestment();
+      await hideNotifications();
+      try {
+        await calcInvestment();
+      } catch (err) {
+        console.error("Startup calcInvestment failed:", err);
+      }
+      try {
+        await hideNotifications();
+      } catch (err) {
+        console.error("Startup hideNotifications failed:", err);
+      }
+    };
+
+    void startup();
+  }, []);
 
   useEffect(() => {
     const isAnyModalOpen = Object.values(modalsOpen).some((isOpen) => isOpen);
@@ -60,7 +82,9 @@ const PhoneHome = () => {
             <PhoneNavbar 
             optionsOpen={() => setModalsOpen(prev => ({...prev, settingsOpen:true}))} 
             notificationsOpen={() => setModalsOpen(prev => ({...prev, notificationsOpen:true}))} 
-            settingsOpen={modalsOpen.settingsOpen} />
+            settingsOpen={modalsOpen.settingsOpen} 
+            InitialNotificationCount={notificationCount}
+            />
 
             <PhoneBalance createdTransactions={createdTransactions} />
             
@@ -82,7 +106,8 @@ const PhoneHome = () => {
             )}
 
             {modalsOpen.notificationsOpen && (
-                <NotificationModal onClose={() => {
+                <NotificationModal onClose={(unreadCount) => {
+                    setNotificationCount(unreadCount);
                     setTimeout(() => {
                         setModalsOpen(prev => ({...prev, notificationsOpen:false}));
                     }, animateAwayItemsDuration * 1000);

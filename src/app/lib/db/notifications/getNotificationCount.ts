@@ -5,7 +5,7 @@ const getNotificationCount = async () => {
     if (!userId) {
         return 0;
     }
-    const { count, error } = await supabase.from('user_notifications').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('read', false);
+    const { count, error } = await supabase.from('user_notifications').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('read', false).eq('hidden', false);
 
     if (error) {
         console.error("Error fetching notification count:", error);
