@@ -4,6 +4,13 @@ import createNotification from "./db/notifications/createNotification";
 import getAvanzaInvestment from "./db/getAvanzaInvestment";
 import { formatCurrency } from "./formatcurrency";
 
+/**
+ * Calculate the user's monthly investable amount and indicate whether it has already been invested.
+ *
+ * @returns `0` if the current day of the month is before the 25th; otherwise an object with:
+ * - `amount`: the rounded investable amount calculated as (income - expense) minus today's income, and
+ * - `invested`: `true` if a matching Avanza investment was found (a notification is created), `false` if no existing investment was found (a notification with the calculated amount is created).
+ */
 export default async function calcInvestment(): Promise<{amount: number, invested: boolean} | 0> {
     const date = new Date();
     if (date.getDate() < 25) return 0
