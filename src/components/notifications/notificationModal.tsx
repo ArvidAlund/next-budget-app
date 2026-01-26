@@ -108,7 +108,7 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
                 <div className="px-4 mt-2">
                     <p className="text-gray-600 text-sm">Du har {notificationsList?.filter(n => !n.read).length} olästa notifikationer</p>
                 </div>
-                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white" onClick={handleReadAll}>Markera som lästa</button>
+                <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1rem)]" onClick={handleReadAll}>Markera som lästa</button>
             </div>
             <ul className="mt-8 px-4 space-y-4">
                 {notificationsList?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((notification) => (

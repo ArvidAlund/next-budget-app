@@ -1,7 +1,6 @@
 import supabase from "../../supabaseClient";
 import { supabaseUserID } from "../../supabaseClient";
-
-type NotificationType = "info" | "warning" | "error" | "success";
+import { NotificationType } from "../../types";
 
 type props = {
     title: string;

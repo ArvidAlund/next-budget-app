@@ -16,4 +16,6 @@ type Notification = {
     date: string;
     created_at?: string;
 };
-export type { Transaction, Notification };
+
+type NotificationType = "info" | "warning" | "error" | "success";
+export type { Transaction, Notification, NotificationType };
