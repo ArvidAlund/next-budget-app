@@ -7,6 +7,7 @@ import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 import { onEvent } from "@/app/lib/eventbus";
 import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 import gsap from "gsap";
+import CreateNotification from "@/app/lib/db/notifications/createNotification";
 
 const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) => {
     const [budget, setBudget] = useState<number>(0);
@@ -83,6 +84,32 @@ const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) =>
             unsubscribeBack();
         };
     }, []);
+
+    useEffect(() => {
+        const NewNotification = async (amount: number) => {
+            await CreateNotification({
+                title: "Budgetvarning",
+                message: `Du har spenderat över ${amount}% av din budget för denna månad.`,
+                type: "warning"
+            });
+        }
+
+        if (!totalExpense || !budget) return;
+        switch (true) {
+            case (totalExpense >= budget * 0.8 && totalExpense < budget * 0.9):
+                NewNotification(80);
+                break;
+            case (totalExpense >= budget * 0.9 && totalExpense < budget):
+                NewNotification(90);
+                break;
+            case (totalExpense >= budget):
+                NewNotification(100);
+                break;
+            default:
+                break;
+        }
+        
+    }, [totalExpense, budget]);
 
     return (
         <section className="mt-6" ref={progressBarRef}>

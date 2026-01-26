@@ -1,6 +1,6 @@
 import { getIncomeExpenseTotal } from "./IncomeExspenseTotal";
 import supabase, { supabaseUserID } from "./supabaseClient";
-import createNotification from "./db/createNotification";
+import createNotification from "./db/notifications/createNotification";
 import getAvanzaInvestment from "./db/getAvanzaInvestment";
 import { formatCurrency } from "./formatcurrency";
 
