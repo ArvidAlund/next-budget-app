@@ -24,36 +24,14 @@ export default function Investment({ className }: InvestmentProps) {
 
   useEffect(()=>{
       const getInvestmentAmount = async ()=>{
-          const result: number = await calcInvestment();
+          const result: {amount: number, invested: boolean} | 0 = await calcInvestment();
           if (result === 0){
             setInvestmentAmount(0);
             return;
           }
-          setInvestmentAmount(result);
-
-          await getAvanzaInvestment(result);
+          setInvestmentAmount(result.amount);
+          setHasInvested(result.invested);
       }
-
-        const getAvanzaInvestment = async (amount: number) => {
-            const user = await supabaseUserID();
-
-            const { data, error } = await supabase
-                .from('transactions')
-                .select('*')
-                .eq('type', 'expense')
-                .eq('description', 'Avanza')
-                .eq("user_id", user)
-                .eq('amount', amount)
-                .eq('category', 'savings');
-
-            if (error) {
-                console.error("Supabase error:", error);
-                setHasInvested(false);
-                return;
-            }
-
-            setHasInvested(data && data.length > 0);
-        };
 
         const unsubscribe = onEvent("modalChange", (e: { opened: boolean }) => {
           setShow(!e.opened);

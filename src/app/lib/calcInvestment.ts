@@ -1,7 +1,10 @@
 import { getIncomeExpenseTotal } from "./IncomeExspenseTotal";
 import supabase, { supabaseUserID } from "./supabaseClient";
+import createNotification from "./db/createNotification";
+import getAvanzaInvestment from "./db/getAvanzaInvestment";
+import { formatCurrency } from "./formatcurrency";
 
-export default async function calcInvestment(): Promise<number> {
+export default async function calcInvestment(): Promise<{amount: number, invested: boolean} | 0> {
     const date = new Date();
     if (date.getDate() < 25) return 0
     const dateMinus:number = date.getDate() - 24;
@@ -18,7 +21,7 @@ export default async function calcInvestment(): Promise<number> {
     .eq("date", date.toLocaleDateString("sv-SE"))
     .eq("type", "inkomst")
 
-    if(incomeTodayError) return 0
+    if(incomeTodayError) return {amount: 0, invested: false};
 
     let incomeTodayTotal: number = 0;
 
@@ -27,7 +30,17 @@ export default async function calcInvestment(): Promise<number> {
         incomeTodayTotal += amount;
     }
 
-    const totinvest: number = (Number(income) - Number(expense)) - incomeTodayTotal;
+    const totinvest: number = Math.round((Number(income) - Number(expense)) - incomeTodayTotal);
 
-    return Math.round(totinvest)
+    const existingInvestment = await getAvanzaInvestment(totinvest);
+    if (existingInvestment && existingInvestment.length > 0) {
+        return {amount: totinvest, invested: true};
+    }
+
+    await createNotification({
+        title: "Månatlig investering beräknad",
+        message: `Din rekommenderade investering för denna månad är ${formatCurrency(totinvest)} kr.`,
+        type: "info"
+    });
+    return {amount: totinvest, invested: false};
 }
