@@ -10,15 +10,16 @@ type Props = {
     optionsOpen: () => void; 
     notificationsOpen: () => void; 
     settingsOpen: boolean;
+    InitialNotificationCount?: number;
 };
 
 
-const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => {
+const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen, InitialNotificationCount} : Props) => {
     const [usersFirstInitial, setUsersFirstInitial] = useState<string | null>(null);
     const notificationRef = useRef<HTMLSpanElement>(null);
     const navRef = useRef<HTMLElement>(null);
     const iconRef = useRef<HTMLLIElement>(null);
-    const [notificationCount, setNotificationCount] = useState<number>(0);
+    const [notificationCount, setNotificationCount] = useState<number>(InitialNotificationCount || 0);
     const settingsOpenRef = useRef(settingsOpen);
 
     useEffect(() => {
@@ -33,6 +34,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen} : Props) => 
         }
 
         const fetchNotificationCount = async () => {
+            if (notificationCount > 0) return;
             try {
                 const count = await getNotificationCount();
                 setNotificationCount(count);

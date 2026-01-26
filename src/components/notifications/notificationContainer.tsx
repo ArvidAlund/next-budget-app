@@ -1,15 +1,7 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
-import { NotificationType } from "@/app/lib/types";
+import { Notification } from "@/app/lib/types";
 
-type Notification = {
-    id: number;
-    message: string;
-    date: string;
-    read: boolean;
-    title?: string;
-    type?: NotificationType;
-};
 
 const NotificationContainer = ({ notification, onClick }: { notification: Notification, onClick: () => void }) => {
     const dotRef = useRef<HTMLDivElement>(null);
