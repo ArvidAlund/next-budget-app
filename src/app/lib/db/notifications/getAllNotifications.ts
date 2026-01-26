@@ -5,7 +5,7 @@ const getAllNotifications = async () => {
     if (!userId) {
         return [];
     }
-    const { data, error } = await supabase.from('user_notifications').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('user_notifications').select('*').eq('user_id', userId).eq('hidden', false).order('created_at', { ascending: false });
     if (error) {
         console.error("Error fetching notifications:", error);
         return [];

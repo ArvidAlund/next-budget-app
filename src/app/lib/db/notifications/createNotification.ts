@@ -19,7 +19,6 @@ const CreateNotification = async (props: props) => {
         .eq("title", props.title)
         .eq("message", props.message)
         .eq("type", props.type)
-        .eq("read", false)
         .limit(1)
         .single();
         

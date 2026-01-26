@@ -10,7 +10,7 @@ type Props = {
     optionsOpen: () => void; 
     notificationsOpen: () => void; 
     settingsOpen: boolean;
-    InitialNotificationCount?: number;
+    InitialNotificationCount?: number | null;
 };
 
 
@@ -19,7 +19,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen, InitialNotif
     const notificationRef = useRef<HTMLSpanElement>(null);
     const navRef = useRef<HTMLElement>(null);
     const iconRef = useRef<HTMLLIElement>(null);
-    const [notificationCount, setNotificationCount] = useState<number>(InitialNotificationCount || 0);
+    const [notificationCount, setNotificationCount] = useState<number | null>(InitialNotificationCount || null);
     const settingsOpenRef = useRef(settingsOpen);
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen, InitialNotif
         }
 
         const fetchNotificationCount = async () => {
-            if (notificationCount > 0) return;
+            if (notificationCount !== null) return;
             try {
                 const count = await getNotificationCount();
                 setNotificationCount(count);
@@ -86,6 +86,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen, InitialNotif
     }, []);
 
     useEffect(() => {
+        if (notificationCount === null) return;
         let tween: gsap.core.Tween | null = null;
         if (notificationCount > 0 && notificationRef.current) {
             tween =gsap.fromTo(
@@ -159,7 +160,7 @@ const PhoneNavbar = ({optionsOpen, notificationsOpen, settingsOpen, InitialNotif
                 <span className="w-7 aspect-square">
                     <Bell className="text-black w-full h-full" />
                 </span>
-                {notificationCount > 0 && (
+                {notificationCount !== null && notificationCount > 0 && (
                     <span
                     ref={notificationRef}
                     className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 aspect-square flex items-center justify-center rounded-full transform"

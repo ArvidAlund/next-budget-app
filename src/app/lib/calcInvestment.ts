@@ -34,6 +34,11 @@ export default async function calcInvestment(): Promise<{amount: number, investe
 
     const existingInvestment = await getAvanzaInvestment(totinvest);
     if (existingInvestment && existingInvestment.length > 0) {
+        createNotification({
+            title: "Månatlig investering gjord",
+            message: `Din rekommenderade investering för denna månad på ${formatCurrency(totinvest)} kr har registrerats.`,
+            type: "info"
+        });
         return {amount: totinvest, invested: true};
     }
 
