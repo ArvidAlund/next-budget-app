@@ -95,14 +95,14 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
     const handleReadAllNotifications = async () => {
         for (const notification of notificationsList || []) {
             if (!notification.read) {
-                await markAsRead(notification.id.toString());
+                await markAsRead(notification.id);
             }
         }
         setNotificationsList(prev => prev ? prev.map(n => ({ ...n, read: true })) : null);
         setUnreadCount(0);
     }
 
-    const handleReadNotification = async (notificationId: string) => {
+    const handleReadNotification = async (notificationId: number) => {
         await markAsRead(notificationId);
     }
 
@@ -128,7 +128,7 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
                                 n.id === notification.id ? { ...n, read: true } : n
                             ) : null);
                             setUnreadCount(prev => prev - 1);
-                            handleReadNotification(notification.id.toString());
+                            handleReadNotification(notification.id);
                         }
                     }} />
                 ))}

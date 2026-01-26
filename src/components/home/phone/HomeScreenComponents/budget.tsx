@@ -7,12 +7,13 @@ import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 import { onEvent } from "@/app/lib/eventbus";
 import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 import gsap from "gsap";
-import CreateNotification from "@/app/lib/db/notifications/createNotification";
+import createNotification from "@/app/lib/db/notifications/createNotification";
 
 const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) => {
     const [budget, setBudget] = useState<number>(0);
     const [totalExpense, setTotalExpense] = useState<number>(0);
     const progressBarRef = useRef<HTMLElement>(null);
+    const lastNotifiedRef = useRef<number | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
 
     useEffect(() => {
@@ -87,30 +88,28 @@ const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) =>
 
     useEffect(() => {
         const NewNotification = async (amount: number) => {
-            await CreateNotification({
-                title: "Budgetvarning",
-                message: `Du har spenderat över ${amount}% av din budget för denna månad.`,
-                type: "warning"
-            });
-        }
+            try {
+                await createNotification({
+                    title: "Budgetvarning",
+                    message: `Du har spenderat över ${amount}% av din budget för denna månad.`,
+                    type: "warning"
+                });
+            } catch (err) {
+                console.error("Error creating budget notification:", err);
+            }
+        };
 
         if (!totalExpense || !budget) return;
-        switch (true) {
-            case (totalExpense >= budget * 0.8 && totalExpense < budget * 0.9):
-                NewNotification(80);
-                break;
-            case (totalExpense >= budget * 0.9 && totalExpense < budget):
-                NewNotification(90);
-                break;
-            case (totalExpense >= budget):
-                NewNotification(100);
-                break;
-            default:
-                break;
-        }
-        
-    }, [totalExpense, budget]);
+        let threshold: number | null = null;
+        if (totalExpense >= budget) threshold = 100;
+        else if (totalExpense >= budget * 0.9) threshold = 90;
+        else if (totalExpense >= budget * 0.8) threshold = 80;
 
+        if (threshold !== null && lastNotifiedRef.current !== threshold) {
+            lastNotifiedRef.current = threshold;
+            void NewNotification(threshold);
+        }
+    }, [totalExpense, budget]);
     return (
         <section className="mt-6" ref={progressBarRef}>
             <div className="flex justify-between items-center text-[clamp(0.5rem,3vw,1.5rem)]">

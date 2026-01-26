@@ -37,11 +37,22 @@ const PhoneHome = () => {
   const [notificationCount, setNotificationCount] = useState<number | null>(null);
 
   useEffect(() => {
-    const startup = async () => {
+     const startup = async () => {
       await calcInvestment();
       await hideNotifications();
-    }
-    startup();
+      try {
+        await calcInvestment();
+      } catch (err) {
+        console.error("Startup calcInvestment failed:", err);
+      }
+      try {
+        await hideNotifications();
+      } catch (err) {
+        console.error("Startup hideNotifications failed:", err);
+      }
+    };
+
+    void startup();
   }, []);
 
   useEffect(() => {
