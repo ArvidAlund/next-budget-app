@@ -19,6 +19,7 @@ import { useWindowWidth } from "@/components/useWindowWidth"
 import Investment from "@/components/home/investment"
 import HomePage from "./pages/home"
 import PhoneHome from "@/components/home/phone/phoneHome"
+import getOptions from "./lib/db/getOptions"
 
 /**
  * Root React component that controls authentication, initial-setup gating, lock screen, transient alerts, and renders the main dashboard layout.
@@ -79,6 +80,7 @@ function App() {
         await checkSetup();
         setLoading(false);
         await calcInvestment();
+        await getOptions();
       } else {
         setLoading(false);
       }
