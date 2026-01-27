@@ -13,6 +13,7 @@ import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
  */
 export default function AppearanceOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
+    
     return (
         <section className="text-secondary">
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
