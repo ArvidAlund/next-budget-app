@@ -82,6 +82,7 @@ function App() {
         await calcInvestment();
         await getOptions();
       } else {
+        localStorage.clear();
         setLoading(false);
       }
     };

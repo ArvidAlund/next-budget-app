@@ -64,6 +64,13 @@ interface UnsavedDetails {
   [key: string]: string | number | boolean;
 }
 
+const saveChangesToLocalStorage = async (changes: Record<string, string | number | boolean>) => {
+  const options = localStorage.getItem("user_options");
+  const parsedOptions = options ? JSON.parse(options) : {};
+  const updatedOptions = { ...parsedOptions, ...changes };
+  localStorage.setItem("user_options", JSON.stringify(updatedOptions));
+};
+
 /**
  * Manage and persist a collection of unsaved settings via event-driven updates.
  *
@@ -90,6 +97,9 @@ export function useUnsavedChanges() {
     const performSave = async () => {
       try {
         await saveChangesToDb(
+          unsavedChanges as Record<string, string | number | boolean>
+        );
+        await saveChangesToLocalStorage(
           unsavedChanges as Record<string, string | number | boolean>
         );
         setUnsavedChanges({});
