@@ -6,22 +6,6 @@ import { animateBackItemsDuration } from "@/app/lib/globalSettings";
 import supabase from "@/app/lib/supabaseClient";
 import { addTransaction } from "@/app/lib/transactions";
 import SwitchButton from "../ui/switchButton";
-import { create, all } from "mathjs";
-
-const math = create(all, {
-  matrix: "Array",
-  number: "number",
-});
-
-function evaluateExpression(expr: string): number | null {
-  try {
-    const node = math.parse(expr);
-    const result = node.evaluate();
-    return typeof result === "number" && !isNaN(result) ? result : null;
-  } catch {
-    return null;
-  }
-}
 
 interface CategoryInterface {
   category_key: string;
