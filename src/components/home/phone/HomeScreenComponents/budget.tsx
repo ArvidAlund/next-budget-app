@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { formatCurrency } from "@/app/lib/formatcurrency";
 import ProgressBar from "@/components/ui/progressBar";
 import { Sparkles } from "lucide-react";
-import supabase, { supabaseUserID } from "@/app/lib/supabaseClient";
+import { supabaseUserID } from "@/app/lib/supabaseClient";
 import { getIncomeExpenseTotal } from "@/app/lib/IncomeExspenseTotal";
 import { onEvent } from "@/app/lib/eventbus";
 import { animateAwayItemsDuration, animateBackItemsDuration } from "@/app/lib/globalSettings";
 import gsap from "gsap";
 import createNotification from "@/app/lib/db/notifications/createNotification";
+import getBudget from "@/app/lib/db/getBudget";
 
 const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) => {
     const [budget, setBudget] = useState<number>(0);
@@ -19,22 +20,8 @@ const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) =>
     useEffect(() => {
         const fetchBudgetData = async () => {
             try {
-                const userId = await supabaseUserID();
-
-                const {data:budgetRes, error} = await supabase.from('budgets').select('*').eq('user_id', userId).single();
-                if (error) {
-                    console.error("Error fetching budget:", error.message);
-                    return;
-                }
-                let sum = 0;
-                if (budgetRes) {
-                    for (const key in budgetRes) {
-                        if (typeof budgetRes[key] === 'number' && key !== 'user_id' && key !== 'id' && budgetRes[key] !== null) {
-                            sum += budgetRes[key];
-                        }
-                    }
-                }
-                setBudget(sum);
+                const res = await getBudget();
+                setBudget(res.total as number);
             } catch (error) {
                 console.error("Error fetching budget data:", error);
             }

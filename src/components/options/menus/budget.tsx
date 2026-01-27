@@ -2,6 +2,8 @@ import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import CarryoverOption from "../optionFunctions/carryover";
 import ExportTransactionsOption from "../optionFunctions/exportTransactions";
 import TransactionFormatOption from "../optionFunctions/transactionFormat";
+import BudgetTypeOption from "../optionFunctions/budgetType";
+import BudgetOverviewOption from "../optionFunctions/budgetOverview";
 
 
 /**
@@ -30,6 +32,8 @@ export default function BudgetOptions() {
             <div className="space-y-4 *:border-b *:pb-4">
                 <CarryoverOption />
                 <TransactionFormatOption />
+                <BudgetTypeOption />
+                <BudgetOverviewOption />
                 <ExportTransactionsOption />
             </div>
         </section>

@@ -2,7 +2,7 @@
  * Formats a numeric amount as an en-US decimal string with no fractional digits.
  *
  * @param amount - The numeric value to format
- * @returns The formatted string using the en-US locale with no decimal places
+ * @returns The formatted string using the user's preferred thousand separator and decimal settings
  */
 export function formatCurrency(amount: number) {
   const options = localStorage.getItem("user_options");

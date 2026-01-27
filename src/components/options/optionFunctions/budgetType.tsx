@@ -17,30 +17,30 @@ export default function BudgetTypeOption(){
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        const fetchAutoBackup = async () => {
+        const fetchBudgetType = async () => {
             try {
-                const userAutoBackup = await getUserOption("budget_type");
-                if (typeof userAutoBackup === "string") {
-                    setBudgetType(userAutoBackup);
-                    setUserBudgetType(userAutoBackup);
+                const userBudgetType = await getUserOption("budget_type");
+                if (typeof userBudgetType === "string") {
+                    setBudgetType(userBudgetType);
+                    setUserBudgetType(userBudgetType);
                     setLoaded(true);
                 }
             } catch (error) {
-                console.error("Error fetching auto backup option:", error);
+                console.error("Error fetching budget type option:", error);
             }
         };
 
-        fetchAutoBackup();
+        fetchBudgetType();
     }, []);
 
     useEffect(() => {
         if (!loaded) return
         if (userBudgetType === null) return;
         if (budgetType === userBudgetType) {
-            emitEvent("remove-unsaved-changes", {"auto_backup" : budgetType});
+            emitEvent("remove-unsaved-changes", {"budget_type" : budgetType});
             return;
         }
-        emitEvent("unsaved-changes", {"auto_backup" : budgetType});
+        emitEvent("unsaved-changes", {"budget_type" : budgetType});
     }, [budgetType, userBudgetType, loaded]);
 
     return (
@@ -55,6 +55,8 @@ export default function BudgetTypeOption(){
                         <select className="mt-2 p-2 border rounded w-full bg-primary text-secondary" name="" id="" onChange={(e) => setBudgetType(e.target.value)} value={budgetType}>
                             <option value="zero" selected={budgetType === "zero"}>Zero-based budget</option>
                             <option value="50/30/20" selected={budgetType === "50/30/20"}>50/30/20-modellen</option>
+                            <option value="manual" selected={budgetType === "manual"}>Manuell budget</option>
+                            <option value="surplus-budget" selected={budgetType === "surplus-budget"}>Överskottsbudget</option>
                         </select>
                     </label>
                 </div>
