@@ -16,7 +16,7 @@ export default async function saveChangesToDb(changes: Record<string, number | s
     }
 
     const { error } = await supabase
-    .from("users")
+    .from("user_options")
     .update(changes)
     .eq("user_id", userID)
     .select();
