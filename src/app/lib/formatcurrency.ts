@@ -17,7 +17,7 @@ export function formatCurrency(amount: number) {
     }).replace(/\u00A0/g, ' '); // Replace non-breaking space with regular space
   }
   if (formatSetting === "comma") {
-    return amount.toLocaleString("de-DE", {
+    return amount.toLocaleString("en-US", {
       style: "decimal",
       minimumFractionDigits: 0,
       maximumFractionDigits: transactionDecimalSetting ? 2 : 0,
@@ -25,11 +25,15 @@ export function formatCurrency(amount: number) {
   }
 
   if (formatSetting === "none") {
-    return amount.toFixed(transactionDecimalSetting ? 2 : 0);
+    if (!transactionDecimalSetting) {
+      const parts = amount.toString().split(".");
+      return parts[0].toString().replace(" ", "");
+    }
+    return parseFloat(amount.toString().replace(" ", ""));
   }
 
   if (formatSetting === "dot") {
-    return amount.toLocaleString("en-IN", {
+    return amount.toLocaleString("de-DE", {
       style: "decimal",
       minimumFractionDigits: 0,
       maximumFractionDigits: transactionDecimalSetting ? 2 : 0,
