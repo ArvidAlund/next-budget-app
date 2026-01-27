@@ -49,7 +49,6 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: TransactionD
     const sectionRef = useRef<HTMLElement>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [amountInput, setAmountInput] = useState("");
-    const [mathAnswer, setMathAnswer] = useState<number | null>(null);
 
 
     useEffect(() => {
@@ -123,7 +122,7 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: TransactionD
         const transactionData: TransactionData = {
             type: formData.get("type") as "income" | "expense",
             category: formData.get("category") as string,
-            amount: mathAnswer !== null ? mathAnswer : Number(formData.get("amount")),
+            amount: Number(formData.get("amount")),
             date: formData.get("date") as string,
             description: formData.get("description") ? formData.get("description") as string : undefined,
             recurring: recurring,
@@ -187,18 +186,18 @@ const AddTransaction = ({ onClose } : { onClose: (transactionData?: TransactionD
                     <div className="flex flex-col"> 
                         <label htmlFor="amount">Belopp</label> 
                         <input 
-                        type="text" 
+                        type="number" 
                         id="amount" 
                         name="amount" 
-                        value={amountInput} 
-                        onChange={(e) => { const value = e.target.value; setAmountInput(value); setMathAnswer(evaluateExpression(value)); }} 
+                        value={amountInput}
+                        onChange={(e) => setAmountInput(e.target.value)}
                         required 
                         className="p-2 rounded border border-gray-300 *:bg-black" 
                         /> 
-                        {mathAnswer !== null && ( <span className="text-sm text-gray-400">= {mathAnswer}</span> )} </div>
+                    </div>
                     <div className="flex flex-col">
                         <label htmlFor="date">Datum</label>
-                        <input type="date" id="date" name="date" className="p-2 rounded border border-gray-300" defaultValue={new Date().toISOString().split("T")[0]} />
+                        <input type="date" id="date" name="date" className="p-2 rounded border border-gray-300 *:bg-black w-full" defaultValue={new Date().toISOString().split("T")[0]} />
                     </div>
                     <button type="submit" className="bg-green-700 hover:bg-green-900 text-white p-2 rounded mt-4">Lägg till transaktion</button>
                 </div>
