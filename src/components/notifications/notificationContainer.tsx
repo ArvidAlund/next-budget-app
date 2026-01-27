@@ -3,8 +3,25 @@ import gsap from "gsap";
 import { Notification } from "@/app/lib/types";
 
 
-const NotificationContainer = ({ notification, onClick }: { notification: Notification, onClick: () => void }) => {
+const NotificationContainer = ({ notification, onClick, index }: { notification: Notification, onClick: () => void, index: number }) => {
     const dotRef = useRef<HTMLDivElement>(null);
+    const liRef = useRef<HTMLLIElement>(null);
+
+    useEffect(() => {
+        if (liRef.current && index % 2 === 0) {
+            gsap.fromTo(
+                liRef.current,
+                { opacity: 0, x: "100%" },
+                { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", delay: index * 0.2 }
+            );
+        } else if (liRef.current && index % 2 !== 0) {
+            gsap.fromTo(
+                liRef.current,
+                { opacity: 0, x: "-100%" },
+                { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", delay: index * 0.2 }
+            );
+        }
+    }, [index]);
     
     useEffect(() => {
         if (dotRef.current && !notification.read) {
@@ -25,7 +42,7 @@ const NotificationContainer = ({ notification, onClick }: { notification: Notifi
     }, [notification.read]);
     
     return (
-        <li>
+        <li ref={liRef}>
             <div className={`p-4 rounded-lg shadow-md ${notification.read ? 'bg-gray-100' : `bg-white border-2 border-blue-500`} relative cursor-pointer`} onClick={onClick}>
                 {notification.title && <h3 className="font-semibold mb-2 text-black">{notification.title}</h3>}
                 <p className="text-gray-800 w-3/4">{notification.message}</p>

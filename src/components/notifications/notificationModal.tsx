@@ -46,8 +46,8 @@ const orgNotifications = [
 ];
 
 const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => void }) => {
-    const [notificationsList, setNotificationsList] = useState<Notification[] | null>(orgNotifications);
-    const [unreadCount, setUnreadCount] = useState<number>(orgNotifications.filter(n => !n.read).length);
+    const [notificationsList, setNotificationsList] = useState<Notification[] | null>(null);
+    const [unreadCount, setUnreadCount] = useState<number>(0);
     const modalRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -70,6 +70,9 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
                 setUnreadCount(unread);
             } catch (error) {
                 console.error("Error fetching notifications:", error);
+                setNotificationsList(orgNotifications);
+                const unread = orgNotifications.filter(n => !n.read).length;
+                setUnreadCount(unread);
             }
         };
         getNotifications();
@@ -107,7 +110,7 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
     }
 
     return (
-        <section ref={modalRef} className="absolute left-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 rounded-3xl overflow-x-hidden overflow-y-scroll no-scrollbar">
+        <section ref={modalRef} className="absolute left-0 w-full h-full bg-linear-to-b from-[#8280FE] to-white z-50 rounded-top-3xl overflow-x-hidden overflow-y-scroll no-scrollbar">
             <div className="flex justify-between items-center w-full mt-4 h-12">
                 <button className="p-2 rounded-full" onClick={handleClose}>
                     <ArrowLeft size={24} />
@@ -120,9 +123,9 @@ const NotificationModal = ({ onClose } : { onClose: (unreadCount: number) => voi
                 </div>
                 <button className="bg-[#0B0748] p-3 rounded-full flex justify-center items-center text-white text-[clamp(0.5rem,3vw,1rem)]" onClick={handleReadAllNotifications}>Markera som lästa</button>
             </div>
-            <ul className="mt-8 px-4 space-y-4">
-                {notificationsList?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((notification) => (
-                    <NotificationContainer key={notification.id} notification={notification} onClick={() => {
+            <ul className="mt-8 px-4 space-y-4 pb-4">
+                {notificationsList?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((notification, index) => (
+                    <NotificationContainer index={index} key={notification.id} notification={notification} onClick={() => {
                         if (!notification.read) {
                             setNotificationsList(prev => prev ? prev.map(n => 
                                 n.id === notification.id ? { ...n, read: true } : n
