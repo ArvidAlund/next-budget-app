@@ -67,7 +67,6 @@ const BudgetOverviewOption = () => {
         }
         const keys = Object.keys(budget) as (keyof Budget)[];
         for (const key of keys) {
-            console.log(budget[key], userBudget[key]);
             if (budget[key] !== userBudget[key]) {
                 setUnsavedChanges(true);
                 return;

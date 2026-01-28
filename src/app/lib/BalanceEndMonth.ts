@@ -1,5 +1,7 @@
-import supabase from "./supabaseClient";
-import { supabaseUserID } from "./supabaseClient";
+import { create } from "domain";
+import getUserOption from "./db/getUserOption";
+import supabase, {supabaseUserID} from "./supabaseClient";
+import CreateNotification from "./db/notifications/createNotification";
 
 // Returnerar antal dagar i en månad
 function getDaysInMonth(year: number, month: number): number {
@@ -23,6 +25,17 @@ function formatDate(year: number, month: number, day: number): string {
 export async function BalanceEndMonth(){
     const date = new Date()
     const id = await supabaseUserID();
+
+    try {
+        const userCarryover = await getUserOption("carryover");
+        if (typeof userCarryover === "boolean") {
+            if (!userCarryover) return;
+        }
+    } catch (error) {
+        console.error("Error fetching carryover option:", error);
+        return;
+    }
+    
 
     // Dagens datum
     const currday = date.toLocaleDateString("sv-SE").split("T")[0];
@@ -113,6 +126,11 @@ export async function BalanceEndMonth(){
             if (error){
                 console.warn("Supabase insert error: ", error.message)
             } else {
+                await CreateNotification({
+                    title: "Månadens balans sparad",
+                    message: `Din balans för ${lastMonth}/${Year} har sparats.`,
+                    type: "info"
+                });
                 window.location.reload();
             }
         }
