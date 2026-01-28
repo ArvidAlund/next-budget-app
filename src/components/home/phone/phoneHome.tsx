@@ -99,7 +99,6 @@ const PhoneHome = () => {
             {modalsOpen.settingsOpen && canShowSettings && (
               <div className="absolute top-0 left-0 w-full h-full z-50 overflow-x-hidden overflow-y-scroll no-scrollbar p-0!">
                 <OptionsPage onClose={() => {
-                  console.log("Closing options");
                   setModalsOpen(prev => ({...prev, settingsOpen:false}));
                 }}/>
               </div>
