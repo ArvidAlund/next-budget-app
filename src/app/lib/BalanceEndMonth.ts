@@ -1,4 +1,3 @@
-import { create } from "domain";
 import getUserOption from "./db/getUserOption";
 import supabase, {supabaseUserID} from "./supabaseClient";
 import CreateNotification from "./db/notifications/createNotification";
