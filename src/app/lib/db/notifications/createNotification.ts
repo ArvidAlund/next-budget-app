@@ -7,7 +7,11 @@ type props = {
     message: string;
     type: NotificationType;
 }
-
+/**
+ * Funktion för att skapa en notifikation för användaren.
+ * @param props Objekt som innehåller titel, meddelande och typ av notifikation.
+ * @returns returnerar den skapade notifikationen.
+ */
 const CreateNotification = async (props: props) => {
     const userId = await supabaseUserID();
     if (!userId) throw new Error("Användare inte autentiserad");
@@ -22,6 +26,7 @@ const CreateNotification = async (props: props) => {
         .limit(1)
         .single();
         
+
     if (existingError && existingError.code !== "PGRST116") {
         throw existingError;
     }
@@ -29,7 +34,29 @@ const CreateNotification = async (props: props) => {
     if (existingNotification) {
         return existingNotification;
     }
-
+    const { data:allNotifications, error: allError } = await supabase
+        .from("user_notifications")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("hidden", false)
+        .order("date", { ascending: false });
+    if (allError) {
+        throw allError;
+    }
+    
+    for (const element of allNotifications ?? []) {
+        const monthDifference =
+            (new Date().getFullYear() - new Date(element.date).getFullYear()) * 12 +
+            (new Date().getMonth() - new Date(element.date).getMonth());
+        if (
+            props.title === element.title &&
+            monthDifference < 1 &&
+            (props.title === "Månatlig investering gjord" || props.title === "Månatlig investering beräknad")
+        ) {
+            return element;
+        }
+    }
+    
     const { data, error } = await supabase
         .from("user_notifications")
         .insert([{

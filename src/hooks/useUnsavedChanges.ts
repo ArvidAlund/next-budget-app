@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { emitEvent, onEvent } from "@/app/lib/eventbus";
 import saveChangesToDb from "@/app/lib/db/saveChanges";
 import { JSONSchema } from "openai/lib/jsonschema.js";
+import { supabaseUserID } from "@/app/lib/supabaseClient";
 
 interface UnsavedChanges {
   language?: string;
@@ -64,6 +65,25 @@ interface UnsavedDetails {
   [key: string]: string | number | boolean;
 }
 
+const saveChangesToLocalStorage = async (changes: Record<string, string | number | boolean>) => {
+  try {
+    let userId: string | null = null;
+    try {
+      userId = await supabaseUserID();
+      if (!userId) throw new Error("User not authenticated");
+    } catch (error) {
+      console.warn("User not authenticated, skipping localStorage update.", error);
+      return;
+    }
+    const options = localStorage.getItem(`user_options_${userId}`);
+    const parsedOptions = options ? JSON.parse(options) : {};
+    const updatedOptions = { ...parsedOptions, ...changes };
+    localStorage.setItem(`user_options_${userId}`, JSON.stringify(updatedOptions));
+  } catch (error) {
+    console.warn("Failed to persist user options to localStorage:", error);
+  }
+};
+
 /**
  * Manage and persist a collection of unsaved settings via event-driven updates.
  *
@@ -90,6 +110,9 @@ export function useUnsavedChanges() {
     const performSave = async () => {
       try {
         await saveChangesToDb(
+          unsavedChanges as Record<string, string | number | boolean>
+        );
+        await saveChangesToLocalStorage(
           unsavedChanges as Record<string, string | number | boolean>
         );
         setUnsavedChanges({});

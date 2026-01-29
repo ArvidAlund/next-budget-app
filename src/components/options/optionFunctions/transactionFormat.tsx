@@ -43,14 +43,14 @@ export default function TransactionFormatOption() {
         }
         if (!hasChanges) {
             emitEvent("remove-unsaved-changes", {
-                transactionDecimals: transactionDecimals,
-                thousandSeparator: thousandSeparator,
+                "transaction_decimals": transactionDecimals,
+                "thousand_separator": thousandSeparator,
             });
             return;
         }
         emitEvent("unsaved-changes", {
-            transactionDecimals: transactionDecimals,
-            thousandSeparator: thousandSeparator,
+            "transaction_decimals": transactionDecimals,
+            "thousand_separator": thousandSeparator,
         });
     }, [transactionDecimals, userTransactionDecimals, thousandSeparator, userThousandSeparator, loaded]);
 
