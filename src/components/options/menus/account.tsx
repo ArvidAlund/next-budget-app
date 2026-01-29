@@ -3,9 +3,11 @@ import DeleteDataOption from "../optionFunctions/delete";
 import LogOutOption from "../optionFunctions/logout";
 
 /**
- * Renders an account settings section with a centered "Konto Inställningar" heading and a styled container for option rows.
+ * Render the account settings section with a centered "Konto Inställningar" heading.
  *
- * @returns The JSX element representing the account settings section.
+ * If there are unsaved changes, displays a "Spara Ändringar" button that, when clicked, triggers saving of those changes.
+ *
+ * @returns The JSX element for the account settings section.
  */
 export default function SecurityOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();

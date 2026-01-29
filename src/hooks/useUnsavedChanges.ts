@@ -72,19 +72,18 @@ const saveChangesToLocalStorage = async (changes: Record<string, string | number
 };
 
 /**
- * Manage and persist a collection of unsaved settings via event-driven updates.
+ * Tracks unsaved user settings and persists them on demand.
  *
- * The hook maintains a map of pending changes and a boolean flag that triggers persistence.
- * It listens for "unsaved-changes" events to merge incoming details into the map and
- * for "remove-unsaved-changes" events to remove specified keys. When the returned
- * `setSaveChanges(true)` is called, the current changes are persisted to the database,
- * the map is cleared, a "general-changes-saved" event is emitted, and the page is reloaded.
+ * The hook listens for "unsaved-changes" events to merge incoming details into the pending changes
+ * and for "remove-unsaved-changes" events to remove specified keys. When `setSaveChanges(true)` is
+ * used, the current pending changes are persisted, the pending map is cleared, a "general-changes-saved"
+ * event is emitted, and the page reloads.
  *
- * @returns An object containing:
- * - `unsavedChanges`: the current map of pending changes.
- * - `setUnsavedChanges`: setter to replace or merge pending changes.
- * - `saveChanges`: boolean flag indicating whether a save has been requested.
- * - `setSaveChanges`: setter used to trigger persistence when set to `true`.
+ * @returns An object with:
+ * - `unsavedChanges`: the current map of pending changes
+ * - `setUnsavedChanges`: setter to replace or merge pending changes
+ * - `saveChanges`: flag indicating whether a save has been requested
+ * - `setSaveChanges`: setter used to trigger persistence when set to `true`
  */
 export function useUnsavedChanges() {
   const [unsavedChanges, setUnsavedChanges] = useState<UnsavedChanges>({});

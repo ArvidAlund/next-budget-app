@@ -1,9 +1,11 @@
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 /**
- * Renders the privacy settings section with a centered header and a container for privacy option items.
+ * Render the privacy settings section with a centered title and a conditional save button.
  *
- * @returns The JSX structure for the privacy settings section.
+ * The "Spara Ändringar" button is shown when there are unsaved changes and triggers saving via the unsaved-changes hook.
+ *
+ * @returns The JSX element for the privacy settings UI.
  */
 export default function PrivacyOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();

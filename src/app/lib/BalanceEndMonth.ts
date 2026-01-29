@@ -2,7 +2,13 @@ import getUserOption from "./db/getUserOption";
 import supabase, {supabaseUserID} from "./supabaseClient";
 import CreateNotification from "./db/notifications/createNotification";
 
-// Returnerar antal dagar i en månad
+/**
+ * Get the number of days in the specified month for a given year.
+ *
+ * @param year - The full year (e.g., 2025)
+ * @param month - The month as 1-12
+ * @returns The number of days in that month
+ */
 function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
@@ -21,6 +27,14 @@ function formatDate(year: number, month: number, day: number): string {
 }
 
 
+/**
+ * Compute and persist the previous month's end balance for the current user when appropriate.
+ *
+ * Checks the user's "carryover" option and returns early if the option is explicitly disabled or cannot be read.
+ * If no end-of-month balance exists for the previous month, aggregates transactions (including recurring ones up to that month)
+ * and any recorded balance from two months ago to compute the net amount, then inserts an end_of_month_balances record.
+ * On successful insert, creates a notification and reloads the page.
+ */
 export async function BalanceEndMonth(){
     const date = new Date()
     const id = await supabaseUserID();

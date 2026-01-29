@@ -7,9 +7,11 @@ import BudgetOverviewOption from "../optionFunctions/budgetOverview";
 
 
 /**
- * Render the "Budget Inställningar" section with its options.
+ * Render the "Budget Inställningar" section containing budget option controls and a conditional save button.
  *
- * @returns A JSX element containing a styled section with a centered header and the ExportTransactionsOption entry.
+ * The save button is shown when there are unsaved changes and triggers saving when clicked.
+ *
+ * @returns A JSX element representing the "Budget Inställningar" section with the CarryoverOption, TransactionFormatOption, BudgetTypeOption, BudgetOverviewOption, and ExportTransactionsOption entries
  */
 export default function BudgetOptions() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();
