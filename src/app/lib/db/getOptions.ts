@@ -1,12 +1,15 @@
 import supabase, {supabaseUserID} from "../supabaseClient"
 
 const getOptions = async () => {
-    const optionsInLocalStorage = localStorage.getItem("user_options");
+    const userId = await supabaseUserID();
+    if (!userId) throw new Error("User not authenticated");
+    const cacheKey = `user_options_${userId}`;
+    const optionsInLocalStorage = sessionStorage.getItem(cacheKey);
+
     if (optionsInLocalStorage) {
         return {data: JSON.parse(optionsInLocalStorage), success: true};
     }
-    const userId = await supabaseUserID();
-    if (!userId) throw new Error("User not authenticated");
+    
     const { data, error } = await supabase
         .from("user_options")
         .select("*")
@@ -18,7 +21,7 @@ const getOptions = async () => {
     const filterdData = { ...data };
     delete filterdData.user_id;
 
-    localStorage.setItem("user_options", JSON.stringify(filterdData));
+    sessionStorage.setItem(cacheKey, JSON.stringify(filterdData));
 
     return {data: filterdData, success: true};
 }

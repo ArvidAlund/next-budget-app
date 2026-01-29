@@ -31,8 +31,10 @@ const saveBudget = async (budgetData: Budget) => {
     // Om rad finns → uppdatera endast ändrade fält
     const updates: Partial<Budget> = {};
     for (const key in budgetData) {
-        if (budgetData[key] !== existing[key]) {
-            updates[key] = budgetData[key];
+        const newVal = budgetData[key] ?? null;
+        const oldVal = existing[key] ?? null;
+        if (newVal !== oldVal) {
+            updates[key] = newVal;
         }
     }
 

@@ -44,12 +44,19 @@ const CreateNotification = async (props: props) => {
         throw allError;
     }
     
-    allNotifications.forEach(element => {
-        const monthDifference = (new Date().getFullYear() - new Date(element.date).getFullYear()) * 12 + (new Date().getMonth() - new Date(element.date).getMonth());
-        if (props.title === element.title && monthDifference < 1 && (props.title === "Månatlig investering gjord" || props.title === "Månatlig investering beräknad")) {
-            return {success: true, message: "Notification already exists for this month"};
+    for (const element of allNotifications ?? []) {
+        const monthDifference =
+            (new Date().getFullYear() - new Date(element.date).getFullYear()) * 12 +
+            (new Date().getMonth() - new Date(element.date).getMonth());
+        if (
+            props.title === element.title &&
+            monthDifference < 1 &&
+            (props.title === "Månatlig investering gjord" || props.title === "Månatlig investering beräknad")
+        ) {
+            return element;
         }
-    });
+    }
+    
     const { data, error } = await supabase
         .from("user_notifications")
         .insert([{

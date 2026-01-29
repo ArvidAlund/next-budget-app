@@ -46,7 +46,7 @@ const BudgetOverviewOption = () => {
 
     // Auto-assign logik baserat på budgetType
     useEffect(() => {
-        if (!budget || !totalBudget || typeof totalBudget === "string") return;
+        if (!loaded || !totalBudget || typeof totalBudget === "string") return;
 
         if (budgetType === "50/30/20") {
             setBudget(prev => ({
@@ -58,7 +58,7 @@ const BudgetOverviewOption = () => {
         }
 
         // Zero-based kräver ingen auto-assign
-    }, [budgetType, totalBudget]);
+    }, [budgetType, totalBudget, loaded]);
 
     const checkUnsavedChanges = (budget: Budget) => {
         if (!budget || !userBudget) {
@@ -103,7 +103,7 @@ const BudgetOverviewOption = () => {
                 <>
                     {totalBudget !== null && budgetType !== "50/30/20" && (
                         <h3 className="text-lg font-semibold my-2 text-center">
-                            Total budget {budgetType === "surplus-budget" ? (Number(totalBudget) - (Number(budget?.savings) ?? 0)) : formatCurrency(Number(totalBudget))} kr
+                            Total budget {budgetType === "surplus-budget" ? formatCurrency((Number(totalBudget) - (Number(budget?.savings) ?? 0))) : formatCurrency(Number(totalBudget))} kr
                         </h3>
                     )}
 

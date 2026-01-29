@@ -22,9 +22,17 @@ const getBudget = async (): Promise<GetBudgetResult> => {
     const filterdBudgetData: Budget = {};
     let totalBudget = 0;
     for (const [key, value] of Object.entries(budgetData)) {
-        if (key !== "id" && key !== "user_id" && key !== "created_at" && key !== "updated_at" && typeof value === "number") {
-            filterdBudgetData[key] = value;
-            totalBudget += value;
+        if (key !== "id" && key !== "user_id" && key !== "created_at" && key !== "updated_at") {
+            const numericValue =
+                typeof value === "number"
+                    ? value
+                    : typeof value === "string" && value.trim() !== ""
+                    ? Number(value)
+                    : NaN;
+            if (!Number.isNaN(numericValue)) {
+                filterdBudgetData[key] = numericValue;
+                totalBudget += numericValue;
+            }
         }
     }
 

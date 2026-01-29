@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { emitEvent, onEvent } from "@/app/lib/eventbus";
 import saveChangesToDb from "@/app/lib/db/saveChanges";
 import { JSONSchema } from "openai/lib/jsonschema.js";
+import { supabaseUserID } from "@/app/lib/supabaseClient";
 
 interface UnsavedChanges {
   language?: string;
@@ -65,10 +66,22 @@ interface UnsavedDetails {
 }
 
 const saveChangesToLocalStorage = async (changes: Record<string, string | number | boolean>) => {
-  const options = localStorage.getItem("user_options");
-  const parsedOptions = options ? JSON.parse(options) : {};
-  const updatedOptions = { ...parsedOptions, ...changes };
-  localStorage.setItem("user_options", JSON.stringify(updatedOptions));
+  try {
+    let userId: string | null = null;
+    try {
+      userId = await supabaseUserID();
+      if (!userId) throw new Error("User not authenticated");
+    } catch (error) {
+      console.warn("User not authenticated, skipping localStorage update.", error);
+      return;
+    }
+    const options = localStorage.getItem(`user_options_${userId}`);
+    const parsedOptions = options ? JSON.parse(options) : {};
+    const updatedOptions = { ...parsedOptions, ...changes };
+    localStorage.setItem(`user_options_${userId}`, JSON.stringify(updatedOptions));
+  } catch (error) {
+    console.warn("Failed to persist user options to localStorage:", error);
+  }
 };
 
 /**

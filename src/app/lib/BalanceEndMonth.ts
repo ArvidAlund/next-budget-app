@@ -125,11 +125,15 @@ export async function BalanceEndMonth(){
             if (error){
                 console.warn("Supabase insert error: ", error.message)
             } else {
-                await CreateNotification({
-                    title: "Månadens balans sparad",
-                    message: `Din balans för ${lastMonth}/${Year} har sparats.`,
-                    type: "info"
-                });
+                try {
+                    await CreateNotification({
+                        title: "Månadens balans sparad",
+                        message: `Din balans för ${lastMonth}/${Year} har sparats.`,
+                        type: "info"
+                    });
+                } catch (notificationError) {
+                    console.error("Error creating notification:", notificationError);
+                }
                 window.location.reload();
             }
         }
