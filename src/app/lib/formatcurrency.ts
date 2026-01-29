@@ -1,8 +1,8 @@
 /**
- * Formats a numeric amount as an en-US decimal string with no fractional digits.
+ * Format a numeric amount according to the user's preferred thousand separator and decimal settings.
  *
  * @param amount - The numeric value to format
- * @returns The formatted string using the user's preferred thousand separator and decimal settings
+ * @returns The formatted string according to the user's thousand-separator and transaction-decimal settings, or `undefined` if the stored format setting is unrecognized
  */
 export function formatCurrency(amount: number): string {
   const options = localStorage.getItem("user_options");

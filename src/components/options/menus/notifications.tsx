@@ -1,13 +1,11 @@
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 /**
- * Renders the Notifications settings menu UI.
+ * Renders the Notifications settings UI section.
  *
- * The component outputs a section with a centered header reading "Notifikations Inställningar"
- * and an empty container reserved for notification options.
+ * When unsaved changes are present, includes a "Spara Ändringar" button that triggers saving.
  *
- * @returns A React element: a section (class "text-secondary") containing a centered `h1`
- * with the title and a styled `div` intended to hold notification setting entries.
+ * @returns The section element containing the centered title and a container for notification settings.
  */
 export default function NotificationsMenu() {
     const { unsavedChanges, setSaveChanges } = useUnsavedChanges();

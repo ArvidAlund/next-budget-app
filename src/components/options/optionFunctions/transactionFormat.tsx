@@ -3,6 +3,14 @@ import getUserOption from "@/app/lib/db/getUserOption";
 import { emitEvent } from "@/app/lib/eventbus";
 import SwitchButton from "@/components/ui/switchButton";
 
+/**
+ * Renders the transaction format settings UI and manages loading, local state, and unsaved-change events.
+ *
+ * On mount, loads the user's saved "transaction_decimals" and "thousand_separator" options and initializes component state.
+ * Emits "unsaved-changes" when the current values differ from the saved values, and "remove-unsaved-changes" when they match.
+ *
+ * @returns A React element containing controls for toggling decimal display and selecting the thousands separator.
+ */
 export default function TransactionFormatOption() {
     const [loaded, setLoaded] = useState(false);
     const [transactionDecimals, setTransactionDecimals] = useState<boolean | null>(null);
