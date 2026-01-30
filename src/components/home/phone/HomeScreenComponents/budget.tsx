@@ -21,7 +21,7 @@ const PhoneBudget = ({ openImproveModal } : { openImproveModal: () => void }) =>
         const fetchBudgetData = async () => {
             try {
                 const res = await getBudget();
-                if (!res.success && typeof res.total === "number") {
+                if (res.success && typeof res.total === "number") {
                     setBudget(res.total);
                 }
             } catch (error) {
